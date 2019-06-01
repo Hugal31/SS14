@@ -1,0 +1,17 @@
+[package]
+name = "ss14"
+version = "0.1.0"
+authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+dmm = { path = "../dmm" }
+dmm-format = { path = "../dmm/dmm-format" }
+fnv = "1"
+log = "0.4"
+serde = { version ="1", features = ["derive"] }
+
+[dependencies.amethyst]
+git = "https://github.com/amethyst/amethyst.git"
+rev = "0829d10bee0bf2b44db6e90645f61772776a9d12"
+features = ["vulkan"]

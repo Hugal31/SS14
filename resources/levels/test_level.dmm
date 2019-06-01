@@ -1,0 +1,31 @@
+"aa" = (
+/turf/open/space/basic,
+/area/space),
+"ab" = (
+/turf/open/floor
+)
+"ac" = (
+/turf/debug
+)
+"ad" = (
+/turf/area/nw
+)
+"ae" = (
+/turf/area/ne
+)
+
+(1,1,1) = {"
+ad aa aa aa aa aa aa aa aa ac
+"}
+(2,1,1) = {"
+aa aa ab ab ab ab ab ab ab aa
+"}
+(3,1,1) = {"
+aa aa ab ab ab ab ab ab ab aa
+"}
+(4,1,1) = {"
+aa aa ab ab ab ab ab ab ab aa
+"}
+(5,1,1) = {"
+ae aa ab ab ab ab ab ab ab ac
+"}

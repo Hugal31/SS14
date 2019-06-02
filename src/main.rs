@@ -1,4 +1,5 @@
 use std::time::Duration;
+use std::path::PathBuf;
 
 use amethyst::{
     self,
@@ -6,6 +7,7 @@ use amethyst::{
     core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
     error::{ResultExt, format_err},
     prelude::*,
+    input::InputBundle,
     renderer::{
         RenderingSystem,
         sprite::SpriteSheet,
@@ -19,17 +21,24 @@ use ss14::{
     assets::{self, GameAssetsLoader},
     bundles,
     components,
+    inputs,
     states,
     render::RenderGraphCreator as SS14RenderGraph,
 };
 
 const DISPLAY_CONFIG_PATH: &str = "display.ron";
+const BINDINGS_CONFIG_PATH: &str = "inputs.ron";
 
 fn main() -> amethyst::Result<()> {
-    start_game()
+    let level = std::env::args()
+        .skip(1)
+        .map(From::from)
+        .next();
+
+    start_game(level)
 }
 
-fn start_game() -> amethyst::Result<()> {
+fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
     amethyst::start_logger(amethyst::LoggerConfig{
         level_filter: amethyst::LogLevelFilter::Debug,
         ..Default::default()
@@ -38,9 +47,12 @@ fn start_game() -> amethyst::Result<()> {
     let app_root = application_root_dir()?;
     let assets_dir = app_root.join("resources");
     let display_config_path = assets_dir.join(DISPLAY_CONFIG_PATH);
+    let bindings_config_path = assets_dir.join(BINDINGS_CONFIG_PATH);
     let ss13_source = get_ss13_source()?;
+    let level = level.unwrap_or_else(|| assets_dir.join("levels/test_level.dmm"));
 
     let game_data = GameDataBuilder::<f32>::default()
+        .with_bundle(InputBundle::<inputs::Input>::new().with_bindings_from_file(bindings_config_path)?)?
         .with_bundle(bundles::GameBundle)?
         // The WindowBundle provides all the scaffolding for opening a window and drawing to it
         .with_bundle(WindowBundle::from_config_path(display_config_path))?
@@ -58,7 +70,7 @@ fn start_game() -> amethyst::Result<()> {
             SS14RenderGraph::default(),
         ));
 
-    let initial_state = states::loading::LoadLevelAsset::<states::play::PlayState>::new(assets_dir.join("levels/test_level.dmm"));
+    let initial_state = states::loading::LoadLevelAsset::<states::play::PlayState>::new(level);
     let initial_state = states::loading::AssetsLoaderState::new(Box::new(initial_state), GameAssetsLoader::default());
 
     let mut game = Application::build(assets_dir, initial_state)?

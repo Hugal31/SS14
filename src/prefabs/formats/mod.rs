@@ -29,7 +29,6 @@ impl Format<Prefab<MapPrefabData>> for DmmFormat {
             .map(|(c, d)| MapPrefabData::new(c.clone(), d.clone()))
             .for_each(|mp| {
                 prefab.add(Some(0), Some(mp));
-                ()
             });
 
         Ok(prefab)

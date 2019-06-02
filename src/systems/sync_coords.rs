@@ -1,6 +1,9 @@
 use amethyst::{
     core::Transform,
-    ecs::{BitSet, Join, ReaderId, Resources, ReadStorage, WriteStorage, System, SystemData, storage::ComponentEvent},
+    ecs::{
+        shred::DynamicSystemData,
+        BitSet, Join, ReaderId, Resources, ReadStorage, WriteStorage, System, SystemData, storage::ComponentEvent
+    },
 };
 
 use crate::components::Coordinates;
@@ -33,13 +36,14 @@ impl<'a> System<'a> for SyncCoordsSystem {
             });
 
         for (cell, transform, _) in (&cells, &mut transforms, &self.modified).join() {
-            transform.set_translation_xyz(32.0 * cell.0 as f32, 32.0 * cell.1 as f32, cell.2 as f32);
-            debug!("Sync coord {:?} to {:?}", cell, transform.translation());
+            transform.set_translation_xyz(32.0 * cell.0 as f32, -32.0 * cell.1 as f32, cell.2 as f32);
         }
     }
 
     fn setup(&mut self, res: &mut Resources) {
-        let mut coords = WriteStorage::<Coordinates>::fetch(res);
+        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
+
+        let mut coords = <WriteStorage::<Coordinates> as SystemData>::fetch(res);
         self.coords_event_id.replace(coords.register_reader());
     }
 }

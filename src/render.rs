@@ -4,7 +4,7 @@ use amethyst::{
     ecs::prelude::*,
     renderer::{
         GraphCreator,
-        pass::DrawFlat2DDesc,
+        pass::{DrawDebugLinesDesc, DrawFlat2DDesc},
         rendy::{
             factory::Factory,
             graph::{
@@ -34,7 +34,7 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
     fn rebuild(&mut self, res: &Resources) -> bool {
         let new_dimensions = res.try_fetch::<ScreenDimensions>();
         use std::ops::Deref;
-        if self.dimensions.as_ref() != new_dimensions.as_ref().map(|d| d.deref()) {
+        if self.dimensions.as_ref() != new_dimensions.as_ref().map(Deref::deref) {
             self.dirty = true;
             self.dimensions = new_dimensions.map(|d| d.clone());
             return false;
@@ -66,7 +66,7 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
             window_kind,
             1,
             surface_format,
-            Some(ClearValue::Color([0.34, 0.36, 0.52, 1.0].into())),
+            Some(ClearValue::Color([0, 0, 0, 1].into())),
         );
 
         let depth = graph_builder.create_image(
@@ -81,6 +81,7 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
         let pass = graph_builder.add_node(
             SubpassBuilder::new()
                 .with_group(DrawFlat2DDesc::new().builder()) // Draws sprites
+                .with_group(DrawDebugLinesDesc::new().builder())
                 //.with_group(DrawUiDesc::new().builder()) // Draws UI components
                 .with_color(color)
                 .with_depth_stencil(depth)

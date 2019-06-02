@@ -19,8 +19,8 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
         // Asset loading
         dispatcher.add(PrefabLoaderSystem::<MapPrefabData>::default(), "", &[]);
 
-        dispatcher.add(systems::SyncCoordsSystem::default(), "sync_coords", &[]);
-
+        dispatcher.add(systems::MoveCamera::default(), "move_camera", &["input_system"]);
+        dispatcher.add(systems::SyncCoordsSystem::default(), "sync_coords", &["move_camera"]);
 
         Ok(())
     }

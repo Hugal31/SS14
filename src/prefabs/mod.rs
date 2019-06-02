@@ -29,7 +29,7 @@ impl MapPrefabData {
 
     fn get_dir(&self) -> Direction {
         match self.datum.var_edits().get("dir") {
-            Some(Literal::Number(d)) if *d >= std::u8::MIN as i64 && *d <= std::u8::MAX as i64 =>
+            Some(Literal::Number(d)) if *d >= i64::from(std::u8::MIN) && *d <= i64::from(std::u8::MAX) =>
                 Direction::try_from(*d as u8).unwrap_or_default(),
             _ => Default::default()
         }

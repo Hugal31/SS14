@@ -1,0 +1,9 @@
+(
+    axes: {},
+    actions: {
+        Move(North): [[Key(Up)]],
+        Move(South): [[Key(Down)]],
+        Move(East): [[Key(Right)]],
+        Move(West): [[Key(Left)]],
+    },
+)

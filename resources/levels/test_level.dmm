@@ -14,6 +14,7 @@
 /turf/area/ne
 )
 
+(0,0,1) = {"ac"}
 (1,1,1) = {"
 ad aa aa aa aa aa aa aa aa ac
 "}

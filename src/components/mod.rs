@@ -1,10 +1,24 @@
+use std::convert::TryFrom;
+
 use amethyst::{
     ecs::{Component, FlaggedStorage, VecStorage},
 };
-use std::convert::TryFrom;
+use serde::{Serialize, Deserialize};
 
-#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Coordinates(pub u32, pub u32, pub u32);
+
+impl Coordinates {
+    pub fn try_moved(&self, dir: Direction) -> Option<Self> {
+        match dir {
+            Direction::North if self.1 > 0 => Some(Coordinates(self.0, self.1 - 1, self.2)),
+            Direction::South => Some(Coordinates(self.0, self.1 + 1, self.2)),
+            Direction::East => Some(Coordinates(self.0 + 1, self.1, self.2)),
+            Direction::West if self.0 > 0 => Some(Coordinates(self.0 - 1, self.1, self.2)),
+            _ => None,
+        }
+    }
+}
 
 impl From<(u32, u32, u32)> for Coordinates {
     fn from(c: (u32, u32, u32)) -> Self {
@@ -16,7 +30,7 @@ impl Component for Coordinates {
     type Storage = FlaggedStorage<Coordinates, VecStorage<Coordinates>>;
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Direction {
     North,
     South,

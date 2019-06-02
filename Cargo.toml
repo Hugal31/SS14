@@ -14,4 +14,8 @@ serde = { version ="1", features = ["derive"] }
 [dependencies.amethyst]
 git = "https://github.com/amethyst/amethyst.git"
 rev = "0829d10bee0bf2b44db6e90645f61772776a9d12"
-features = ["vulkan"]
+features = ["nightly", "vulkan"]
+
+[features]
+default = ["no-slow-safety-check"]
+no-slow-safety-check = ["amethyst/no-slow-safety-checks"]

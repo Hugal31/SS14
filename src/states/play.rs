@@ -2,10 +2,11 @@ use amethyst::{
     core::{Parent, Transform},
     ecs::{Builder as _, Entity, World},
     renderer::camera::{Camera, Projection},
-    GameData, State, StateData, StateEvent, Trans,
+    GameData, State, StateData, Trans,
 };
 
 use crate::components::Coordinates;
+use crate::events::SS14StateEvent;
 
 pub struct PlayState {
     level_entity: Entity,
@@ -17,21 +18,16 @@ impl From<Entity> for PlayState {
     }
 }
 
-impl<'a, 'b> State<GameData<'a, 'b>, StateEvent> for PlayState {
+impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
-        initialise_camera_with_size(
-            self.level_entity,
-            data.world,
-            (-16.0, -16.0),
-            (20, 20),
-        );
+        initialise_camera_with_size(self.level_entity, data.world, (-16.0, -16.0), (20, 20));
     }
 
     fn on_stop(&mut self, data: StateData<GameData>) {
         data.world.delete_entity(self.level_entity).ok();
     }
 
-    fn update(&mut self, data: StateData<GameData>) -> Trans<GameData<'a, 'b>, StateEvent<String>> {
+    fn update(&mut self, data: StateData<GameData>) -> Trans<GameData<'a, 'b>, SS14StateEvent> {
         data.data.update(data.world);
 
         Trans::None

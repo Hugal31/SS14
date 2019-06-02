@@ -15,7 +15,7 @@ use amethyst::{
 
 use ss14::{
     assets::{self, GameAssetsLoader},
-    bundles, components, inputs,
+    bundles, components, events, inputs,
     render::RenderGraphCreator as SS14RenderGraph,
     states,
 };
@@ -69,14 +69,15 @@ fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
         GameAssetsLoader::default(),
     );
 
-    let mut game = Application::build(assets_dir, initial_state)?
-        .with_frame_limit(
-            FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
-            60,
-        )
-        .with_source(assets::SS13_SOURCE, ss13_source)
-        .register::<components::Direction>()
-        .build(game_data)?;
+    let mut game =
+        CoreApplication::<_, _, events::SS14StateEventReader>::build(assets_dir, initial_state)?
+            .with_frame_limit(
+                FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
+                60,
+            )
+            .with_source(assets::SS13_SOURCE, ss13_source)
+            .register::<components::Direction>()
+            .build(game_data)?;
 
     game.run();
     Ok(())

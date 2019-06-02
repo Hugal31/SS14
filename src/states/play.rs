@@ -22,8 +22,8 @@ impl<'a, 'b> State<GameData<'a, 'b>, StateEvent> for PlayState {
         initialise_camera_with_size(
             self.level_entity,
             data.world,
-            (0.0, 0.0),
-            (32.0 * 20.0, 32.0 * 20.0),
+            (-16.0, -16.0),
+            (20, 20),
         );
     }
 
@@ -42,7 +42,7 @@ fn initialise_camera_with_size(
     parent: Entity,
     world: &mut World,
     origin: (f32, f32),
-    size: (f32, f32),
+    size: (u32, u32),
 ) -> Entity {
     use amethyst::{
         core::math::Vector3,
@@ -72,15 +72,15 @@ fn initialise_camera_with_size(
     world
         .create_entity()
         .with(Camera::from(Projection::orthographic(
-            origin_x - size_x / 2.0,
-            origin_x + size_x / 2.0,
-            origin_y - size_y / 2.0,
-            origin_y + size_y / 2.0,
+            origin_x - (size_x * 32) as f32 / 2.0,
+            origin_x + (size_x * 32) as f32 / 2.0,
+            origin_y - (size_y * 32) as f32 / 2.0,
+            origin_y + (size_y * 32) as f32 / 2.0,
             0.1,
             100.0,
         )))
         .with(Transform::default())
-        .with(Coordinates(0, 0, 2))
+        .with(Coordinates(size_x / 2, size_y / 2, 2))
         .with(Parent { entity: parent })
         .build()
 }

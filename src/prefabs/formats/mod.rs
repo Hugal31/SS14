@@ -5,15 +5,17 @@ use amethyst::{
 };
 use dmm::Datum;
 
-use crate::components::Coordinates;
 use super::MapPrefabData;
+use crate::components::Coordinates;
 
 /// DMM format, i.e. Byond DreamMaker Map format
 #[derive(Clone, Copy, Debug)]
 pub struct DmmFormat;
 
 impl Format<Prefab<MapPrefabData>> for DmmFormat {
-    fn name(&self) -> &'static str { "Dmm" }
+    fn name(&self) -> &'static str {
+        "Dmm"
+    }
 
     fn import_simple(&self, bytes: Vec<u8>) -> Result<Prefab<MapPrefabData>> {
         let s = std::str::from_utf8(&bytes)
@@ -24,7 +26,10 @@ impl Format<Prefab<MapPrefabData>> for DmmFormat {
         let mut prefab = Prefab::new();
 
         map.iter()
-            .map(|(coords, d)| CellIterator{ coords: coords.into(), iter: d.iter()})
+            .map(|(coords, d)| CellIterator {
+                coords: coords.into(),
+                iter: d.iter(),
+            })
             .flatten()
             .map(|(c, d)| MapPrefabData::new(c.clone(), d.clone()))
             .for_each(|mp| {
@@ -32,7 +37,6 @@ impl Format<Prefab<MapPrefabData>> for DmmFormat {
             });
 
         Ok(prefab)
-
     }
 }
 
@@ -42,19 +46,20 @@ struct CellIterator<'d> {
 }
 
 impl<'d> Iterator for CellIterator<'d> {
-    type Item = (Coordinates,  &'d Datum);
+    type Item = (Coordinates, &'d Datum);
 
     fn next(&mut self) -> Option<Self::Item> {
-        self.iter
-            .next()
-            .map(|d| (self.coords.clone(), d))
+        self.iter.next().map(|d| (self.coords.clone(), d))
     }
 
     fn size_hint(&self) -> (usize, Option<usize>) {
         self.iter.size_hint()
     }
 
-    fn count(self) -> usize where Self: Sized {
+    fn count(self) -> usize
+    where
+        Self: Sized,
+    {
         self.iter.count()
     }
 }

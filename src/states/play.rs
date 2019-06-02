@@ -1,12 +1,8 @@
 use amethyst::{
-    core::{Transform, Parent},
-    ecs::{Entity, Builder as _, World},
-    renderer::{
-        camera::{Camera, Projection},
-    },
-    GameData,
-    Trans,
-    State, StateData, StateEvent,
+    core::{Parent, Transform},
+    ecs::{Builder as _, Entity, World},
+    renderer::camera::{Camera, Projection},
+    GameData, State, StateData, StateEvent, Trans,
 };
 
 use crate::components::Coordinates;
@@ -17,19 +13,18 @@ pub struct PlayState {
 
 impl From<Entity> for PlayState {
     fn from(e: Entity) -> Self {
-        PlayState {
-            level_entity: e
-        }
+        PlayState { level_entity: e }
     }
 }
 
-impl<'a, 'b> State<GameData<'a, 'b>, StateEvent>  for PlayState {
-
+impl<'a, 'b> State<GameData<'a, 'b>, StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
-        initialise_camera_with_size(self.level_entity,
-                                    data.world,
-                                    (0.0, 0.0),
-                                    (32.0 * 20.0, 32.0 * 20.0));
+        initialise_camera_with_size(
+            self.level_entity,
+            data.world,
+            (0.0, 0.0),
+            (32.0 * 20.0, 32.0 * 20.0),
+        );
     }
 
     fn on_stop(&mut self, data: StateData<GameData>) {
@@ -43,26 +38,33 @@ impl<'a, 'b> State<GameData<'a, 'b>, StateEvent>  for PlayState {
     }
 }
 
-fn initialise_camera_with_size(parent: Entity,
-                               world: &mut World,
-                               origin: (f32, f32),
-                               size: (f32, f32)) -> Entity
-{
+fn initialise_camera_with_size(
+    parent: Entity,
+    world: &mut World,
+    origin: (f32, f32),
+    size: (f32, f32),
+) -> Entity {
     use amethyst::{
-        core::math::{Vector3},
+        core::math::Vector3,
         renderer::{
             debug_drawing::{DebugLines, DebugLinesComponent},
             palette::Srgba,
-        }
+        },
     };
     world.add_resource(DebugLines::new());
 
     let mut debug_lines = DebugLinesComponent::new();
-    debug_lines.add_direction(Vector3::new(0.0, 0.0, 1.1).into(), Vector3::new(32.0, 0.0, 0.0), Srgba::new(1.0, 0.0, 0.0, 1.0));
-    debug_lines.add_direction(Vector3::new(0.0, 0.0, 1.1).into(), Vector3::new(0.0, 32.0, 0.0), Srgba::new(0.0, 1.0, 0.0, 1.0));
-    world.create_entity()
-        .with(debug_lines)
-        .build();
+    debug_lines.add_direction(
+        Vector3::new(0.0, 0.0, 1.1).into(),
+        Vector3::new(32.0, 0.0, 0.0),
+        Srgba::new(1.0, 0.0, 0.0, 1.0),
+    );
+    debug_lines.add_direction(
+        Vector3::new(0.0, 0.0, 1.1).into(),
+        Vector3::new(0.0, 32.0, 0.0),
+        Srgba::new(0.0, 1.0, 0.0, 1.0),
+    );
+    world.create_entity().with(debug_lines).build();
 
     let (origin_x, origin_y) = origin;
     let (size_x, size_y) = size;
@@ -74,7 +76,8 @@ fn initialise_camera_with_size(parent: Entity,
             origin_x + size_x / 2.0,
             origin_y - size_y / 2.0,
             origin_y + size_y / 2.0,
-            0.1, 100.0
+            0.1,
+            100.0,
         )))
         .with(Transform::default())
         .with(Coordinates(0, 0, 2))

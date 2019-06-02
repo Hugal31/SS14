@@ -3,11 +3,11 @@ pub mod formats;
 use std::convert::TryFrom as _;
 
 use amethyst::{
-    assets::{PrefabData},
+    assets::PrefabData,
     core::Transform,
     ecs::{Entity, ReadExpect, WriteStorage},
-    renderer::{SpriteRender},
     error::Error,
+    renderer::SpriteRender,
 };
 use dmm::{Datum, Literal};
 
@@ -21,17 +21,17 @@ pub struct MapPrefabData {
 
 impl MapPrefabData {
     pub fn new(coords: Coordinates, datum: Datum) -> Self {
-        MapPrefabData {
-            coords,
-            datum,
-        }
+        MapPrefabData { coords, datum }
     }
 
     fn get_dir(&self) -> Direction {
         match self.datum.var_edits().get("dir") {
-            Some(Literal::Number(d)) if *d >= i64::from(std::u8::MIN) && *d <= i64::from(std::u8::MAX) =>
-                Direction::try_from(*d as u8).unwrap_or_default(),
-            _ => Default::default()
+            Some(Literal::Number(d))
+                if *d >= i64::from(std::u8::MIN) && *d <= i64::from(std::u8::MAX) =>
+            {
+                Direction::try_from(*d as u8).unwrap_or_default()
+            }
+            _ => Default::default(),
         }
     }
 }
@@ -46,23 +46,36 @@ impl<'a> PrefabData<'a> for MapPrefabData {
     );
     type Result = ();
 
-    fn add_to_entity(&self, entity: Entity, system_data: &mut Self::SystemData, _entities: &[Entity], _children: &[Entity]) -> Result<Self::Result, Error> {
+    fn add_to_entity(
+        &self,
+        entity: Entity,
+        system_data: &mut Self::SystemData,
+        _entities: &[Entity],
+        _children: &[Entity],
+    ) -> Result<Self::Result, Error> {
         let dir = self.get_dir();
         system_data.1.insert(entity, self.coords.clone())?;
         system_data.2.insert(entity, dir)?;
         system_data.4.insert(entity, Default::default())?;
 
-        if let Some(sprite) = system_data.0.get_state(self.datum.path())
+        if let Some(sprite) = system_data
+            .0
+            .get_state(self.datum.path())
             .or_else(|| {
                 if self.datum.path().starts_with("/turf/open/floor") {
                     system_data.0.get_state("/turf/open/floor")
                 } else {
                     None
                 }
-            }).map(|states| states.sprite_for_dir(dir).clone()) {
-
-
-            debug!("Added Datum {} at {:?} with sprite {:?}", self.datum.path(), self.coords, sprite);
+            })
+            .map(|states| states.sprite_for_dir(dir).clone())
+        {
+            debug!(
+                "Added Datum {} at {:?} with sprite {:?}",
+                self.datum.path(),
+                self.coords,
+                sprite
+            );
 
             system_data.3.insert(entity, sprite)?;
         }

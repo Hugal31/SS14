@@ -3,7 +3,6 @@ use std::sync::Arc;
 use amethyst::{
     ecs::prelude::*,
     renderer::{
-        GraphCreator,
         pass::{DrawDebugLinesDesc, DrawFlat2DDesc},
         rendy::{
             factory::Factory,
@@ -13,14 +12,15 @@ use amethyst::{
                 GraphBuilder,
             },
             hal::{
-                format::Format,
                 command::{ClearDepthStencil, ClearValue},
+                format::Format,
                 image,
             },
         },
         types::DefaultBackend,
+        GraphCreator,
     },
-    window::{Window, ScreenDimensions},
+    window::{ScreenDimensions, Window},
 };
 
 #[derive(Default)]
@@ -43,9 +43,11 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
         self.dirty
     }
 
-    fn builder(&mut self, factory: &mut Factory<DefaultBackend>, res: &Resources)
-               -> GraphBuilder<DefaultBackend, Resources>
-    {
+    fn builder(
+        &mut self,
+        factory: &mut Factory<DefaultBackend>,
+        res: &Resources,
+    ) -> GraphBuilder<DefaultBackend, Resources> {
         self.dirty = false;
 
         let window = <ReadExpect<'_, Arc<Window>>>::fetch(res);
@@ -56,9 +58,12 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
         let surface_format = *self
             .surface_format
             .get_or_insert_with(|| factory.get_surface_format(&surface));
-        let dimensions = self.dimensions.as_ref()
+        let dimensions = self
+            .dimensions
+            .as_ref()
             .expect("rebuild should have been called before");
-        let window_kind = image::Kind::D2(dimensions.width() as u32, dimensions.height() as u32, 1, 1);
+        let window_kind =
+            image::Kind::D2(dimensions.width() as u32, dimensions.height() as u32, 1, 1);
 
         // Begin building our RenderGraph
         let mut graph_builder = GraphBuilder::new();

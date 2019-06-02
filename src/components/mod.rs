@@ -1,9 +1,7 @@
 use std::convert::TryFrom;
 
-use amethyst::{
-    ecs::{Component, FlaggedStorage, VecStorage},
-};
-use serde::{Serialize, Deserialize};
+use amethyst::ecs::{Component, FlaggedStorage, VecStorage};
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
 pub struct Coordinates(pub u32, pub u32, pub u32);

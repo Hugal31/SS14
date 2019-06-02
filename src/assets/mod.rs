@@ -1,15 +1,12 @@
-use std::{
-    fs::File,
-    io::Read,
-};
+use std::{fs::File, io::Read};
 
 use amethyst::{
     assets::{AssetStorage, Format as _, Handle, Loader, ProgressCounter, RonFormat},
-    renderer::{SpriteRender, SpriteSheet, sprite::Sprites, Texture, TexturePrefab},
     ecs::{Resources, World},
+    renderer::{sprite::Sprites, SpriteRender, SpriteSheet, Texture, TexturePrefab},
 };
 use fnv::FnvHashMap;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub const SS13_SOURCE: &str = "SS13";
 
@@ -23,21 +20,32 @@ pub trait AssetsLoader {
 pub struct GameAssetsLoader;
 
 impl GameAssetsLoader {
-    fn load_texture_prefab(prefab: TexturePrefab, resources: &Resources, progress: &mut ProgressCounter) -> Handle<Texture> {
+    fn load_texture_prefab(
+        prefab: TexturePrefab,
+        resources: &Resources,
+        progress: &mut ProgressCounter,
+    ) -> Handle<Texture> {
         let texture_storage = resources.fetch::<AssetStorage<Texture>>();
         let loader = resources.fetch::<Loader>();
 
         match prefab {
             TexturePrefab::Data(d) => loader.load_from_data(d, progress, &texture_storage),
-            TexturePrefab::Generate(g) => loader.load_from_data(g.data(), progress, &texture_storage),
-            TexturePrefab::File(name, format) =>
-                loader.load_from(name, format, SS13_SOURCE, progress, &texture_storage),
+            TexturePrefab::Generate(g) => {
+                loader.load_from_data(g.data(), progress, &texture_storage)
+            }
+            TexturePrefab::File(name, format) => {
+                loader.load_from(name, format, SS13_SOURCE, progress, &texture_storage)
+            }
             TexturePrefab::Handle(h) => h,
             TexturePrefab::Placeholder => unreachable!(),
         }
     }
 
-    fn load_sprite_sheet(sprite_sheet: SpriteSheet, resources: &Resources, progress: &mut ProgressCounter) -> Handle<SpriteSheet> {
+    fn load_sprite_sheet(
+        sprite_sheet: SpriteSheet,
+        resources: &Resources,
+        progress: &mut ProgressCounter,
+    ) -> Handle<SpriteSheet> {
         let sprite_sheet_storage = resources.fetch::<AssetStorage<SpriteSheet>>();
         let loader = resources.fetch::<Loader>();
 
@@ -46,9 +54,7 @@ impl GameAssetsLoader {
 }
 
 impl AssetsLoader for GameAssetsLoader {
-
-    fn load(&self, world: &mut World, progress: &mut ProgressCounter)
-    {
+    fn load(&self, world: &mut World, progress: &mut ProgressCounter) {
         // TODO Don't just parse the whole file now, use a (custom?) loader.
         let mut file = File::open("resources/assets/main_icons.ron").expect("file not found");
         let mut data = Vec::new();
@@ -58,7 +64,8 @@ impl AssetsLoader for GameAssetsLoader {
         let mut icon_dictionary = IconsDictionary::default();
 
         for entry in icons.entries {
-            let texture = GameAssetsLoader::load_texture_prefab(entry.texture, &world.res, progress);
+            let texture =
+                GameAssetsLoader::load_texture_prefab(entry.texture, &world.res, progress);
             let sprite_sheet = SpriteSheet {
                 texture,
                 sprites: match entry.sprites {
@@ -66,13 +73,17 @@ impl AssetsLoader for GameAssetsLoader {
                     Sprites::Grid(g) => g.build_sprites(),
                 },
             };
-            let sprite_sheet = GameAssetsLoader::load_sprite_sheet(sprite_sheet, &world.res, progress);
+            let sprite_sheet =
+                GameAssetsLoader::load_sprite_sheet(sprite_sheet, &world.res, progress);
             for (name, state) in entry.states {
-                icon_dictionary.0.insert(name, StateIcons {
-                    index: state.index,
-                    dirs: state.dirs,
-                    sprite_sheet: sprite_sheet.clone(),
-                });
+                icon_dictionary.0.insert(
+                    name,
+                    StateIcons {
+                        index: state.index,
+                        dirs: state.dirs,
+                        sprite_sheet: sprite_sheet.clone(),
+                    },
+                );
             }
         }
 
@@ -119,7 +130,7 @@ impl StateIcons {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct IconsDictionaryDesc {
-    entries: Vec<IconsSpriteSheet>
+    entries: Vec<IconsSpriteSheet>,
 }
 
 /// For now, states == type, i.e. "flashbang" becomes /obj/item/grenade/flashbang

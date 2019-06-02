@@ -1,8 +1,5 @@
 use amethyst::{
-    assets::PrefabLoaderSystem,
-    core::{SystemBundle},
-    ecs::DispatcherBuilder,
-    error::Error,
+    assets::PrefabLoaderSystem, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
 };
 
 use crate::prefabs::MapPrefabData;
@@ -19,8 +16,16 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
         // Asset loading
         dispatcher.add(PrefabLoaderSystem::<MapPrefabData>::default(), "", &[]);
 
-        dispatcher.add(systems::MoveCamera::default(), "move_camera", &["input_system"]);
-        dispatcher.add(systems::SyncCoordsSystem::default(), "sync_coords", &["move_camera"]);
+        dispatcher.add(
+            systems::MoveCamera::default(),
+            "move_camera",
+            &["input_system"],
+        );
+        dispatcher.add(
+            systems::SyncCoordsSystem::default(),
+            "sync_coords",
+            &["move_camera"],
+        );
 
         Ok(())
     }

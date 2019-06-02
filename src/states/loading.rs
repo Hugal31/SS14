@@ -1,11 +1,7 @@
 use std::marker::PhantomData;
 use std::path::PathBuf;
 
-use amethyst::{
-    assets::{ProgressCounter},
-    ecs::Entity,
-    prelude::*,
-};
+use amethyst::{assets::ProgressCounter, ecs::Entity, prelude::*};
 
 use crate::assets::{AssetsLoader as _, GameAssetsLoader};
 
@@ -67,14 +63,13 @@ impl<S> LoadLevelAsset<S> {
 }
 
 impl<'a, 'b, E, S> State<GameData<'a, 'b>, E> for LoadLevelAsset<S>
-    where
-        E: Send + Sync + 'static,
-        S: State<GameData<'a, 'b>, E> + From<Entity> + 'static
+where
+    E: Send + Sync + 'static,
+    S: State<GameData<'a, 'b>, E> + From<Entity> + 'static,
 {
-
     fn on_start(&mut self, data: StateData<GameData>) {
+        use crate::prefabs::{formats::DmmFormat, MapPrefabData};
         use amethyst::assets::PrefabLoader;
-        use crate::prefabs::{MapPrefabData, formats::DmmFormat};
 
         let StateData { world, .. } = data;
 
@@ -82,9 +77,7 @@ impl<'a, 'b, E, S> State<GameData<'a, 'b>, E> for LoadLevelAsset<S>
             loader.load(self.path.to_str().unwrap(), DmmFormat, &mut self.progress)
         });
 
-        self.level_entity = Some(world.create_entity()
-            .with(prefab_handler)
-            .build());
+        self.level_entity = Some(world.create_entity().with(prefab_handler).build());
     }
 
     fn update(&mut self, data: StateData<GameData<'a, 'b>>) -> Trans<GameData<'a, 'b>, E> {
@@ -92,7 +85,9 @@ impl<'a, 'b, E, S> State<GameData<'a, 'b>, E> for LoadLevelAsset<S>
 
         if self.progress.is_complete() {
             debug!("Level loaded!");
-            Trans::Switch(Box::new(S::from(self.level_entity.expect("on start was not called!"))))
+            Trans::Switch(Box::new(S::from(
+                self.level_entity.expect("on start was not called!"),
+            )))
         } else {
             Trans::None
         }

@@ -1,12 +1,10 @@
 use amethyst::{
-    core::{
-        shrev::EventChannel,
-    },
+    core::shrev::EventChannel,
     ecs::{
-        shred::DynamicSystemData,
-        Join, Read, ReaderId, Resources, ReadStorage, WriteStorage, System
+        shred::DynamicSystemData, Join, Read, ReadStorage, ReaderId, Resources, System,
+        WriteStorage,
     },
-    input::{InputEvent},
+    input::InputEvent,
     renderer::camera::Camera,
 };
 
@@ -26,7 +24,9 @@ impl<'a> System<'a> for MoveCamera {
     );
 
     fn run(&mut self, (inputs, cameras, mut coords): Self::SystemData) {
-        let action_reader_id = self.action_reader_id.as_mut()
+        let action_reader_id = self
+            .action_reader_id
+            .as_mut()
             .expect("setup was not called");
 
         inputs.read(action_reader_id).for_each(|event| {
@@ -43,7 +43,9 @@ impl<'a> System<'a> for MoveCamera {
     fn setup(&mut self, res: &mut Resources) {
         <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
 
-        self.action_reader_id.replace(res.fetch_mut::<EventChannel<InputEvent<Input>>>()
-            .register_reader());
+        self.action_reader_id.replace(
+            res.fetch_mut::<EventChannel<InputEvent<Input>>>()
+                .register_reader(),
+        );
     }
 }

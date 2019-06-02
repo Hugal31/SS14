@@ -1,45 +1,36 @@
-use std::time::Duration;
 use std::path::PathBuf;
+use std::time::Duration;
 
 use amethyst::{
     self,
-    assets::{Source, Processor},
+    assets::{Processor, Source},
     core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
-    error::{ResultExt, format_err},
-    prelude::*,
+    error::{format_err, ResultExt},
     input::InputBundle,
-    renderer::{
-        RenderingSystem,
-        sprite::SpriteSheet,
-        types::DefaultBackend,
-    },
+    prelude::*,
+    renderer::{sprite::SpriteSheet, types::DefaultBackend, RenderingSystem},
     utils::application_root_dir,
-    window::{WindowBundle},
+    window::WindowBundle,
 };
 
 use ss14::{
     assets::{self, GameAssetsLoader},
-    bundles,
-    components,
-    inputs,
-    states,
+    bundles, components, inputs,
     render::RenderGraphCreator as SS14RenderGraph,
+    states,
 };
 
 const DISPLAY_CONFIG_PATH: &str = "display.ron";
 const BINDINGS_CONFIG_PATH: &str = "inputs.ron";
 
 fn main() -> amethyst::Result<()> {
-    let level = std::env::args()
-        .skip(1)
-        .map(From::from)
-        .next();
+    let level = std::env::args().skip(1).map(From::from).next();
 
     start_game(level)
 }
 
 fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
-    amethyst::start_logger(amethyst::LoggerConfig{
+    amethyst::start_logger(amethyst::LoggerConfig {
         level_filter: amethyst::LogLevelFilter::Debug,
         ..Default::default()
     });
@@ -52,7 +43,9 @@ fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
     let level = level.unwrap_or_else(|| assets_dir.join("levels/test_level.dmm"));
 
     let game_data = GameDataBuilder::<f32>::default()
-        .with_bundle(InputBundle::<inputs::Input>::new().with_bindings_from_file(bindings_config_path)?)?
+        .with_bundle(
+            InputBundle::<inputs::Input>::new().with_bindings_from_file(bindings_config_path)?,
+        )?
         .with_bundle(bundles::GameBundle)?
         // The WindowBundle provides all the scaffolding for opening a window and drawing to it
         .with_bundle(WindowBundle::from_config_path(display_config_path))?
@@ -71,7 +64,10 @@ fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
         ));
 
     let initial_state = states::loading::LoadLevelAsset::<states::play::PlayState>::new(level);
-    let initial_state = states::loading::AssetsLoaderState::new(Box::new(initial_state), GameAssetsLoader::default());
+    let initial_state = states::loading::AssetsLoaderState::new(
+        Box::new(initial_state),
+        GameAssetsLoader::default(),
+    );
 
     let mut game = Application::build(assets_dir, initial_state)?
         .with_frame_limit(

@@ -1,7 +1,7 @@
-use std::fmt::{self, Display, Debug};
+use std::fmt::{self, Debug, Display};
 
 use amethyst::input::BindingTypes;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::components::Direction;
 

@@ -21,6 +21,7 @@ impl From<Entity> for PlayState {
 impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
         initialise_camera_with_size(self.level_entity, data.world, (-16.0, -16.0), (20, 20));
+        add_debug_lines(data.world);
     }
 
     fn on_stop(&mut self, data: StateData<GameData>) {
@@ -40,6 +41,26 @@ fn initialise_camera_with_size(
     origin: (f32, f32),
     size: (u32, u32),
 ) -> Entity {
+    let (origin_x, origin_y) = origin;
+    let (size_x, size_y) = size;
+
+    world
+        .create_entity()
+        .with(Camera::from(Projection::orthographic(
+            origin_x - (size_x * 32) as f32 / 2.0,
+            origin_x + (size_x * 32) as f32 / 2.0,
+            origin_y - (size_y * 32) as f32 / 2.0,
+            origin_y + (size_y * 32) as f32 / 2.0,
+            0.1,
+            1.5,
+        )))
+        .with(Transform::default())
+        .with(Coordinates(size_x / 2, size_y / 2, 2))
+        .with(Parent { entity: parent })
+        .build()
+}
+
+fn add_debug_lines(world: &mut World) -> Entity {
     use amethyst::{
         core::math::Vector3,
         renderer::{
@@ -47,6 +68,7 @@ fn initialise_camera_with_size(
             palette::Srgba,
         },
     };
+
     world.add_resource(DebugLines::new());
 
     let mut debug_lines = DebugLinesComponent::new();
@@ -60,23 +82,10 @@ fn initialise_camera_with_size(
         Vector3::new(0.0, 32.0, 0.0),
         Srgba::new(0.0, 1.0, 0.0, 1.0),
     );
-    world.create_entity().with(debug_lines).build();
-
-    let (origin_x, origin_y) = origin;
-    let (size_x, size_y) = size;
-
-    world
-        .create_entity()
-        .with(Camera::from(Projection::orthographic(
-            origin_x - (size_x * 32) as f32 / 2.0,
-            origin_x + (size_x * 32) as f32 / 2.0,
-            origin_y - (size_y * 32) as f32 / 2.0,
-            origin_y + (size_y * 32) as f32 / 2.0,
-            0.1,
-            100.0,
-        )))
-        .with(Transform::default())
-        .with(Coordinates(size_x / 2, size_y / 2, 2))
-        .with(Parent { entity: parent })
-        .build()
+    debug_lines.add_direction(
+        Vector3::new(0.0, 0.0, 1.1).into(),
+        Vector3::new(0.0, 0.0, 1.0),
+        Srgba::new(0.0, 0.0, 1.0, 1.0),
+    );
+    world.create_entity().with(debug_lines).build()
 }

@@ -10,7 +10,7 @@ use serde::{Deserialize, Serialize};
 
 pub const SS13_SOURCE: &str = "SS13";
 
-use crate::components::Direction;
+use crate::components::{Direction, Layer};
 
 pub trait AssetsLoader {
     fn load(&self, world: &mut World, progress: &mut ProgressCounter);
@@ -78,11 +78,7 @@ impl AssetsLoader for GameAssetsLoader {
             for (name, state) in entry.states {
                 icon_dictionary.0.insert(
                     name,
-                    StateIcons {
-                        index: state.index,
-                        dirs: state.dirs,
-                        sprite_sheet: sprite_sheet.clone(),
-                    },
+                    StateIcons::new(state, sprite_sheet.clone()),
                 );
             }
         }
@@ -103,15 +99,27 @@ impl IconsDictionary {
 /// State name here is derived from the DMI format
 #[derive(Debug)]
 pub struct StateIcons {
-    /// Start index in the
-    index: usize,
-    /// Number of available direction, betwen 1 and 8
-    dirs: u8,
+    desc: StateIconsDesc,
     /// The sprite sheet
     sprite_sheet: Handle<SpriteSheet>,
 }
 
 impl StateIcons {
+    pub fn new(desc: StateIconsDesc, sprite_sheet: Handle<SpriteSheet>) -> Self {
+        StateIcons {
+            desc,
+            sprite_sheet,
+        }
+    }
+
+    pub fn transparent(&self) -> bool {
+        self.desc.transparent
+    }
+
+    pub fn layer(&self) -> Layer {
+        self.desc.layer
+    }
+
     pub fn sprite_for_dir(&self, dir: Direction) -> SpriteRender {
         let dir = match dir {
             Direction::South => 1,
@@ -119,7 +127,7 @@ impl StateIcons {
             Direction::West => 3,
             _ => 0,
         };
-        let sprite_number = self.index + if dir < self.dirs { dir as usize } else { 0 };
+        let sprite_number = self.desc.index + if dir < self.desc.dirs { dir as usize } else { 0 };
 
         SpriteRender {
             sprite_sheet: self.sprite_sheet.clone(),
@@ -148,5 +156,15 @@ pub struct StateIconsDesc {
     /// Start index in the
     index: usize,
     /// Number of available direction, betwen 1 and 8
+    #[serde(default = "default_dirs")]
     dirs: u8,
+    /// TODO Remove from here. This should not be here, as it is not in the DMI format.
+    /// However, we use this asset format for basic "scripting"
+    #[serde(default)]
+    transparent: bool,
+    #[serde(default = "default_layer")]
+    layer: Layer,
 }
+
+fn default_dirs() -> u8 { 1 }
+fn default_layer() -> Layer { Layer::Turf }

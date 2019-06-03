@@ -1,4 +1,5 @@
 use std::convert::TryFrom;
+use std::cmp::Ordering;
 
 use amethyst::ecs::{Component, FlaggedStorage, VecStorage};
 use serde::{Deserialize, Serialize};
@@ -87,5 +88,39 @@ impl TryFrom<u8> for Direction {
             10 => Direction::SouthWest,
             _ => return Err(()),
         })
+    }
+}
+
+/// Display layer for datums
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
+pub enum Layer {
+    Space,
+    Turf,
+    Lattice,
+    OpenDoor,
+    BelowObj,
+}
+
+impl Component for Layer {
+    type Storage = VecStorage<Layer>;
+}
+
+/// From SS13 code. Multiplied by 10 to have an Ord-able representation.
+impl Into<u32> for Layer {
+    fn into(self) -> u32 {
+        use Layer::*;
+        match self {
+            Space => 18,
+            Turf => 20,
+            Lattice => 22,
+            OpenDoor => 27,
+            BelowObj => 29,
+        }
+    }
+}
+
+impl Ord for Layer {
+    fn cmp(&self, other: &Self) -> Ordering {
+        Ord::cmp(&Into::<u32>::into(*self), &Into::<u32>::into(*other))
     }
 }

@@ -7,7 +7,7 @@ use amethyst::{
     core::Transform,
     ecs::{Entity, ReadExpect, WriteStorage},
     error::Error,
-    renderer::SpriteRender,
+    renderer::{transparent::Transparent, SpriteRender},
 };
 use dmm::{Datum, Literal};
 
@@ -41,43 +41,39 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         ReadExpect<'a, IconsDictionary>,
         WriteStorage<'a, Coordinates>,
         WriteStorage<'a, Direction>,
+        WriteStorage<'a, Layer>,
         WriteStorage<'a, SpriteRender>,
         WriteStorage<'a, Transform>,
+        WriteStorage<'a, Transparent>,
     );
     type Result = ();
 
+    // TODO Someday, we will script all of these
     fn add_to_entity(
         &self,
         entity: Entity,
-        system_data: &mut Self::SystemData,
+        (ref dic, ref mut coords, ref mut dirs, ref mut layers, ref mut sprites, ref mut transforms, ref mut transparents): &mut Self::SystemData,
         _entities: &[Entity],
         _children: &[Entity],
     ) -> Result<Self::Result, Error> {
         let dir = self.get_dir();
-        system_data.1.insert(entity, self.coords.clone())?;
-        system_data.2.insert(entity, dir)?;
-        system_data.4.insert(entity, Default::default())?;
+        coords.insert(entity, self.coords.clone())?;
+        dirs.insert(entity, dir)?;
+        transforms.insert(entity, Default::default())?;
 
-        if let Some(sprite) = system_data
-            .0
-            .get_state(self.datum.path())
-            .or_else(|| {
-                if self.datum.path().starts_with("/turf/open/floor") {
-                    system_data.0.get_state("/turf/open/floor")
-                } else {
-                    None
-                }
-            })
-            .map(|states| states.sprite_for_dir(dir).clone())
+        if let Some(states) = dic.get_state(self.datum.path())
         {
             debug!(
-                "Added Datum {} at {:?} with sprite {:?}",
+                "Added Datum {} at {:?}",
                 self.datum.path(),
-                self.coords,
-                sprite
+                self.coords
             );
 
-            system_data.3.insert(entity, sprite)?;
+            sprites.insert(entity, states.sprite_for_dir(dir).clone())?;
+            layers.insert(entity, states.layer())?;
+            if states.transparent() {
+                transparents.insert(entity, Transparent)?;
+            }
         }
 
         Ok(())

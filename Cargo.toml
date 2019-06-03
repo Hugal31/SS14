@@ -19,3 +19,6 @@ features = ["nightly", "vulkan"]
 [features]
 default = ["no-slow-safety-check"]
 no-slow-safety-check = ["amethyst/no-slow-safety-checks"]
+
+[profile.dev]
+opt-level = 2

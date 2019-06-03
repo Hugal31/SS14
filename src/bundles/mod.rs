@@ -26,6 +26,11 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             "sync_coords",
             &["move_camera"],
         );
+        dispatcher.add(
+            systems::SpriteLayerSortingSystem::new(),
+            "layer_sorting",
+            &[]
+        );
 
         Ok(())
     }

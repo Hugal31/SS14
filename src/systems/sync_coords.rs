@@ -4,6 +4,7 @@ use amethyst::{
         shred::DynamicSystemData, storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
         Resources, System, SystemData, WriteStorage,
     },
+    renderer::transparent::Transparent,
 };
 
 use crate::components::Coordinates;
@@ -16,11 +17,16 @@ pub struct SyncCoordsSystem {
 }
 
 impl<'a> System<'a> for SyncCoordsSystem {
-    type SystemData = (ReadStorage<'a, Coordinates>, WriteStorage<'a, Transform>);
+    type SystemData = (
+        ReadStorage<'a, Coordinates>,
+        ReadStorage<'a, Transparent>,
+        WriteStorage<'a, Transform>
+    );
 
-    fn run(&mut self, (cells, mut transforms): Self::SystemData) {
+    fn run(&mut self, (cells, transparents, mut transforms): Self::SystemData) {
         let coords_event_id = self.coords_event_id.as_mut().expect("setup was not called");
 
+        // Read modifications
         self.modified.clear();
         cells
             .channel()
@@ -32,11 +38,14 @@ impl<'a> System<'a> for SyncCoordsSystem {
                 _ => (),
             });
 
-        for (cell, transform, _) in (&cells, &mut transforms, &self.modified).join() {
+        // Sync coords
+        for (cell, transparent, transform, _) in (&cells, transparents.maybe(), &mut transforms, &self.modified).join() {
+            // Non transparent sprites are a little below.
+            let z = if transparent.is_none() { cell.2 as f32 -0.1 } else { cell.2 as f32 };
             transform.set_translation_xyz(
                 32.0 * cell.0 as f32,
                 -32.0 * cell.1 as f32,
-                cell.2 as f32,
+                z
             );
         }
     }

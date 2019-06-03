@@ -2,7 +2,7 @@
 /turf/open/space/basic,
 /area/space),
 "ab" = (
-/turf/open/floor
+/turf/open/floor/plasteel
 )
 "ac" = (
 /turf/debug

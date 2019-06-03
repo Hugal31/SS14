@@ -27,8 +27,156 @@
                  cell_size: (32, 32),
             )),
             states: {
-                "/turf/debug": (index: 0, dirs: 1),
-                "/turf/open/floor": (index: 4, dirs: 1 ),
+                "/turf/debug": (index: 0),
+                "/turf/open/floor": (index: 4),
+                "/turf/open/floor/plasteel": (index: 4),
+                "/turf/open/floor/plating": (index: 18),
+            }
+        ),
+        (
+            texture: File("icons/obj/smooth_structures/catwalk.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 160,
+                texture_height: 160,
+                columns: 5,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/obj/structure/lattice/catwalk": (index: 20, transparent: true, layer: Lattice),
+            }
+        ),
+        (
+            texture: File("icons/obj/structures.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 672,
+                texture_height: 640,
+                columns: 21,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/obj/structure/grille": (index: 5, transparent: true, layer: BelowObj),
+            }
+        ),
+        (
+            texture: File("icons/obj/smooth_structures/lattice.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 160,
+                texture_height: 160,
+                columns: 5,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/obj/structure/lattice": (index: 20, transparent: true, layer: Lattice),
+            }
+        ),
+        (
+            texture: File("icons/obj/doors/airlocks/station/public.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 192,
+                texture_height: 160,
+                columns: 6,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/obj/machinery/door/airlock": (index: 0, transparent: true, layer: OpenDoor),
+            }
+        ),
+        (
+            texture: File("icons/obj/doors/airlocks/external/external.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 192,
+                texture_height: 160,
+                columns: 6,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/obj/machinery/door/airlock/external": (index: 0, transparent: true, layer: OpenDoor),
+                "/obj/machinery/door/airlock/external/glass": (index: 0, transparent: true, layer: OpenDoor),
             }
         ),
         (
@@ -57,9 +205,68 @@
                 cell_size: (32, 32),
             )),
             states: {
-                "/turf/area/n": (index: 230, dirs: 1),
-                "/turf/area/ne": (index: 231, dirs: 1),
-                "/turf/area/nw": (index: 232, dirs: 1),
+                "/turf/area/n": (index: 230, transparent: true),
+                "/turf/area/ne": (index: 231, transparent: true),
+                "/turf/area/nw": (index: 232, transparent: true),
+            }
+        ),
+        (
+            texture: File("icons/turf/space.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 768,
+                texture_height: 768,
+                columns: 24,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/turf/open/space": (index: 0, layer: Space),
+                "/turf/open/space/basic": (index: 0, layer: Space),
+            }
+        ),
+        (
+            texture: File("icons/turf/walls/reinforced_wall.dmi", (
+                "IMAGE", (
+                    sampler_info: (
+                        min_filter: Nearest,
+                        mag_filter: Nearest,
+                        mip_filter: Nearest,
+                        wrap_mode: (Tile, Tile, Tile),
+                        lod_bias: (0),
+                        lod_range: (
+                            start: ( 0 ),
+                            end: ( 8000 ),
+                        ),
+                        comparison: None,
+                        border: (0),
+                        anisotropic: Off,
+                    ),
+                )
+            )),
+            sprites: Grid((
+                texture_width: 224,
+                texture_height: 192,
+                columns: 7,
+                cell_size: (32, 32),
+            )),
+            states: {
+                "/turf/closed/wall/r_wall": (index: 20, layer: Turf),
             }
         ),
     ]

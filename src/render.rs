@@ -3,7 +3,7 @@ use std::sync::Arc;
 use amethyst::{
     ecs::prelude::*,
     renderer::{
-        pass::{DrawDebugLinesDesc, DrawFlat2DDesc},
+        pass::{DrawDebugLinesDesc, DrawFlat2DDesc, DrawFlat2DTransparentDesc},
         rendy::{
             factory::Factory,
             graph::{
@@ -81,13 +81,19 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
             Some(ClearValue::DepthStencil(ClearDepthStencil(1.0, 0))),
         );
 
-        // Create our first `Subpass`, which contains the DrawFlat2D and DrawUi render groups.
-        // We pass the subpass builder a description of our groups for construction
-        let pass = graph_builder.add_node(
+        let opaque_pass = graph_builder.add_node(
             SubpassBuilder::new()
                 .with_group(DrawFlat2DDesc::new().builder()) // Draws sprites
                 .with_group(DrawDebugLinesDesc::new().builder())
-                //.with_group(DrawUiDesc::new().builder()) // Draws UI components
+                .with_color(color)
+                .with_depth_stencil(depth)
+                .into_pass(),
+        );
+
+        let transparent_pass = graph_builder.add_node(
+            SubpassBuilder::new()
+                .with_group(DrawFlat2DTransparentDesc::new().builder()) // Draws transparent sprites
+                .with_dependency(opaque_pass)
                 .with_color(color)
                 .with_depth_stencil(depth)
                 .into_pass(),
@@ -96,7 +102,10 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
         // Finally, add the pass to the graph.
         // The PresentNode takes its input and applies it to the surface.
         let _present = graph_builder
-            .add_node(PresentNode::builder(factory, surface, color).with_dependency(pass));
+            .add_node(PresentNode::builder(factory, surface, color)
+                .with_dependency(transparent_pass)
+                .with_dependency(opaque_pass)
+            );
 
         graph_builder
     }

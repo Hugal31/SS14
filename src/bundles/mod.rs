@@ -1,6 +1,7 @@
 use amethyst::{
     assets::PrefabLoaderSystem, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
 };
+use dmi_assets::DmiProcessor;
 
 use crate::prefabs::MapPrefabData;
 use crate::systems;
@@ -31,6 +32,8 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             "layer_sorting",
             &[]
         );
+
+        dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
 
         Ok(())
     }

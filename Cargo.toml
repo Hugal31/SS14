@@ -5,6 +5,7 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+dmi-assets = { path = "dmi-assets" }
 dmm = { path = "../dmm" }
 dmm-format = { path = "../dmm/dmm-format" }
 fnv = "1"

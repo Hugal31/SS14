@@ -8,9 +8,9 @@ use amethyst::{
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
 
-pub const SS13_SOURCE: &str = "SS13";
-
 use crate::components::{Direction, Layer};
+
+pub const SS13_SOURCE: &str = "SS13";
 
 pub trait AssetsLoader {
     fn load(&self, world: &mut World, progress: &mut ProgressCounter);

@@ -41,7 +41,8 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
         );
 
         dispatcher.add(systems::SyncIconStateSystem::new(), "sync_icon_states", &[]);
-        dispatcher.add(systems::SyncSpritesSystem::new(), "sync_sprites", &["sync_icon_states"]);
+        dispatcher.add(systems::IconStateAnimation::new(), "icon_state_animation", &["sync_icon_states"]);
+        dispatcher.add(systems::SyncSpritesSystem::new(), "sync_sprites", &["icon_state_animation"]);
 
         Ok(())
     }

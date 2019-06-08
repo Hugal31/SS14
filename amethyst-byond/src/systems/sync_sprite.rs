@@ -122,9 +122,10 @@ impl<'a> System<'a> for SyncIconStateSystem {
         ReadStorage<'a, Handle<Dmi>>,
         ReadStorage<'a, IconStateName>,
         WriteStorage<'a, IconState>,
+        WriteStorage<'a, IconFrame>,
     );
 
-    fn run(&mut self, (entities, dmi_assets, dmi_handles, state_names, mut states): Self::SystemData) {
+    fn run(&mut self, (entities, dmi_assets, dmi_handles, state_names, mut states, mut frames): Self::SystemData) {
 
         // Read modifications
         Self::read_events(&mut self.modified, &dmi_handles, self.dmi_event_id.as_mut().expect("setup was not called"));
@@ -134,9 +135,16 @@ impl<'a> System<'a> for SyncIconStateSystem {
         for (e, dmi_handle, name, _) in (&entities, &dmi_handles, &state_names, &self.modified).join() {
             if let Some(dmi) = dmi_assets.get(dmi_handle) {
                 if let Some(state) = dmi.get_state(&name.0) {
+                    if state.info.frames > 1 {
+                        debug!("Insert icon {} frame", state.info.frames);
+                        frames.insert(e, IconFrame(0)).ok();
+                    } else {
+                        frames.remove(e);
+                    }
                     states.insert(e, state).ok();
                 } else {
                     states.remove(e);
+                    frames.remove(e);
                 }
 
                 self.done.add(e.id());

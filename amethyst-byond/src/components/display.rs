@@ -71,7 +71,7 @@ impl Component for IconState {
 
 impl IconState {
     pub fn get_sprite(&self, dir: Direction, frame: IconFrame) -> SpriteRender {
-        let frame = std::cmp::max(frame.0, self.info.frames - 1);
+        let frame = std::cmp::min(frame.0, self.info.frames - 1);
         let dir = self.info.get_dir_index(dir);
 
         SpriteRender {

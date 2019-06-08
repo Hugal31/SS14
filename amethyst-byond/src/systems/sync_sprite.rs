@@ -136,7 +136,6 @@ impl<'a> System<'a> for SyncIconStateSystem {
             if let Some(dmi) = dmi_assets.get(dmi_handle) {
                 if let Some(state) = dmi.get_state(&name.0) {
                     if state.info.frames > 1 {
-                        debug!("Insert icon {} frame", state.info.frames);
                         frames.insert(e, IconFrame(0)).ok();
                     } else {
                         frames.remove(e);

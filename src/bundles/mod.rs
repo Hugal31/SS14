@@ -23,6 +23,12 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             &["input_system"],
         );
 
+        dispatcher.add(
+            systems::VisionFieldSystem::new(),
+            "vision_field",
+            &["move_camera"],
+        );
+
         ByondBundle::new()
             .with_dep(&["move_camera"])
             .build(dispatcher)?;

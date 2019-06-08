@@ -5,10 +5,10 @@ use amethyst::{
         WriteStorage,
     },
     input::InputEvent,
-    renderer::camera::Camera,
 };
 use amethyst_byond::components::Coordinates;
 
+use crate::components::Player;
 use crate::inputs::Input;
 
 #[derive(Debug, Default)]
@@ -19,11 +19,11 @@ pub struct MoveCamera {
 impl<'a> System<'a> for MoveCamera {
     type SystemData = (
         Read<'a, EventChannel<InputEvent<Input>>>,
-        ReadStorage<'a, Camera>,
+        ReadStorage<'a, Player>,
         WriteStorage<'a, Coordinates>,
     );
 
-    fn run(&mut self, (inputs, cameras, mut coords): Self::SystemData) {
+    fn run(&mut self, (inputs, players, mut coords): Self::SystemData) {
         let action_reader_id = self
             .action_reader_id
             .as_mut()
@@ -31,7 +31,7 @@ impl<'a> System<'a> for MoveCamera {
 
         inputs.read(action_reader_id).for_each(|event| {
             if let InputEvent::ActionPressed(Input::Move(dir)) = event {
-                for (_, coord) in (&cameras, &mut coords).join() {
+                for (_, coord) in (&players, &mut coords).join() {
                     if let Some(new_coord) = coord.try_moved(*dir) {
                         *coord = new_coord;
                     }

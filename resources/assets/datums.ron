@@ -87,6 +87,7 @@ PrefabDictionaryDesc({
 	 (
 	     state: "r_wall",
 	     layer: Turf,
+	     opacity: true,
 	 )
     ),
     "/obj/structure/closet/secure_closet/engineering_electrical": (
@@ -115,6 +116,13 @@ PrefabDictionaryDesc({
 	 (
 	     state: "fan_tiny",
 	     layer: AboveNormalTurf,
+	 )
+    ),
+    "/obj/effect/turf_decal/stripes/asteroid/line": (
+         "icons/turf/decals.dmi",
+	 (
+	     state: "ast_warn",
+	     layer: TurfDecal,
 	 )
     ),
 })

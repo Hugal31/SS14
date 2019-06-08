@@ -19,6 +19,10 @@
     icon_state = "opening"
 }
 )
+"ah" = (
+/turf/open/floor/plasteel,
+/obj/effect/turf_decal/stripes/asteroid/line
+)
 
 (0,0,1) = {"ac"}
 (1,1,1) = {"
@@ -28,7 +32,7 @@ ad aa aa aa aa aa aa aa aa ac
 aa aa ab ab ab ab ab ab ab aa
 "}
 (3,1,1) = {"
-aa aa ab ab af ab ab ab ab aa
+aa aa ab ab af ah ab ab ab aa
 "}
 (4,1,1) = {"
 aa aa ab ab ab ab ab ab ab aa

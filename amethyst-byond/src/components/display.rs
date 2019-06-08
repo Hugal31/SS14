@@ -11,6 +11,7 @@ use super::{Direction, IconFrame};
 pub enum Layer {
     Space,
     Turf,
+    TurfDecal,
     AboveNormalTurf,
     Lattice,
     Wire,
@@ -30,6 +31,7 @@ impl Into<u32> for Layer {
         match self {
             Space => 180,
             Turf => 200,
+            TurfDecal => 203,
             AboveNormalTurf => 208,
             Lattice => 220,
             Wire => 240,

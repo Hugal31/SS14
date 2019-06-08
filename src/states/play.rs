@@ -8,6 +8,7 @@ use amethyst::{
 };
 use amethyst_byond::components::Coordinates;
 
+use crate::components::Player;
 use crate::events::SS14StateEvent;
 
 pub struct PlayState {
@@ -22,7 +23,14 @@ impl From<Entity> for PlayState {
 
 impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
-        initialise_camera_with_size(self.level_entity, data.world, (0.0, 0.0), (15, 15));
+        let player = data.world.create_entity()
+            .with(Coordinates(4, 4, 1))
+            .with(Player)
+            .with(Parent { entity: self.level_entity })
+            .with(Transform::default())
+            .build();
+
+        initialise_camera_with_size(player, data.world, (0.0, 0.0), (15, 15));
         add_debug_lines(data.world);
     }
 
@@ -52,6 +60,8 @@ fn initialise_camera_with_size(
 ) -> Entity {
     let (origin_x, origin_y) = origin;
     let (size_x, size_y) = size;
+    let mut transform = Transform::default();
+    transform.set_translation_z(0.5);
 
     world
         .create_entity()
@@ -63,8 +73,7 @@ fn initialise_camera_with_size(
             0.1,
             1.5,
         )))
-        .with(Transform::default())
-        .with(Coordinates(size_x / 2, size_y / 2, 2))
+        .with(transform)
         .with(Parent { entity: parent })
         .build()
 }

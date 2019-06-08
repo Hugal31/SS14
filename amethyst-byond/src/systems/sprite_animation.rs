@@ -1,12 +1,7 @@
-use amethyst_assets::{AssetStorage, Handle};
 use amethyst_core::{
-    ecs::{
-        shred::DynamicSystemData, storage::ComponentEvent, BitSet, Component, Entities, Join, Read, ReadStorage, ReaderId,
-        Resources, System, SystemData, Tracked, WriteStorage,
-    },
+    ecs::{Join, Read, ReadStorage, System, WriteStorage},
     timing::Time,
 };
-use amethyst_rendy::sprite::SpriteRender;
 
 use crate::components::{IconFrame, IconState};
 

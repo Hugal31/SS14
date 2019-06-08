@@ -1,7 +1,9 @@
 use amethyst::{
     core::{Parent, Transform},
     ecs::{Builder as _, Entity, World},
+    input::is_key_down,
     renderer::camera::{Camera, Projection},
+    winit::VirtualKeyCode,
     GameData, State, StateData, Trans,
 };
 
@@ -20,7 +22,7 @@ impl From<Entity> for PlayState {
 
 impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
-        initialise_camera_with_size(self.level_entity, data.world, (-16.0, -16.0), (20, 20));
+        initialise_camera_with_size(self.level_entity, data.world, (0.0, 0.0), (15, 15));
         add_debug_lines(data.world);
 
         use amethyst::{
@@ -52,6 +54,13 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
         data.data.update(data.world);
 
         Trans::None
+    }
+
+    fn handle_event(&mut self, _data: StateData<GameData>, event: SS14StateEvent) -> Trans<GameData<'a, 'b>, SS14StateEvent> {
+        match &event {
+            SS14StateEvent::Window(e) if is_key_down(e, VirtualKeyCode::Escape) => Trans::Pop,
+            _ => Trans::None
+        }
     }
 }
 

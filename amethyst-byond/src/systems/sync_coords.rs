@@ -1,11 +1,11 @@
-use amethyst::{
-    core::Transform,
+use amethyst_core::{
+    Transform,
     ecs::{
         shred::DynamicSystemData, storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
         Resources, System, SystemData, WriteStorage,
     },
-    renderer::transparent::Transparent,
 };
+use amethyst_rendy::transparent::Transparent;
 
 use crate::components::Coordinates;
 

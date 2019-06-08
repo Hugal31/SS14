@@ -9,11 +9,13 @@ use amethyst::{
     error::Error,
     renderer::{transparent::Transparent},
 };
+use amethyst_byond::{
+    assets::dmi::Dmi,
+    components::{Coordinates, Direction, Layer, IconStateName},
+};
 use dmm::{Datum, Literal};
-use dmi_assets::Dmi;
 
 use crate::assets::PrefabDictionary;
-use crate::components::*;
 
 pub struct MapPrefabData {
     coords: Coordinates,
@@ -43,7 +45,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         WriteStorage<'a, Coordinates>,
         WriteStorage<'a, Direction>,
         WriteStorage<'a, Layer>,
-        WriteStorage<'a, IconState>,
+        WriteStorage<'a, IconStateName>,
         WriteStorage<'a, Handle<Dmi>>,
         WriteStorage<'a, Transform>,
         WriteStorage<'a, Transparent>,
@@ -81,7 +83,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                 self.coords
             );
 
-            let icon_state = IconState(
+            let icon_state = IconStateName(
                 self.datum.var_edit("icon_state")
                     .and_then(|l| if let Literal::Str(s) = l { Some(s) } else { None } )
                     .unwrap_or(&datum.1.state).clone()

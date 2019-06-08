@@ -7,7 +7,9 @@ use fnv::FnvHashMap as HashMap;
 use inflate;
 use png::{Decoded, Decoder as PNGDecoder, StreamingDecoder};
 
-use super::{Description, DmiData, State};
+use crate::components::IconStateInfo;
+
+use super::{Description, DmiData};
 
 const ZTXT: &[u8] = &[b'z', b'T', b'X', b't'];
 const DESCRIPTION: &str = "Description";
@@ -129,7 +131,7 @@ impl FromStr for Description {
     // TODO Too restricive, rework
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut dimensions: (Option<u32>, Option<u32>) = (None, None);
-        let mut states: Vec<State> = Vec::new();
+        let mut states: Vec<(String, IconStateInfo)> = Vec::new();
         let mut current_state_name: Option<&str> = None;
         let mut current_state_map: HashMap<&str, &str> = HashMap::default();
 
@@ -141,35 +143,13 @@ impl FromStr for Description {
             if line.starts_with("state =") {
                 let state_name = line["state =".len()..].trim().trim_matches(|c| c == '"');
 
-                if states.iter().any(|s| s.name == state_name) {
+                if states.iter().any(|(n, _)| n == state_name) {
                     warn!("Found two states named \"{}\"", state_name);
                     continue;
                 }
 
                 if let Some(name) = current_state_name {
-                    let dirs = current_state_map
-                        .get("dirs")
-                        .map(|d| {
-                            d.parse().with_context(|_| {
-                                format_err!("Could not parse dirs value \"{}\"", d)
-                            })
-                        })
-                        .transpose()?
-                        .unwrap_or(1);
-                    let frames = current_state_map
-                        .get("frames")
-                        .map(|d| {
-                            d.parse().with_context(|_| {
-                                format_err!("Could not parse frames value \"{}\"", d)
-                            })
-                        })
-                        .transpose()?
-                        .unwrap_or(1);
-                    states.push(State {
-                        name: name.to_string(),
-                        dirs,
-                        frames,
-                    });
+                    states.push((name.to_string(), build_state(&current_state_map)?));
                 }
 
                 current_state_name.replace(state_name);
@@ -208,21 +188,7 @@ impl FromStr for Description {
         }
 
         if let Some(name) = current_state_name {
-            let dirs = current_state_map
-                .get("dirs")
-                .map(|d| {
-                    d.parse().with_context(|_| {
-                        format_err!("Could not parse dirs value \"{}\"", d)
-                    })
-                        })
-                .transpose()?
-                .unwrap_or(1);
-
-            states.push(State {
-                name: name.to_string(),
-                dirs,
-                frames: 1,
-            });
+            states.push((name.to_string(), build_state(&current_state_map)?));
         }
 
         Ok(Description {
@@ -233,6 +199,32 @@ impl FromStr for Description {
             states,
         })
     }
+}
+
+fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
+    let dirs = map
+        .get("dirs")
+        .map(|d| {
+            d.parse().with_context(|_| {
+                format_err!("Could not parse dirs value \"{}\"", d)
+            })
+        })
+        .transpose()?
+        .unwrap_or(1);
+    let frames = map
+        .get("frames")
+        .map(|d| {
+            d.parse().with_context(|_| {
+                format_err!("Could not parse frames value \"{}\"", d)
+            })
+        })
+        .transpose()?
+        .unwrap_or(1);
+
+    Ok(IconStateInfo {
+        dirs,
+        frames,
+    })
 }
 
 #[cfg(test)]

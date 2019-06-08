@@ -7,8 +7,8 @@ use amethyst::{
     input::InputEvent,
     renderer::camera::Camera,
 };
+use amethyst_byond::components::Coordinates;
 
-use crate::components::Coordinates;
 use crate::inputs::Input;
 
 #[derive(Debug, Default)]

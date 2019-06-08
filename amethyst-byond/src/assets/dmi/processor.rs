@@ -12,7 +12,7 @@ use amethyst_rendy::{
 };
 use rayon::ThreadPool;
 
-use crate::{Dmi, DmiData};
+use super::{Dmi, DmiData};
 
 #[derive(Default)]
 pub struct DmiProcessor;

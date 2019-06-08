@@ -3,10 +3,10 @@ use amethyst::{
     error::{format_err, ResultExt},
     Result,
 };
+use amethyst_byond::components::Coordinates;
 use dmm::Datum;
 
 use super::MapPrefabData;
-use crate::components::Coordinates;
 
 /// DMM format, i.e. Byond DreamMaker Map format
 #[derive(Clone, Copy, Debug)]

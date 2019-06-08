@@ -15,7 +15,7 @@ use amethyst::{
 
 use ss14::{
     assets::{self, GameAssetsLoader},
-    bundles, components, events, inputs,
+    bundles, events, inputs,
     render::RenderGraphCreator as SS14RenderGraph,
     states,
 };
@@ -76,7 +76,6 @@ fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
                 60,
             )
             .with_source(assets::SS13_SOURCE, ss13_source)
-            .register::<components::Direction>()
             .build(game_data)?;
 
     game.run();

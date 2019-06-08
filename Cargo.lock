@@ -88,6 +88,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "amethyst-byond"
+version = "0.1.0"
+dependencies = [
+ "amethyst_animation 0.5.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
+ "amethyst_assets 0.6.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
+ "amethyst_core 0.5.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
+ "amethyst_error 0.1.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
+ "amethyst_rendy 0.1.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
+ "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "inflate 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
+ "png 0.14.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rayon 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.91 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "amethyst_animation"
 version = "0.5.0"
 source = "git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12#0829d10bee0bf2b44db6e90645f61772776a9d12"
@@ -1021,21 +1038,6 @@ version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "libloading 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "dmi-assets"
-version = "0.1.0"
-dependencies = [
- "amethyst_assets 0.6.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
- "amethyst_core 0.5.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
- "amethyst_error 0.1.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
- "amethyst_rendy 0.1.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
- "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "inflate 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
- "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
- "png 0.14.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "rayon 1.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -3475,7 +3477,7 @@ name = "ss14"
 version = "0.1.0"
 dependencies = [
  "amethyst 0.10.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
- "dmi-assets 0.1.0",
+ "amethyst-byond 0.1.0",
  "dmm 0.1.0",
  "dmm-format 0.1.0",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",

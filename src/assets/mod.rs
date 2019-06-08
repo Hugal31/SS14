@@ -4,11 +4,12 @@ use amethyst::{
     assets::{AssetStorage, Format as _, Handle, Loader, ProgressCounter, RonFormat},
     ecs::{Read, ReadExpect, World},
 };
-use dmi_assets::{Dmi, DmiFormat};
+use amethyst_byond::{
+    assets::dmi::{Dmi, DmiFormat},
+    components::Layer,
+};
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
-
-use crate::components::Layer;
 
 pub const SS13_SOURCE: &str = "SS13";
 

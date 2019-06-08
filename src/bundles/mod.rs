@@ -1,7 +1,7 @@
 use amethyst::{
     assets::PrefabLoaderSystem, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
 };
-use dmi_assets::DmiProcessor;
+use amethyst_byond::ByondBundle;
 
 use crate::prefabs::MapPrefabData;
 use crate::systems;
@@ -22,20 +22,10 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             "move_camera",
             &["input_system"],
         );
-        dispatcher.add(
-            systems::SyncCoordsSystem::default(),
-            "sync_coords",
-            &["move_camera"],
-        );
-        dispatcher.add(
-            systems::SpriteLayerSortingSystem::new(),
-            "layer_sorting",
-            &[]
-        );
 
-        dispatcher.add(systems::SyncSpritesSystem::new(), "sync_sprites", &[]);
-
-        dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
+        ByondBundle::new()
+            .with_dep(&["move_camera"])
+            .build(dispatcher)?;
 
         Ok(())
     }

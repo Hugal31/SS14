@@ -1,9 +1,8 @@
 use std::fmt::{self, Debug, Display};
 
 use amethyst::input::BindingTypes;
+use amethyst_byond::components::Direction;
 use serde::{Deserialize, Serialize};
-
-use crate::components::Direction;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Input {

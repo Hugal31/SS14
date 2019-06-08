@@ -22,6 +22,26 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
         initialise_camera_with_size(self.level_entity, data.world, (-16.0, -16.0), (20, 20));
         add_debug_lines(data.world);
+
+        use amethyst::{
+            assets::{AssetStorage, Loader},
+            core::ecs::shred::{Read, ReadExpect},
+            renderer::transparent::Transparent,
+        };
+        use crate::assets::SS13_SOURCE;
+        use crate::components::{IconState, Layer};
+        use dmi_assets::{Dmi, DmiFormat};
+        let dmi_handle = data.world.exec(|(dmis, loader): (Read<AssetStorage<Dmi>>, ReadExpect<Loader>)| {
+            loader.load_from("icons/mob/ai.dmi", DmiFormat, SS13_SOURCE, (), &dmis)
+        });
+
+        data.world.create_entity()
+            .with(Coordinates(3, 3, 1))
+            .with(dmi_handle)
+            .with(IconState("ai-empty".to_string()))
+            .with(Layer::BelowObj)
+            .with(Transparent)
+            .build();
     }
 
     fn on_stop(&mut self, data: StateData<GameData>) {

@@ -33,6 +33,8 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             &[]
         );
 
+        dispatcher.add(systems::SyncSpritesSystem::new(), "sync_sprites", &[]);
+
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
 
         Ok(())

@@ -1,0 +1,120 @@
+#![enable(implicit_some)] // TODO Enable newtype pattern or something?
+PrefabDictionaryDesc({
+    "/turf/area/n": (
+         "icons/turf/areas.dmi",
+	 (
+	     state: "north",
+	     layer: Turf,
+	 )
+    ),
+    "/turf/area/ne": (
+         "icons/turf/areas.dmi",
+	 (
+	     state: "northeast",
+	     layer: Turf,
+	 )
+    ),
+    "/turf/area/nw": (
+         "icons/turf/areas.dmi",
+	 (
+	     state: "northwest",
+	     layer: Turf,
+	 )
+    ),
+    "/turf/open/space": (
+         "icons/turf/space.dmi",
+	 (
+	     state: "0",
+	     layer: Space,
+	 )
+    ),
+    "/turf/open/space/basic": (
+         "icons/turf/space.dmi",
+	 (
+	     state: "0",
+	     layer: Space,
+	 )
+    ),
+    "/turf/debug": ("icons/turf/floors.dmi", (state: "", layer: Turf)),
+    "/turf/open/floor": ("icons/turf/floors.dmi", (state: "floor", layer: Turf)),
+    "/turf/open/floor/plasteel": ("icons/turf/floors.dmi", (state: "floor", layer: Turf)),
+    "/turf/open/floor/plating": ("icons/turf/floors.dmi", (state: "plating", layer: Turf)),
+    "/turf/open/floor/plating": ("icons/turf/floors.dmi", (state: "plating", layer: Turf)),
+    "/obj/structure/lattice": (
+        "icons/obj/smooth_structures/lattice.dmi",
+	(
+	    state: "lattice",
+	    layer: Lattice
+	)
+    ),
+    "/obj/structure/lattice/catwalk": (
+        "icons/obj/smooth_structures/catwalk.dmi",
+	(
+	    state: "catwalk",
+	    layer: Lattice
+	)
+    ),
+    "/obj/structure/grille": (
+        "icons/obj/structures.dmi",
+	(
+	    state: "grille",
+	    layer: BelowObj
+	)
+    ),
+    "/obj/machinery/door/airlock": (
+         "icons/obj/doors/airlocks/station/public.dmi",
+	 (
+	     state: "closed",
+	     layer: OpenDoor,
+	 )
+    ),
+    "/obj/machinery/door/airlock/external": (
+         "icons/obj/doors/airlocks/external/external.dmi",
+	 (
+	     state: "closed",
+	     layer: OpenDoor,
+	 )
+    ),
+    "/obj/machinery/door/airlock/external/glass": (
+         "icons/obj/doors/airlocks/external/external.dmi",
+	 (
+	     state: "closed",
+	     layer: OpenDoor,
+	 )
+    ),
+    "/turf/closed/wall/r_wall": (
+         "icons/turf/walls/reinforced_wall.dmi",
+	 (
+	     state: "r_wall",
+	     layer: Turf,
+	 )
+    ),
+    "/obj/structure/closet/secure_closet/engineering_electrical": (
+         "icons/obj/closet.dmi",
+	 (
+	     state: "eng",
+	     layer: BelowObj,
+	 )
+    ),
+    "/obj/structure/cable": (
+         "icons/obj/power_cond/cables.dmi",
+	 (
+	     state: "0-1",
+	     layer: Wire,
+	 )
+    ),
+    "/obj/structure/table": (
+         "icons/obj/smooth_structures/table.dmi",
+	 (
+	     state: "table",
+	     layer: Table,
+	 )
+    ),
+    "/obj/structure/fans/tiny": (
+         "icons/obj/lavaland/survival_pod.dmi",
+	 (
+	     state: "fan_tiny",
+	     layer: AboveNormalTurf,
+	 )
+    ),
+})

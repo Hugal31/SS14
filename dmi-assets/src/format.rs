@@ -142,7 +142,8 @@ impl FromStr for Description {
                 let state_name = line["state =".len()..].trim().trim_matches(|c| c == '"');
 
                 if states.iter().any(|s| s.name == state_name) {
-                    return Err(format_err!("Found two states named \"{}\"", state_name));
+                    warn!("Found two states named \"{}\"", state_name);
+                    continue;
                 }
 
                 if let Some(name) = current_state_name {
@@ -155,11 +156,19 @@ impl FromStr for Description {
                         })
                         .transpose()?
                         .unwrap_or(1);
-
+                    let frames = current_state_map
+                        .get("frames")
+                        .map(|d| {
+                            d.parse().with_context(|_| {
+                                format_err!("Could not parse frames value \"{}\"", d)
+                            })
+                        })
+                        .transpose()?
+                        .unwrap_or(1);
                     states.push(State {
                         name: name.to_string(),
                         dirs,
-                        frames: 1,
+                        frames,
                     });
                 }
 

@@ -3,15 +3,16 @@ pub mod formats;
 use std::convert::TryFrom as _;
 
 use amethyst::{
-    assets::PrefabData,
+    assets::{Handle, PrefabData},
     core::Transform,
-    ecs::{Entity, ReadExpect, WriteStorage},
+    ecs::{Entity, Read, WriteStorage},
     error::Error,
-    renderer::{transparent::Transparent, SpriteRender},
+    renderer::{transparent::Transparent},
 };
 use dmm::{Datum, Literal};
+use dmi_assets::Dmi;
 
-use crate::assets::IconsDictionary;
+use crate::assets::PrefabDictionary;
 use crate::components::*;
 
 pub struct MapPrefabData {
@@ -38,11 +39,12 @@ impl MapPrefabData {
 
 impl<'a> PrefabData<'a> for MapPrefabData {
     type SystemData = (
-        ReadExpect<'a, IconsDictionary>,
+        Read<'a, PrefabDictionary>,
         WriteStorage<'a, Coordinates>,
         WriteStorage<'a, Direction>,
         WriteStorage<'a, Layer>,
-        WriteStorage<'a, SpriteRender>,
+        WriteStorage<'a, IconState>,
+        WriteStorage<'a, Handle<Dmi>>,
         WriteStorage<'a, Transform>,
         WriteStorage<'a, Transparent>,
     );
@@ -52,16 +54,26 @@ impl<'a> PrefabData<'a> for MapPrefabData {
     fn add_to_entity(
         &self,
         entity: Entity,
-        (ref dic, ref mut coords, ref mut dirs, ref mut layers, ref mut sprites, ref mut transforms, ref mut transparents): &mut Self::SystemData,
+        (
+            ref dic,
+            ref mut coords,
+            ref mut dirs,
+            ref mut layers,
+            ref mut icon_states,
+            ref mut dmis,
+            ref mut transforms,
+            ref mut transparents,
+        ): &mut Self::SystemData,
         _entities: &[Entity],
         _children: &[Entity],
     ) -> Result<Self::Result, Error> {
+
         let dir = self.get_dir();
         coords.insert(entity, self.coords.clone())?;
         dirs.insert(entity, dir)?;
         transforms.insert(entity, Default::default())?;
 
-        if let Some(states) = dic.get_state(self.datum.path())
+        if let Some(datum) = dic.0.get(self.datum.path())
         {
             debug!(
                 "Added Datum {} at {:?}",
@@ -69,9 +81,16 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                 self.coords
             );
 
-            sprites.insert(entity, states.sprite_for_dir(dir).clone())?;
-            layers.insert(entity, states.layer())?;
-            if states.transparent() {
+            let icon_state = IconState(
+                self.datum.var_edit("icon_state")
+                    .and_then(|l| if let Literal::Str(s) = l { Some(s) } else { None } )
+                    .unwrap_or(&datum.1.state).clone()
+            );
+
+            dmis.insert(entity, datum.0.clone())?;
+            icon_states.insert(entity, icon_state)?;
+            layers.insert(entity, datum.1.layer)?;
+            if datum.1.layer > Layer::Space {
                 transparents.insert(entity, Transparent)?;
             }
         }

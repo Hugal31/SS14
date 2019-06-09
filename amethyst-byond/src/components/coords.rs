@@ -44,6 +44,28 @@ pub enum Direction {
     SouthWest,
 }
 
+impl Direction {
+    /// The four cardinal directions, clockwise starting from North
+    pub const CARDINALS: [Direction; 4] = [
+        Direction::North,
+        Direction::East,
+        Direction::South,
+        Direction::West,
+    ];
+
+    /// All the eights directions, clockwise starting from North
+    pub const ALL: [Direction; 8] = [
+        Direction::North,
+        Direction::NorthEast,
+        Direction::East,
+        Direction::SouthEast,
+        Direction::South,
+        Direction::SouthWest,
+        Direction::West,
+        Direction::NorthWest,
+    ];
+}
+
 impl Default for Direction {
     fn default() -> Self {
         Direction::North

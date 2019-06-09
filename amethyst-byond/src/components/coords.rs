@@ -9,14 +9,14 @@ pub struct Coordinates(pub u32, pub u32, pub u32);
 impl Coordinates {
     pub fn try_moved(&self, dir: Direction) -> Option<Self> {
         match dir {
-            Direction::North if self.1 > 0 => Some(Coordinates(self.0, self.1 - 1, self.2)),
-            Direction::South => Some(Coordinates(self.0, self.1 + 1, self.2)),
-            Direction::East => Some(Coordinates(self.0 + 1, self.1, self.2)),
-            Direction::West if self.0 > 0 => Some(Coordinates(self.0 - 1, self.1, self.2)),
-            Direction::NorthEast if self.0 > 0 => Some(Coordinates(self.0 - 1, self.1 + 1, self.2)),
-            Direction::NorthWest if self.0 > 0 && self.1 > 0 => Some(Coordinates(self.0 - 1, self.1 - 1, self.2)),
-            Direction::SouthEast => Some(Coordinates(self.0 + 1, self.1 + 1, self.2)),
-            Direction::SouthWest if self.1 > 0  => Some(Coordinates(self.0 + 1, self.1 - 1, self.2)),
+            Direction::North if self.1 > 0                   => Some(Coordinates(self.0, self.1 - 1, self.2)),
+            Direction::South                                 => Some(Coordinates(self.0, self.1 + 1, self.2)),
+            Direction::East                                  => Some(Coordinates(self.0 + 1, self.1, self.2)),
+            Direction::West if self.0 > 0                    => Some(Coordinates(self.0 - 1, self.1, self.2)),
+            Direction::NorthEast if self.1 > 0               => Some(Coordinates(self.0 + 1, self.1 - 1, self.2)),
+            Direction::NorthWest if self.1 > 0 && self.0 > 0 => Some(Coordinates(self.0 - 1, self.1 - 1, self.2)),
+            Direction::SouthEast                             => Some(Coordinates(self.0 + 1, self.1 + 1, self.2)),
+            Direction::SouthWest if self.0 > 0               => Some(Coordinates(self.0 - 1, self.1 + 1, self.2)),
             _ => None,
         }
     }

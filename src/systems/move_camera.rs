@@ -1,68 +1,76 @@
 use amethyst::{
     animation::{AnimationCommand, AnimationSet, AnimationControlSet, EndControl, get_animation_set},
-    core::shrev::EventChannel,
+    core::Time,
     ecs::{
-        shred::DynamicSystemData, Entities, Join, Read, ReadStorage, ReaderId, Resources, System,
+        Entities, Join, Read, ReadStorage, System,
         WriteStorage,
     },
-    input::InputEvent,
+    input::InputHandler,
 };
 use amethyst_byond::components::{Coordinates, Direction, Moving};
 
 use crate::{
-    components::Player,
+    components::{MoveCooldown, Player},
     inputs::Input,
 };
 
 #[derive(Debug, Default)]
-pub struct MoveCamera {
-    action_reader_id: Option<ReaderId<InputEvent<Input>>>,
+pub struct MoveCamera;
+
+impl MoveCamera {
+    fn try_move(time: &Time,
+                dir: Direction,
+                coord: &mut Coordinates,
+                cooldown: Option<&mut MoveCooldown>,
+                animations: &AnimationSet<Direction, Moving>,
+                animation_controls: &mut AnimationControlSet<Direction, Moving>)
+    {
+        match cooldown {
+            Some(ref c) if !c.is_finished(time.absolute_time()) => return,
+            _ => (),
+        }
+
+        if animation_controls.has_animation(dir) {
+            return; // Still animating
+        }
+
+        if let Some(new_coord) = coord.try_moved(dir) {
+            // Move to the new coords
+            *coord = new_coord;
+
+            if let Some(c) = cooldown { c.trigger(time.absolute_time()); }
+
+            // Apply the animation
+            if let Some(animation) = animations.get(&dir) {
+                animation_controls.add_animation(dir, animation, EndControl::Stay, 1.0, AnimationCommand::Start);
+            }
+        }
+    }
 }
 
 impl<'a> System<'a> for MoveCamera {
     type SystemData = (
         Entities<'a>,
-        Read<'a, EventChannel<InputEvent<Input>>>,
+        Read<'a, Time>,
+        Read<'a, InputHandler<Input>>,
         Read<'a, AnimationSet<Direction, Moving>>,
         ReadStorage<'a, Player>,
-        WriteStorage<'a, Coordinates>,
         WriteStorage<'a, AnimationControlSet<Direction, Moving>>,
+        WriteStorage<'a, MoveCooldown>,
+        WriteStorage<'a, Coordinates>,
     );
 
-    fn run(&mut self, (entities, inputs, animations, players, mut coords, mut animation_controls): Self::SystemData) {
-        let action_reader_id = self
-            .action_reader_id
-            .as_mut()
-            .expect("setup was not called");
+    fn run(&mut self, (entities, time, inputs, animations, players, mut animation_controls, mut cooldowns, mut coords): Self::SystemData) {
+        for dir in &Direction::CARDINALS {
+            if inputs.action_is_down(&Input::Move(*dir)).unwrap_or_default() {
+                for (e, _, coord, cooldown) in (&entities, &players, &mut coords, (&mut cooldowns).maybe()).join() {
 
-        inputs.read(action_reader_id).for_each(|event| {
-            if let InputEvent::ActionPressed(Input::Move(dir)) = event {
+                    let control_set = get_animation_set(&mut animation_controls, e)
+                        .expect("The entity should be valid");
 
-                for (e, _, coord) in (&entities, &players, &mut coords).join() {
-                    if let Some(new_coord) = coord.try_moved(*dir) {
-                        // Move to the new coords
-                        *coord = new_coord;
-
-                        // Apply the animation
-                        let control_set = get_animation_set(&mut animation_controls, e).expect("The entity should be valid");
-                        if control_set.has_animation(*dir) {
-                            control_set.toggle(*dir);
-                        } else if let Some(animation) = animations.get(dir) {
-                            control_set.add_animation(*dir, animation, EndControl::Stay, 1.0, AnimationCommand::Start);
-                        }
-
-                    }
+                    Self::try_move(&time, *dir, coord, cooldown, &animations, control_set);
                 }
             }
-        });
-    }
-
-    fn setup(&mut self, res: &mut Resources) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
-
-        self.action_reader_id.replace(
-            res.fetch_mut::<EventChannel<InputEvent<Input>>>()
-                .register_reader(),
-        );
+        }
     }
 }

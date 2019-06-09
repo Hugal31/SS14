@@ -1,3 +1,5 @@
+use std::time::Duration;
+
 use amethyst::{
     core::{Parent, Transform},
     ecs::{Builder as _, Entity, World},
@@ -8,7 +10,7 @@ use amethyst::{
 };
 use amethyst_byond::components::{Coordinates, Moving};
 
-use crate::components::Player;
+use crate::components::{MoveCooldown, Player};
 use crate::events::SS14StateEvent;
 
 pub struct PlayState {
@@ -26,7 +28,8 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
         let player = data.world.create_entity()
             .with(Coordinates(4, 4, 1))
             .with(Player)
-            .with(Moving::default()) // TOOD Remove
+            .with(Moving::default()) // TOOD Remove?
+            .with(MoveCooldown::new(Duration::from_millis(250)))
             .with(Parent { entity: self.level_entity })
             .with(Transform::default())
             .build();

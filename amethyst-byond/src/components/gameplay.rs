@@ -10,7 +10,7 @@ impl Component for Opaque {
 
 /// Entities that blocks air and movements
 #[derive(Copy, Clone, Default)]
-struct Dense;
+pub struct Dense;
 
 impl Component for Dense {
     type Storage = NullStorage<Dense>;

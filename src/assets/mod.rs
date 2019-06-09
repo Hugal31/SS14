@@ -100,6 +100,8 @@ pub struct DatumPrefab {
     pub layer: Layer,
     #[serde(default)]
     pub opacity: bool,
+    #[serde(default)]
+    pub dense: bool,
 }
 
 fn default_layer() -> Layer { Layer::Turf }

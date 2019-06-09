@@ -88,6 +88,7 @@ PrefabDictionaryDesc({
 	     state: "r_wall",
 	     layer: Turf,
 	     opacity: true,
+	     dense: true,
 	 )
     ),
     "/obj/structure/closet/secure_closet/engineering_electrical": (
@@ -109,6 +110,7 @@ PrefabDictionaryDesc({
 	 (
 	     state: "table",
 	     layer: Table,
+	     dense: true,
 	 )
     ),
     "/obj/structure/fans/tiny": (

@@ -7,7 +7,7 @@ use amethyst::{
     },
     input::InputHandler,
 };
-use amethyst_byond::components::{Coordinates, Direction, Moving};
+use amethyst_byond::components::{Coordinates, Dense, Direction, Moving};
 
 use crate::{
     components::{MoveCooldown, Player},
@@ -21,6 +21,7 @@ impl MoveCamera {
     fn try_move(time: &Time,
                 entity: Entity,
                 dir: Direction,
+                dense: &ReadStorage<Dense>,
                 dirs: &mut WriteStorage<Direction>,
                 coords: &mut WriteStorage<Coordinates>,
                 cooldown: Option<&mut MoveCooldown>,
@@ -36,15 +37,28 @@ impl MoveCamera {
             return; // Still animating
         }
 
+        dirs.insert(entity, dir).ok();
+
         let player_coord = if let Some(c) = coords.get(entity) {
             c
         } else {
             return;
         };
+
         if let Some(new_coord) = player_coord.try_moved(dir) {
+
+            // Check for collisions
+            {
+                let coords: &WriteStorage<Coordinates> = &*coords; // Avoid triggering modification events.
+                if (dense, coords).join()
+                    .any(|(_, c)| c == &new_coord)
+                {
+                    return;
+                }
+            }
+
             // Move to the new coords
             coords.insert(entity, new_coord).ok();
-            dirs.insert(entity, dir).ok();
 
             if let Some(c) = cooldown { c.trigger(time.absolute_time()); }
 
@@ -62,6 +76,7 @@ impl<'a> System<'a> for MoveCamera {
         Read<'a, Time>,
         Read<'a, InputHandler<Input>>,
         Read<'a, AnimationSet<Direction, Moving>>,
+        ReadStorage<'a, Dense>,
         ReadStorage<'a, Player>,
         WriteStorage<'a, AnimationControlSet<Direction, Moving>>,
         WriteStorage<'a, Direction>,
@@ -69,7 +84,7 @@ impl<'a> System<'a> for MoveCamera {
         WriteStorage<'a, Coordinates>,
     );
 
-    fn run(&mut self, (entities, time, inputs, animations, players, mut animation_controls, mut directions, mut cooldowns, mut coords): Self::SystemData) {
+    fn run(&mut self, (entities, time, inputs, animations, dense, players, mut animation_controls, mut directions, mut cooldowns, mut coords): Self::SystemData) {
         for dir in &Direction::CARDINALS {
             if inputs.action_is_down(&Input::Move(*dir)).unwrap_or_default() {
                 for (e, _, cooldown) in (&entities, &players, (&mut cooldowns).maybe()).join() {
@@ -77,7 +92,7 @@ impl<'a> System<'a> for MoveCamera {
                     let control_set = get_animation_set(&mut animation_controls, e)
                         .expect("The entity should be valid");
 
-                    Self::try_move(&time, e, *dir, &mut directions, &mut coords, cooldown, &animations, control_set);
+                    Self::try_move(&time, e, *dir, &dense, &mut directions, &mut coords, cooldown, &animations, control_set);
                 }
             }
         }

@@ -11,7 +11,7 @@ use amethyst::{
 };
 use amethyst_byond::{
     assets::dmi::Dmi,
-    components::{Coordinates, Direction, Layer, IconStateName, Opaque},
+    components::{Coordinates, Dense, Direction, Layer, IconStateName, Opaque},
 };
 use dmm::{Datum, Literal};
 
@@ -49,6 +49,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         WriteStorage<'a, Handle<Dmi>>,
         WriteStorage<'a, Transform>,
         WriteStorage<'a, Transparent>,
+        WriteStorage<'a, Dense>,
         WriteStorage<'a, Opaque>,
     );
     type Result = ();
@@ -66,6 +67,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             ref mut dmis,
             ref mut transforms,
             ref mut transparents,
+            ref mut dense,
             ref mut opaques,
         ): &mut Self::SystemData,
         _entities: &[Entity],
@@ -99,6 +101,9 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             }
             if datum.1.opacity {
                 opaques.insert(entity, Opaque)?;
+            }
+            if datum.1.dense {
+                dense.insert(entity, Dense)?;
             }
         }
 

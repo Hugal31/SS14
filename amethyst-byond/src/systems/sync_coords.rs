@@ -7,44 +7,47 @@ use amethyst_core::{
 };
 use amethyst_rendy::transparent::Transparent;
 
-use crate::components::Coordinates;
+use crate::components::{Coordinates, Moving};
 
 #[derive(Debug, Default)]
 pub struct SyncCoordsSystem {
     coords_event_id: Option<ReaderId<ComponentEvent>>,
 
-    modified: BitSet,
+    to_sync: BitSet,
 }
 
 impl<'a> System<'a> for SyncCoordsSystem {
     type SystemData = (
         ReadStorage<'a, Coordinates>,
+        ReadStorage<'a, Moving>,
         ReadStorage<'a, Transparent>,
         WriteStorage<'a, Transform>
     );
 
-    fn run(&mut self, (cells, transparents, mut transforms): Self::SystemData) {
+    fn run(&mut self, (cells, movings, transparents, mut transforms): Self::SystemData) {
         let coords_event_id = self.coords_event_id.as_mut().expect("setup was not called");
 
         // Read modifications
-        self.modified.clear();
+        self.to_sync.clear();
         cells
             .channel()
             .read(coords_event_id)
             .for_each(|event| match event {
                 ComponentEvent::Inserted(id) | ComponentEvent::Modified(id) => {
-                    self.modified.add(*id);
+                    self.to_sync.add(*id);
                 }
                 _ => (),
             });
+        self.to_sync |= movings.mask();
 
         // Sync coords
-        for (cell, transparent, transform, _) in (&cells, transparents.maybe(), &mut transforms, &self.modified).join() {
+        for (cell, transparent, moving, transform, _) in (&cells, transparents.maybe(), movings.maybe(), &mut transforms, &self.to_sync).join() {
             // Non transparent sprites are a little below.
+            let moving = moving.cloned().unwrap_or_default();
             let z = if transparent.is_none() { cell.2 as f32 -0.1 } else { cell.2 as f32 };
             transform.set_translation_xyz(
-                32.0 * cell.0 as f32,
-                -32.0 * cell.1 as f32,
+                32.0 * (moving.0 + cell.0 as f32),
+                -32.0 * (moving.1 + cell.1 as f32),
                 z
             );
         }

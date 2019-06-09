@@ -1,9 +1,11 @@
+use amethyst_animation::AnimationBundle;
 use amethyst_core::{
     ecs::prelude::DispatcherBuilder, SystemBundle,
 };
 use amethyst_error::Error;
 
 use crate::assets::dmi::DmiProcessor;
+use crate::components::{Direction, Moving};
 use crate::systems;
 
 pub struct ByondBundle<'a> {
@@ -27,12 +29,16 @@ impl<'a> ByondBundle<'a> {
 impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
 
     fn build(self, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
+        AnimationBundle::<Direction, Moving>::new("animate_moving", "sample_moving")
+            .build(dispatcher);
+
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
 
         dispatcher.add(
             systems::SyncCoordsSystem::default(),
             "sync_coords",
-            &["move_camera"],
+            // TODO Remove move_camera
+            &["move_camera", "sample_moving"],
         );
         dispatcher.add(
             systems::SpriteLayerSortingSystem::new(),

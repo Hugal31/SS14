@@ -6,7 +6,7 @@ use amethyst::{
     winit::VirtualKeyCode,
     GameData, State, StateData, Trans,
 };
-use amethyst_byond::components::Coordinates;
+use amethyst_byond::components::{Coordinates, Moving};
 
 use crate::components::Player;
 use crate::events::SS14StateEvent;
@@ -26,6 +26,7 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
         let player = data.world.create_entity()
             .with(Coordinates(4, 4, 1))
             .with(Player)
+            .with(Moving::default()) // TOOD Remove
             .with(Parent { entity: self.level_entity })
             .with(Transform::default())
             .build();

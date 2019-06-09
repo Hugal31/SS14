@@ -1,6 +1,7 @@
 use std::cmp::Ordering;
+use std::time::Duration;
 
-use amethyst_core::ecs::{Component, FlaggedStorage, VecStorage};
+use amethyst_core::ecs::{Component, FlaggedStorage, DenseVecStorage, VecStorage};
 use amethyst_rendy::sprite::{SpriteRender, SpriteSheetHandle};
 use serde::{Deserialize, Serialize};
 
@@ -70,12 +71,12 @@ pub struct IconState {
 }
 
 impl Component for IconState {
-    type Storage = FlaggedStorage<IconState, VecStorage<IconState>>;
+    type Storage = FlaggedStorage<IconState, DenseVecStorage<IconState>>;
 }
 
 impl IconState {
     pub fn get_sprite(&self, dir: Direction, frame: IconFrame) -> SpriteRender {
-        let frame = std::cmp::min(frame.0, self.info.frames - 1);
+        let frame = std::cmp::min(frame.current_frame, self.info.frames - 1);
         let dir = self.info.get_dir_index(dir);
 
         SpriteRender {
@@ -89,9 +90,39 @@ impl IconState {
 pub struct IconStateInfo {
     pub dirs: u8,
     pub frames: u8,
+    pub delays: Vec<u8>,
+    pub rewind: bool,
 }
 
 impl IconStateInfo {
+    pub fn new(dirs: u8, frames: u8) -> Self {
+        IconStateInfo {
+            dirs,
+            frames,
+            delays: Vec::new(),
+            rewind: false,
+        }
+    }
+
+    pub fn with_delays(mut self, delays: Vec<u8>) -> Self {
+        self.delays = delays;
+
+        self
+    }
+
+    pub fn rewinds(mut self) -> Self {
+        self.rewind = true;
+
+        self
+    }
+
+    pub fn frame_duration(&self, frame: u8) -> Duration {
+        let delay = self.delays.get(frame as usize)
+            .cloned()
+            .unwrap_or(1);
+        Duration::from_millis(100 * delay as u64)
+    }
+
     fn get_dir_index(&self, dir: Direction) -> usize {
         use Direction::*;
 

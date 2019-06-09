@@ -1,5 +1,7 @@
+use std::time::Duration;
+
 use amethyst_animation::{ApplyData, AnimationSampling, BlendMethod};
-use amethyst_core::ecs::{Component, FlaggedStorage, VecStorage};
+use amethyst_core::ecs::{Component, DenseVecStorage, FlaggedStorage, VecStorage};
 use serde::{Serialize, Deserialize};
 
 pub enum AnimationId {
@@ -8,10 +10,24 @@ pub enum AnimationId {
 
 /// Frame of an animation in a sprite sheet
 #[derive(Copy, Clone, Default)]
-pub struct IconFrame(pub u8);
+pub struct IconFrame {
+    pub current_frame: u8,
+    pub last_update: Duration,
+    pub rewinding: bool,
+}
+
+impl IconFrame {
+    pub fn new(now: Duration) -> Self {
+        Self {
+            current_frame: 0,
+            last_update: now,
+            rewinding: false,
+        }
+    }
+}
 
 impl Component for IconFrame {
-    type Storage = FlaggedStorage<IconFrame, VecStorage<IconFrame>>;
+    type Storage = FlaggedStorage<IconFrame, DenseVecStorage<IconFrame>>;
 }
 
 impl<'a> ApplyData<'a> for IconFrame {
@@ -23,11 +39,11 @@ impl AnimationSampling for IconFrame {
     type Channel = ();
 
     fn apply_sample<'a>(&mut self, _channel: &Self::Channel, data: &Self::Primitive, _extra: &<Self as ApplyData>::ApplyData) {
-        self.0 = *data as u8
+        self.current_frame = *data as u8
     }
 
     fn current_sample<'a>(&self, _channel: &Self::Channel, _extra: &<Self as ApplyData>::ApplyData) -> Self::Primitive {
-        u32::from(self.0)
+        u32::from(self.current_frame)
     }
 
     fn default_primitive(_channel: &Self::Channel) -> Self::Primitive {

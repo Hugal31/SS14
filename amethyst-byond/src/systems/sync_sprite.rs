@@ -1,7 +1,9 @@
 use amethyst_assets::{AssetStorage, Handle};
-use amethyst_core::ecs::{
-    shred::DynamicSystemData, storage::ComponentEvent, BitSet, Component, Entities, Join, Read, ReadStorage, ReaderId,
-    Resources, System, SystemData, Tracked, WriteStorage,
+use amethyst_core::{
+    Time,
+    ecs::{shred::DynamicSystemData, storage::ComponentEvent, BitSet, Component, Entities, Join, Read, ReadStorage, ReaderId,
+        Resources, System, SystemData, Tracked, WriteStorage,
+    },
 };
 use amethyst_rendy::sprite::SpriteRender;
 
@@ -119,13 +121,14 @@ impl<'a> System<'a> for SyncIconStateSystem {
     type SystemData = (
         Entities<'a>,
         Read<'a, AssetStorage<Dmi>>,
+        Read<'a, Time>,
         ReadStorage<'a, Handle<Dmi>>,
         ReadStorage<'a, IconStateName>,
         WriteStorage<'a, IconState>,
         WriteStorage<'a, IconFrame>,
     );
 
-    fn run(&mut self, (entities, dmi_assets, dmi_handles, state_names, mut states, mut frames): Self::SystemData) {
+    fn run(&mut self, (entities, dmi_assets, time, dmi_handles, state_names, mut states, mut frames): Self::SystemData) {
 
         // Read modifications
         Self::read_events(&mut self.modified, &dmi_handles, self.dmi_event_id.as_mut().expect("setup was not called"));
@@ -136,7 +139,7 @@ impl<'a> System<'a> for SyncIconStateSystem {
             if let Some(dmi) = dmi_assets.get(dmi_handle) {
                 if let Some(state) = dmi.get_state(&name.0) {
                     if state.info.frames > 1 {
-                        frames.insert(e, IconFrame(0)).ok();
+                        frames.insert(e, IconFrame::new(time.absolute_time())).ok();
                     } else {
                         frames.remove(e);
                     }

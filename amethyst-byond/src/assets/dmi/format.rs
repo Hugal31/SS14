@@ -220,10 +220,35 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
         })
         .transpose()?
         .unwrap_or(1);
+    let delays = map
+        .get("delay")
+        .map(|s| {
+            s.split(',')
+                .map(|d| {
+                    d.parse().with_context(|_| {
+                        format_err!("Could not parse delays value \"{}\"", s)
+                    })
+                })
+                .collect::<Result<Vec<u8>, Error>>()
+        })
+        .transpose()?
+        .unwrap_or_default();
+    let rewind = map
+        .get("rewind")
+        .map(|d| {
+            d.parse::<u8>().with_context(|_| {
+                format_err!("Could not parse dirs value \"{}\"", d)
+            })
+        })
+        .transpose()?
+        .unwrap_or(0) > 0;
+
 
     Ok(IconStateInfo {
         dirs,
         frames,
+        delays,
+        rewind,
     })
 }
 

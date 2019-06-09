@@ -48,13 +48,10 @@ impl MoveCamera {
         if let Some(new_coord) = player_coord.try_moved(dir) {
 
             // Check for collisions
+            if (dense, &coords.restrict()).join()
+                .any(|(_, c)| c.get_unchecked() == &new_coord)
             {
-                let coords: &WriteStorage<Coordinates> = &*coords; // Avoid triggering modification events.
-                if (dense, coords).join()
-                    .any(|(_, c)| c == &new_coord)
-                {
-                    return;
-                }
+                return;
             }
 
             // Move to the new coords

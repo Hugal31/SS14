@@ -18,8 +18,8 @@ use dmm::{Datum, Literal};
 use crate::assets::PrefabDictionary;
 
 pub struct MapPrefabData {
-    coords: Coordinates,
-    datum: Datum,
+    pub coords: Coordinates,
+    pub datum: Datum,
 }
 
 impl MapPrefabData {

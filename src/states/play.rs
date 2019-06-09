@@ -1,6 +1,7 @@
 use std::time::Duration;
 
 use amethyst::{
+    assets::PrefabData,
     core::{Parent, Transform},
     ecs::{Builder as _, Entity, World},
     input::is_key_down,
@@ -9,9 +10,11 @@ use amethyst::{
     GameData, State, StateData, Trans,
 };
 use amethyst_byond::components::{Coordinates, Moving};
+use dmm::Datum;
 
 use crate::components::{MoveCooldown, Player};
 use crate::events::SS14StateEvent;
+use crate::prefabs::MapPrefabData;
 
 pub struct PlayState {
     level_entity: Entity,
@@ -25,17 +28,25 @@ impl From<Entity> for PlayState {
 
 impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
+        let player_datum = MapPrefabData {
+            coords: Coordinates(4, 4, 1),
+            datum: Datum::new("/mob/living/simple_animal/hostile/carp/megacarp")
+        };
         let player = data.world.create_entity()
-            .with(Coordinates(4, 4, 1))
+            //.with(Coordinates(4, 4, 1))
             .with(Player)
             .with(Moving::default()) // TOOD Remove?
             .with(MoveCooldown::new(Duration::from_millis(250)))
             .with(Parent { entity: self.level_entity })
-            .with(Transform::default())
+            //.with(Transform::default())
             .build();
 
         initialise_camera_with_size(player, data.world, (0.0, 0.0), (15, 15));
         add_debug_lines(data.world);
+
+        data.world.exec(|mut data| {
+            player_datum.add_to_entity(player, &mut data, &[player], &[]).expect("Should have added prefab");
+        });
     }
 
     fn on_stop(&mut self, data: StateData<GameData>) {

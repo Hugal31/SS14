@@ -18,6 +18,7 @@ pub enum Layer {
     OpenDoor,
     Table,
     BelowObj,
+    Mob,
 }
 
 impl Component for Layer {
@@ -38,6 +39,7 @@ impl Into<u32> for Layer {
             OpenDoor => 270,
             Table => 280,
             BelowObj => 290,
+            Mob => 400,
         }
     }
 }
@@ -105,5 +107,4 @@ impl IconStateInfo {
             _ => 0,
         }
     }
-
 }

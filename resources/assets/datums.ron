@@ -125,4 +125,11 @@ PrefabDictionaryDesc({
 	     layer: TurfDecal,
 	 )
     ),
+    "/mob/living/simple_animal/hostile/carp/megacarp": (
+        "icons/mob/broadMobs.dmi",
+	(
+            state: "megacarp",
+	    layer: Mob,
+        )
+    )
 })

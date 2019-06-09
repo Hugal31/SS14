@@ -68,7 +68,7 @@ impl Direction {
 
 impl Default for Direction {
     fn default() -> Self {
-        Direction::North
+        Direction::South
     }
 }
 

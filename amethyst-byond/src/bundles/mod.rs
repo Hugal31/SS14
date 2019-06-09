@@ -30,7 +30,7 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
 
     fn build(self, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
         AnimationBundle::<Direction, Moving>::new("animate_moving", "sample_moving")
-            .build(dispatcher);
+            .build(dispatcher)?;
 
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
 

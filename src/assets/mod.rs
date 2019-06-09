@@ -2,7 +2,7 @@ use std::{fs::File, io::Read as _};
 
 use amethyst::{
     animation::{Animation, AnimationSampling, AnimationSet, InterpolationFunction, Sampler},
-    assets::{AssetStorage, Format as _, Handle, Loader, ProgressCounter, RonFormat},
+    assets::{AssetStorage, AssetLoaderSystemData, Format as _, Handle, Loader, ProgressCounter, RonFormat},
     ecs::{Read, ReadExpect, World},
 };
 use amethyst_byond::{
@@ -36,8 +36,8 @@ impl GameAssetsLoader {
         let mut dmi_cache = DmiCache::default();
         let datums = PrefabDictionary(datums.into_iter()
             .map(|(path, (dmi_name, prefab))| {
-                let dmi_handle = dmi_cache.0.entry(dmi_name.clone()).or_insert_with(|| world.exec(|(loader, dmi_storage): (ReadExpect<Loader>, Read<AssetStorage<Dmi>>)| {
-                    loader.load_from(dmi_name.clone(), DmiFormat, SS13_SOURCE, (), &dmi_storage)
+                let dmi_handle = dmi_cache.0.entry(dmi_name.clone()).or_insert_with(|| world.exec(|load: AssetLoaderSystemData<Dmi>| {
+                    load.load_from(dmi_name.clone(), DmiFormat, SS13_SOURCE, ())
                 })).clone();
 
                 (path, (dmi_handle, prefab))

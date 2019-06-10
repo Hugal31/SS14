@@ -82,7 +82,6 @@ impl<'a> System<'a> for DoorSystem {
                     *icon.get_mut_unchecked() = IconStateName("closing".to_string());
                 }
                 DoorState::Closing if is_animation_finished => {
-                    debug!("Door closed");
                     door.state = DoorState::Close;
                     *icon.get_mut_unchecked() = IconStateName("closed".to_string());
                 }

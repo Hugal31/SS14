@@ -1043,7 +1043,7 @@ dependencies = [
 [[package]]
 name = "dmm"
 version = "0.1.0"
-source = "git+https://github.com/Hugal31/DMM.git#6b32c421cdbe9918d7e5f3e22c1a9491b88baf16"
+source = "git+https://github.com/Hugal31/DMM.git#409d07c2abaffa3ad5bfe05e080e09a56827a598"
 dependencies = [
  "serde 1.0.91 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -1051,7 +1051,7 @@ dependencies = [
 [[package]]
 name = "dmm-format"
 version = "0.1.0"
-source = "git+https://github.com/Hugal31/DMM.git#6b32c421cdbe9918d7e5f3e22c1a9491b88baf16"
+source = "git+https://github.com/Hugal31/DMM.git#409d07c2abaffa3ad5bfe05e080e09a56827a598"
 dependencies = [
  "dmm 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "nom 4.2.3 (registry+https://github.com/rust-lang/crates.io-index)",

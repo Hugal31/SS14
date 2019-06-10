@@ -1,7 +1,5 @@
 use amethyst_animation::AnimationBundle;
-use amethyst_core::{
-    ecs::prelude::DispatcherBuilder, SystemBundle,
-};
+use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
 use amethyst_error::Error;
 
 use crate::assets::dmi::DmiProcessor;
@@ -14,9 +12,7 @@ pub struct ByondBundle<'a> {
 
 impl<'a> ByondBundle<'a> {
     pub fn new() -> Self {
-        Self {
-            _dep: &[],
-        }
+        Self { _dep: &[] }
     }
 
     pub fn with_dep(mut self, dep: &'a [&'a str]) -> Self {
@@ -27,7 +23,6 @@ impl<'a> ByondBundle<'a> {
 }
 
 impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
-
     fn build(self, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
         AnimationBundle::<Direction, Moving>::new("animate_moving", "sample_moving")
             .build(dispatcher)?;
@@ -43,12 +38,20 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
         dispatcher.add(
             systems::SpriteLayerSortingSystem::new(),
             "layer_sorting",
-            &[]
+            &[],
         );
 
         dispatcher.add(systems::SyncIconStateSystem::new(), "sync_icon_states", &[]);
-        dispatcher.add(systems::IconStateAnimation::new(), "icon_state_animation", &["sync_icon_states"]);
-        dispatcher.add(systems::SyncSpritesSystem::new(), "sync_sprites", &["icon_state_animation"]);
+        dispatcher.add(
+            systems::IconStateAnimation::new(),
+            "icon_state_animation",
+            &["sync_icon_states"],
+        );
+        dispatcher.add(
+            systems::SyncSpritesSystem::new(),
+            "sync_sprites",
+            &["icon_state_animation"],
+        );
 
         Ok(())
     }

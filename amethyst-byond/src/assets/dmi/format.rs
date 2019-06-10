@@ -192,10 +192,7 @@ impl FromStr for Description {
         }
 
         Ok(Description {
-            dimensions: (
-                dimensions.0.unwrap_or(16),
-                dimensions.1.unwrap_or(16),
-            ),
+            dimensions: (dimensions.0.unwrap_or(16), dimensions.1.unwrap_or(16)),
             states,
         })
     }
@@ -205,18 +202,16 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
     let dirs = map
         .get("dirs")
         .map(|d| {
-            d.parse().with_context(|_| {
-                format_err!("Could not parse dirs value \"{}\"", d)
-            })
+            d.parse()
+                .with_context(|_| format_err!("Could not parse dirs value \"{}\"", d))
         })
         .transpose()?
         .unwrap_or(1);
     let frames = map
         .get("frames")
         .map(|d| {
-            d.parse().with_context(|_| {
-                format_err!("Could not parse frames value \"{}\"", d)
-            })
+            d.parse()
+                .with_context(|_| format_err!("Could not parse frames value \"{}\"", d))
         })
         .transpose()?
         .unwrap_or(1);
@@ -225,9 +220,8 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
         .map(|s| {
             s.split(',')
                 .map(|d| {
-                    d.parse().with_context(|_| {
-                        format_err!("Could not parse delays value \"{}\"", s)
-                    })
+                    d.parse()
+                        .with_context(|_| format_err!("Could not parse delays value \"{}\"", s))
                 })
                 .collect::<Result<Vec<f32>, Error>>()
         })
@@ -236,22 +230,21 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
     let rewind = map
         .get("rewind")
         .map(|d| {
-            d.parse::<u8>().with_context(|_| {
-                format_err!("Could not parse rewind value \"{}\"", d)
-            })
+            d.parse::<u8>()
+                .with_context(|_| format_err!("Could not parse rewind value \"{}\"", d))
         })
         .transpose()?
-        .unwrap_or(0) > 0;
+        .unwrap_or(0)
+        > 0;
     let looop = map
         .get("loop")
         .map(|d| {
-            d.parse::<u8>().with_context(|_| {
-                format_err!("Could not parse loop value \"{}\"", d)
-            })
+            d.parse::<u8>()
+                .with_context(|_| format_err!("Could not parse loop value \"{}\"", d))
         })
         .transpose()?
-        .unwrap_or(0) == 0;
-
+        .unwrap_or(0)
+        == 0;
 
     Ok(IconStateInfo {
         dirs,
@@ -276,7 +269,9 @@ version = 4.0
 state = "test"
         dirs = 1
 # DMI END
-"#.parse().expect("Should have parsed");
+"#
+        .parse()
+        .expect("Should have parsed");
 
         assert_eq!((16, 16), dmi.dimensions);
         assert_eq!(1, dmi.states.len());

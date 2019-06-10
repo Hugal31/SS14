@@ -15,7 +15,6 @@ impl IconStateAnimation {
 }
 
 impl<'a> System<'a> for IconStateAnimation {
-
     type SystemData = (
         Read<'a, Time>,
         ReadStorage<'a, IconState>,
@@ -26,13 +25,14 @@ impl<'a> System<'a> for IconStateAnimation {
         if time.frame_number() % 5 == 0 {
             let now = time.absolute_time();
             for (state, mut frame) in (&states, &mut frames.restrict_mut()).join() {
+                if frame.get_unchecked().current_frame + 1 == state.info.frames && !state.info.looop
+                {
+                    continue;
+                }
 
-                if frame.get_unchecked().current_frame + 1 == state.info.frames
-                    && !state.info.looop {
-                        continue;
-                    }
-
-                let frame_duration = state.info.frame_duration(frame.get_unchecked().current_frame);
+                let frame_duration = state
+                    .info
+                    .frame_duration(frame.get_unchecked().current_frame);
                 if frame.get_unchecked().last_update + frame_duration <= now {
                     let frame = frame.get_mut_unchecked();
 

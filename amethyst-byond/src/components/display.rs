@@ -1,7 +1,7 @@
 use std::cmp::Ordering;
 use std::time::Duration;
 
-use amethyst_core::ecs::{Component, FlaggedStorage, DenseVecStorage, VecStorage};
+use amethyst_core::ecs::{Component, DenseVecStorage, FlaggedStorage, VecStorage};
 use amethyst_rendy::sprite::{SpriteRender, SpriteSheetHandle};
 use serde::{Deserialize, Serialize};
 
@@ -125,9 +125,7 @@ impl IconStateInfo {
     }
 
     pub fn frame_duration(&self, frame: u8) -> Duration {
-        let delay = self.delays.get(frame as usize)
-            .cloned()
-            .unwrap_or(1.0);
+        let delay = self.delays.get(frame as usize).cloned().unwrap_or(1.0);
         Duration::from_millis((100.0 * delay) as u64)
     }
 

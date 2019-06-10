@@ -1,5 +1,5 @@
 use amethyst_core::ecs::{Component, NullStorage};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// Entities that blocks view
 #[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]

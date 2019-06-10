@@ -30,14 +30,18 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
         let player_datum = MapPrefabData {
             coords: Coordinates(4, 4, 1),
-            datum: Datum::new("/mob/living/simple_animal/hostile/carp/megacarp")
+            datum: Datum::new("/mob/living/simple_animal/hostile/carp/megacarp"),
         };
-        let player = data.world.create_entity()
+        let player = data
+            .world
+            .create_entity()
             //.with(Coordinates(4, 4, 1))
             .with(Player)
             .with(Moving::default()) // TOOD Remove?
             .with(MoveCooldown::new(Duration::from_millis(250)))
-            .with(Parent { entity: self.level_entity })
+            .with(Parent {
+                entity: self.level_entity,
+            })
             //.with(Transform::default())
             .build();
 
@@ -45,7 +49,9 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
         add_debug_lines(data.world);
 
         data.world.exec(|mut data| {
-            player_datum.add_to_entity(player, &mut data, &[player], &[]).expect("Should have added prefab");
+            player_datum
+                .add_to_entity(player, &mut data, &[player], &[])
+                .expect("Should have added prefab");
         });
     }
 
@@ -59,10 +65,14 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
         Trans::None
     }
 
-    fn handle_event(&mut self, _data: StateData<GameData>, event: SS14StateEvent) -> Trans<GameData<'a, 'b>, SS14StateEvent> {
+    fn handle_event(
+        &mut self,
+        _data: StateData<GameData>,
+        event: SS14StateEvent,
+    ) -> Trans<GameData<'a, 'b>, SS14StateEvent> {
         match &event {
             SS14StateEvent::Window(e) if is_key_down(e, VirtualKeyCode::Escape) => Trans::Pop,
-            _ => Trans::None
+            _ => Trans::None,
         }
     }
 }

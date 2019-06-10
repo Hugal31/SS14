@@ -3,9 +3,8 @@ use std::time::Duration;
 use amethyst::{
     core::Time,
     ecs::{
-        shred::{DynamicSystemData},
-        BitSet, Entities, Join, Read, ReaderId, ReadStorage, Resources, System,
-        WriteStorage,
+        shred::DynamicSystemData, BitSet, Entities, Join, Read, ReadStorage, ReaderId, Resources,
+        System, WriteStorage,
     },
     shrev::EventChannel,
 };
@@ -32,7 +31,6 @@ impl DoorSystem {
 }
 
 impl<'a> System<'a> for DoorSystem {
-
     type SystemData = (
         Entities<'a>,
         Read<'a, Time>,
@@ -44,18 +42,25 @@ impl<'a> System<'a> for DoorSystem {
         WriteStorage<'a, IconStateName>,
     );
 
-    fn run(&mut self, (entities, time, bumps, frames, states, mut dense, mut doors, mut icons): Self::SystemData) {
+    fn run(
+        &mut self,
+        (entities, time, bumps, frames, states, mut dense, mut doors, mut icons): Self::SystemData,
+    ) {
         self.bumped.clear();
         self.bumped.extend(
-            bumps.read(self.bumps_event_id.as_mut().expect("setup was not called"))
-                .map(|e| e.bumped.id())
+            bumps
+                .read(self.bumps_event_id.as_mut().expect("setup was not called"))
+                .map(|e| e.bumped.id()),
         );
 
-        for (e, frame, state, door, mut icon) in (&entities,
-                                                  frames.maybe(),
-                                                  &states,
-                                                  &mut doors,
-                                                  &mut icons.restrict_mut()).join()
+        for (e, frame, state, door, mut icon) in (
+            &entities,
+            frames.maybe(),
+            &states,
+            &mut doors,
+            &mut icons.restrict_mut(),
+        )
+            .join()
         {
             let is_animation_finished = frame
                 .map(|f| state.info.frames == f.current_frame + 1)
@@ -65,22 +70,22 @@ impl<'a> System<'a> for DoorSystem {
                 DoorState::Close if self.bumped.contains(e.id()) => {
                     door.state = DoorState::Openning;
                     *icon.get_mut_unchecked() = IconStateName("opening".to_string());
-                },
+                }
                 DoorState::Openning if is_animation_finished => {
                     door.state = DoorState::Open(time.absolute_time());
                     dense.remove(e);
                     *icon.get_mut_unchecked() = IconStateName("open".to_string());
-                },
+                }
                 DoorState::Open(d) if d + DOOR_OPEN_TIME <= time.absolute_time() => {
                     door.state = DoorState::Closing;
                     dense.insert(e, Dense).ok();
                     *icon.get_mut_unchecked() = IconStateName("closing".to_string());
-                },
+                }
                 DoorState::Closing if is_animation_finished => {
                     debug!("Door closed");
                     door.state = DoorState::Close;
                     *icon.get_mut_unchecked() = IconStateName("closed".to_string());
-                },
+                }
                 _ => (),
             }
         }

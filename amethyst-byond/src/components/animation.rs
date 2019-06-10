@@ -1,8 +1,8 @@
 use std::time::Duration;
 
-use amethyst_animation::{ApplyData, AnimationSampling, BlendMethod};
+use amethyst_animation::{AnimationSampling, ApplyData, BlendMethod};
 use amethyst_core::ecs::{Component, DenseVecStorage, FlaggedStorage, VecStorage};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 pub enum AnimationId {
     Frames,
@@ -38,11 +38,20 @@ impl AnimationSampling for IconFrame {
     type Primitive = u32;
     type Channel = ();
 
-    fn apply_sample<'a>(&mut self, _channel: &Self::Channel, data: &Self::Primitive, _extra: &<Self as ApplyData>::ApplyData) {
+    fn apply_sample<'a>(
+        &mut self,
+        _channel: &Self::Channel,
+        data: &Self::Primitive,
+        _extra: &<Self as ApplyData>::ApplyData,
+    ) {
         self.current_frame = *data as u8
     }
 
-    fn current_sample<'a>(&self, _channel: &Self::Channel, _extra: &<Self as ApplyData>::ApplyData) -> Self::Primitive {
+    fn current_sample<'a>(
+        &self,
+        _channel: &Self::Channel,
+        _extra: &<Self as ApplyData>::ApplyData,
+    ) -> Self::Primitive {
         u32::from(self.current_frame)
     }
 
@@ -77,14 +86,23 @@ impl AnimationSampling for Moving {
     type Primitive = f32;
     type Channel = MovingChannel;
 
-    fn apply_sample<'a>(&mut self, channel: &Self::Channel, data: &Self::Primitive, _extra: &<Self as ApplyData>::ApplyData) {
+    fn apply_sample<'a>(
+        &mut self,
+        channel: &Self::Channel,
+        data: &Self::Primitive,
+        _extra: &<Self as ApplyData>::ApplyData,
+    ) {
         match channel {
             MovingChannel::Horizontal => self.0 = *data,
             MovingChannel::Vertical => self.1 = *data,
         }
     }
 
-    fn current_sample<'a>(&self, channel: &Self::Channel, _extra: &<Self as ApplyData>::ApplyData) -> Self::Primitive {
+    fn current_sample<'a>(
+        &self,
+        channel: &Self::Channel,
+        _extra: &<Self as ApplyData>::ApplyData,
+    ) -> Self::Primitive {
         match channel {
             MovingChannel::Horizontal => self.0,
             MovingChannel::Vertical => self.1,

@@ -2,10 +2,7 @@ use amethyst_core::{
     ecs::prelude::{Entities, Entity, Join, ReadStorage, System, Write},
     Hidden, HiddenPropagate,
 };
-use amethyst_rendy::{
-    sprite_visibility::SpriteVisibility,
-    transparent::Transparent,
-};
+use amethyst_rendy::{sprite_visibility::SpriteVisibility, transparent::Transparent};
 
 use crate::components::Layer;
 
@@ -46,21 +43,22 @@ impl<'a> System<'a> for SpriteLayerSortingSystem {
     ) {
         visibility.visible_unordered.clear();
         visibility.visible_unordered.extend(
-            (&*entities, !&hidden, !&hidden_prop, !&transparent).join()
-                .map(|(e, _, _, _)| e.id())
+            (&*entities, !&hidden, !&hidden_prop, !&transparent)
+                .join()
+                .map(|(e, _, _, _)| e.id()),
         );
 
         self.transparent.clear();
         self.transparent.extend(
-            (&*entities, &layer, !&hidden, !&hidden_prop, &transparent).join()
-                .map(|(entity, &layer, _, _, _)| Internals { entity, layer })
+            (&*entities, &layer, !&hidden, !&hidden_prop, &transparent)
+                .join()
+                .map(|(entity, &layer, _, _, _)| Internals { entity, layer }),
         );
         self.transparent.sort_unstable_by_key(|k| k.layer);
 
         visibility.visible_ordered.clear();
-        visibility.visible_ordered.extend(
-            self.transparent.iter()
-                .map(|c| c.entity)
-        );
+        visibility
+            .visible_ordered
+            .extend(self.transparent.iter().map(|c| c.entity));
     }
 }

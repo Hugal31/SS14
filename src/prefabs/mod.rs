@@ -7,17 +7,17 @@ use amethyst::{
     core::Transform,
     ecs::{Entity, Read, WriteStorage},
     error::Error,
-    renderer::{transparent::Transparent},
+    renderer::transparent::Transparent,
 };
 use amethyst_byond::{
     assets::dmi::Dmi,
-    components::{Coordinates, Dense, Direction, Layer, IconStateName, Opaque},
+    components::{Coordinates, Dense, Direction, IconStateName, Layer, Opaque},
 };
 use dmm::{Datum, Literal};
 use serde::{Deserialize, Serialize};
 
 use crate::assets::PrefabDictionary;
-use crate::components::{Door};
+use crate::components::Door;
 
 // TODO Use PrefabData derive
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -33,7 +33,9 @@ pub struct DatumPrefab {
     pub door: Option<Door>,
 }
 
-fn default_layer() -> Layer { Layer::Turf }
+fn default_layer() -> Layer {
+    Layer::Turf
+}
 
 pub struct MapPrefabData {
     pub coords: Coordinates,
@@ -93,24 +95,26 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         _entities: &[Entity],
         _children: &[Entity],
     ) -> Result<Self::Result, Error> {
-
         let dir = self.get_dir();
         coords.insert(entity, self.coords.clone())?;
         dirs.insert(entity, dir)?;
         transforms.insert(entity, Default::default())?;
 
-        if let Some(datum) = dic.0.get(self.datum.path())
-        {
-            debug!(
-                "Added Datum {} at {:?}",
-                self.datum.path(),
-                self.coords
-            );
+        if let Some(datum) = dic.0.get(self.datum.path()) {
+            debug!("Added Datum {} at {:?}", self.datum.path(), self.coords);
 
             let icon_state = IconStateName(
-                self.datum.var_edit("icon_state")
-                    .and_then(|l| if let Literal::Str(s) = l { Some(s) } else { None } )
-                    .unwrap_or(&datum.1.state).clone()
+                self.datum
+                    .var_edit("icon_state")
+                    .and_then(|l| {
+                        if let Literal::Str(s) = l {
+                            Some(s)
+                        } else {
+                            None
+                        }
+                    })
+                    .unwrap_or(&datum.1.state)
+                    .clone(),
             );
 
             dmis.insert(entity, datum.0.clone())?;

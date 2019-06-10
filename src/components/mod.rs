@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use amethyst::core::ecs::{Component, NullStorage, VecStorage};
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[derive(Default)]
 pub struct Player;
@@ -61,5 +61,7 @@ pub enum DoorState {
 }
 
 impl Default for DoorState {
-    fn default() -> Self { DoorState::Close }
+    fn default() -> Self {
+        DoorState::Close
+    }
 }

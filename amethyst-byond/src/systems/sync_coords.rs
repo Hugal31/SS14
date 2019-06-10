@@ -1,9 +1,9 @@
 use amethyst_core::{
-    Transform,
     ecs::{
         shred::DynamicSystemData, storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
         Resources, System, SystemData, WriteStorage,
     },
+    Transform,
 };
 use amethyst_rendy::transparent::Transparent;
 
@@ -21,7 +21,7 @@ impl<'a> System<'a> for SyncCoordsSystem {
         ReadStorage<'a, Coordinates>,
         ReadStorage<'a, Moving>,
         ReadStorage<'a, Transparent>,
-        WriteStorage<'a, Transform>
+        WriteStorage<'a, Transform>,
     );
 
     fn run(&mut self, (cells, movings, transparents, mut transforms): Self::SystemData) {
@@ -41,14 +41,26 @@ impl<'a> System<'a> for SyncCoordsSystem {
         self.to_sync |= movings.mask();
 
         // Sync coords
-        for (cell, transparent, moving, transform, _) in (&cells, transparents.maybe(), movings.maybe(), &mut transforms, &self.to_sync).join() {
+        for (cell, transparent, moving, transform, _) in (
+            &cells,
+            transparents.maybe(),
+            movings.maybe(),
+            &mut transforms,
+            &self.to_sync,
+        )
+            .join()
+        {
             // Non transparent sprites are a little below.
             let moving = moving.cloned().unwrap_or_default();
-            let z = if transparent.is_none() { cell.2 as f32 -0.1 } else { cell.2 as f32 };
+            let z = if transparent.is_none() {
+                cell.2 as f32 - 0.1
+            } else {
+                cell.2 as f32
+            };
             transform.set_translation_xyz(
                 32.0 * (moving.0 + cell.0 as f32),
                 -32.0 * (moving.1 + cell.1 as f32),
-                z
+                z,
             );
         }
     }

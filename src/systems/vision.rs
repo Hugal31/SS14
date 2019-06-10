@@ -1,9 +1,6 @@
 use amethyst::{
     core::Hidden,
-    ecs::{
-        BitSet, Entities, Join, ReadStorage, System,
-        WriteStorage,
-    },
+    ecs::{BitSet, Entities, Join, ReadStorage, System, WriteStorage},
 };
 use amethyst_byond::components::{Coordinates, Direction, Opaque};
 
@@ -29,46 +26,57 @@ impl VisionFieldSystem {
     }
 
     /// Build the vision field from a cell
-    fn build_vision(&self,
-                    start: &Coordinates,
-                    dirs: &[Direction],
-                    entities: &Entities,
-                    coords: &ReadStorage<Coordinates>,
-                    opaques: &ReadStorage<Opaque>,
-                    hiddens: &mut WriteStorage<Hidden>,
-                    max_iter: u32)
-    {
+    fn build_vision(
+        &self,
+        start: &Coordinates,
+        dirs: &[Direction],
+        entities: &Entities,
+        coords: &ReadStorage<Coordinates>,
+        opaques: &ReadStorage<Opaque>,
+        hiddens: &mut WriteStorage<Hidden>,
+        max_iter: u32,
+    ) {
         if max_iter == 0 {
             return;
         }
 
         self.remove_hidden(start, entities, coords, hiddens);
 
-        if (coords, opaques, &self.in_range).join().any(|(c, _, _)| c == start) {
+        if (coords, opaques, &self.in_range)
+            .join()
+            .any(|(c, _, _)| c == start)
+        {
             return;
         }
 
         for next_dir in dirs {
             if let Some(next) = start.try_moved(*next_dir) {
-                self.build_vision(&next,
-                                  Self::next_vision_dirs(*next_dir),
-                                  entities,
-                                  coords,
-                                  opaques,
-                                  hiddens,
-                                  max_iter - 1);
+                self.build_vision(
+                    &next,
+                    Self::next_vision_dirs(*next_dir),
+                    entities,
+                    coords,
+                    opaques,
+                    hiddens,
+                    max_iter - 1,
+                );
             }
         }
     }
 
-    fn remove_hidden(&self,
-                     coord: &Coordinates,
-                     entities: &Entities,
-                     coords: &ReadStorage<Coordinates>,
-                     hiddens: &mut WriteStorage<Hidden>) {
-        (entities, coords, &self.in_range).join()
+    fn remove_hidden(
+        &self,
+        coord: &Coordinates,
+        entities: &Entities,
+        coords: &ReadStorage<Coordinates>,
+        hiddens: &mut WriteStorage<Hidden>,
+    ) {
+        (entities, coords, &self.in_range)
+            .join()
             .filter(|(_, c, _)| *c == coord)
-            .for_each(|(e, _, _)| { hiddens.remove(e); });
+            .for_each(|(e, _, _)| {
+                hiddens.remove(e);
+            });
     }
 
     fn next_vision_dirs(dir: Direction) -> &'static [Direction] {
@@ -88,7 +96,6 @@ impl VisionFieldSystem {
 }
 
 impl<'a> System<'a> for VisionFieldSystem {
-
     type SystemData = (
         Entities<'a>,
         ReadStorage<'a, Player>,
@@ -98,16 +105,12 @@ impl<'a> System<'a> for VisionFieldSystem {
     );
 
     fn run(&mut self, (entities, players, coords, opaques, mut hiddens): Self::SystemData) {
-        if let Some(player_coord) = (&players, &coords).join()
-            .map(|(_, c)| c)
-            .next()
-        {
+        if let Some(player_coord) = (&players, &coords).join().map(|(_, c)| c).next() {
             self.in_range.clear();
 
             // Make close entities hidden
             for (e, coord) in (&entities, &coords).join() {
                 if Self::in_range(player_coord, coord) {
-
                     if coord == player_coord {
                         hiddens.remove(e);
                     } else {
@@ -121,13 +124,15 @@ impl<'a> System<'a> for VisionFieldSystem {
             for dir in &Direction::ALL {
                 if let Some(cell) = player_coord.try_moved(*dir) {
                     let allowed_directions = Self::next_vision_dirs(*dir);
-                    self.build_vision(&cell,
-                                      allowed_directions,
-                                      &entities,
-                                      &coords,
-                                      &opaques,
-                                      &mut hiddens,
-                                      8);
+                    self.build_vision(
+                        &cell,
+                        allowed_directions,
+                        &entities,
+                        &coords,
+                        &opaques,
+                        &mut hiddens,
+                        8,
+                    );
                 }
             }
         }

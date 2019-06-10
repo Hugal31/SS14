@@ -1043,6 +1043,7 @@ dependencies = [
 [[package]]
 name = "dmm"
 version = "0.1.0"
+source = "git+https://github.com/Hugal31/DMM.git#6b32c421cdbe9918d7e5f3e22c1a9491b88baf16"
 dependencies = [
  "serde 1.0.91 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -1050,8 +1051,9 @@ dependencies = [
 [[package]]
 name = "dmm-format"
 version = "0.1.0"
+source = "git+https://github.com/Hugal31/DMM.git#6b32c421cdbe9918d7e5f3e22c1a9491b88baf16"
 dependencies = [
- "dmm 0.1.0",
+ "dmm 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "nom 4.2.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -3478,8 +3480,8 @@ version = "0.1.0"
 dependencies = [
  "amethyst 0.10.0 (git+https://github.com/amethyst/amethyst.git?rev=0829d10bee0bf2b44db6e90645f61772776a9d12)",
  "amethyst-byond 0.1.0",
- "dmm 0.1.0",
- "dmm-format 0.1.0",
+ "dmm 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
+ "dmm-format 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.91 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -4277,6 +4279,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum derive-new 0.5.6 (registry+https://github.com/rust-lang/crates.io-index)" = "6ca414e896ae072546f4d789f452daaecf60ddee4c9df5dc6d5936d769e3d87c"
 "checksum dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)" = "3fd78930633bd1c6e35c4b42b1df7b0cbc6bc191146e512bb3bedf243fcc3901"
 "checksum dlib 0.4.1 (registry+https://github.com/rust-lang/crates.io-index)" = "77e51249a9d823a4cb79e3eca6dcd756153e8ed0157b6c04775d04bf1b13b76a"
+"checksum dmm 0.1.0 (git+https://github.com/Hugal31/DMM.git)" = "<none>"
+"checksum dmm-format 0.1.0 (git+https://github.com/Hugal31/DMM.git)" = "<none>"
 "checksum downcast-rs 1.0.4 (registry+https://github.com/rust-lang/crates.io-index)" = "f2b92dfd5c2f75260cbf750572f95d387e7ca0ba5e3fbe9e1a33f23025be020f"
 "checksum draw_state 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)" = "33cf9537e2d06891448799b96d5a8c8083e0e90522a7fdabe6ebf4f41d79d651"
 "checksum dtoa 0.4.4 (registry+https://github.com/rust-lang/crates.io-index)" = "ea57b42383d091c85abcc2706240b94ab2a8fa1fc81c10ff23c4de06e2a90b5e"

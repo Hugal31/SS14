@@ -6,8 +6,8 @@ edition = "2018"
 
 [dependencies]
 amethyst-byond = { path = "amethyst-byond" }
-dmm = { path = "../dmm" }
-dmm-format = { path = "../dmm/dmm-format" }
+dmm = { git = "https://github.com/Hugal31/DMM.git" }
+dmm-format = { git = "https://github.com/Hugal31/DMM.git" }
 fnv = "1"
 log = "0.4"
 serde = { version ="1", features = ["derive"] }

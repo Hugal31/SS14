@@ -229,7 +229,7 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
                         format_err!("Could not parse delays value \"{}\"", s)
                     })
                 })
-                .collect::<Result<Vec<u8>, Error>>()
+                .collect::<Result<Vec<f32>, Error>>()
         })
         .transpose()?
         .unwrap_or_default();
@@ -237,11 +237,20 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
         .get("rewind")
         .map(|d| {
             d.parse::<u8>().with_context(|_| {
-                format_err!("Could not parse dirs value \"{}\"", d)
+                format_err!("Could not parse rewind value \"{}\"", d)
             })
         })
         .transpose()?
         .unwrap_or(0) > 0;
+    let looop = map
+        .get("loop")
+        .map(|d| {
+            d.parse::<u8>().with_context(|_| {
+                format_err!("Could not parse loop value \"{}\"", d)
+            })
+        })
+        .transpose()?
+        .unwrap_or(0) == 0;
 
 
     Ok(IconStateInfo {
@@ -249,6 +258,7 @@ fn build_state(map: &HashMap<&str, &str>) -> Result<IconStateInfo, Error> {
         frames,
         delays,
         rewind,
+        looop,
     })
 }
 

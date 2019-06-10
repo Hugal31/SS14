@@ -90,8 +90,9 @@ impl IconState {
 pub struct IconStateInfo {
     pub dirs: u8,
     pub frames: u8,
-    pub delays: Vec<u8>,
+    pub delays: Vec<f32>,
     pub rewind: bool,
+    pub looop: bool,
 }
 
 impl IconStateInfo {
@@ -101,10 +102,11 @@ impl IconStateInfo {
             frames,
             delays: Vec::new(),
             rewind: false,
+            looop: true,
         }
     }
 
-    pub fn with_delays(mut self, delays: Vec<u8>) -> Self {
+    pub fn with_delays(mut self, delays: Vec<f32>) -> Self {
         self.delays = delays;
 
         self
@@ -116,11 +118,17 @@ impl IconStateInfo {
         self
     }
 
+    pub fn no_loop(mut self) -> Self {
+        self.looop = false;
+
+        self
+    }
+
     pub fn frame_duration(&self, frame: u8) -> Duration {
         let delay = self.delays.get(frame as usize)
             .cloned()
-            .unwrap_or(1);
-        Duration::from_millis(100 * delay as u64)
+            .unwrap_or(1.0);
+        Duration::from_millis((100.0 * delay) as u64)
     }
 
     fn get_dir_index(&self, dir: Direction) -> usize {

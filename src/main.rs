@@ -24,12 +24,18 @@ const DISPLAY_CONFIG_PATH: &str = "display.ron";
 const BINDINGS_CONFIG_PATH: &str = "inputs.ron";
 
 fn main() -> amethyst::Result<()> {
-    let level = std::env::args().skip(1).map(From::from).next();
-
-    start_game(level)
+    let level = std::env::args().nth(1).map(From::from);
+    if let Ok(ss13_sources) = get_ss13_source() {
+        start_game(level, ss13_sources)
+    } else {
+        eprintln!("Could not find SS13 sources.
+Please make sure you downloaded the sources from https://github.com/tgstation/tgstation, \
+and set the SS13_SOURCE environment variable to its directory.");
+        Ok(())
+    }
 }
 
-fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
+fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Result<()> {
     amethyst::start_logger(amethyst::LoggerConfig {
         level_filter: amethyst::LogLevelFilter::Debug,
         ..Default::default()
@@ -39,7 +45,6 @@ fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
     let assets_dir = app_root.join("resources");
     let display_config_path = assets_dir.join(DISPLAY_CONFIG_PATH);
     let bindings_config_path = assets_dir.join(BINDINGS_CONFIG_PATH);
-    let ss13_source = get_ss13_source()?;
     let level = level.unwrap_or_else(|| assets_dir.join("levels/test_level.dmm"));
 
     let game_data = GameDataBuilder::<f32>::default()
@@ -84,7 +89,7 @@ fn start_game(level: Option<PathBuf>) -> amethyst::Result<()> {
 
 fn get_ss13_source() -> amethyst::Result<impl Source> {
     let path = std::env::var("SS13_SOURCE")
-        .with_context(|_| format_err!("Could not tet SS13_SOURCE env var"))?;
+        .with_context(|_| format_err!("Could not find SS13_SOURCE env var."))?;
 
     Ok(amethyst::assets::Directory::new(path))
 }

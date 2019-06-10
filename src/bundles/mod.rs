@@ -23,6 +23,8 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             &["input_system"],
         );
 
+        dispatcher.add(systems::DoorSystem::new(), "door_system", &[]);
+
         dispatcher.add(
             systems::VisionFieldSystem::new(),
             "vision_field",

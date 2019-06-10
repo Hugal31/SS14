@@ -7,10 +7,12 @@ use amethyst::{
 };
 use amethyst_byond::{
     assets::dmi::{Dmi, DmiFormat},
-    components::{Direction, Moving, MovingChannel, Layer},
+    components::{Direction, Moving, MovingChannel},
 };
 use fnv::FnvHashMap;
 use serde::{Deserialize, Serialize};
+
+use crate::prefabs::DatumPrefab;
 
 pub const SS13_SOURCE: &str = "SS13";
 
@@ -92,16 +94,3 @@ pub struct PrefabDictionary(pub FnvHashMap<String, (Handle<Dmi>, DatumPrefab)>);
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 struct PrefabDictionaryDesc(FnvHashMap<String, (String, DatumPrefab)>);
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct DatumPrefab {
-    pub state: String,
-    #[serde(default = "default_layer")]
-    pub layer: Layer,
-    #[serde(default)]
-    pub opacity: bool,
-    #[serde(default)]
-    pub dense: bool,
-}
-
-fn default_layer() -> Layer { Layer::Turf }

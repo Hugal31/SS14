@@ -15,9 +15,7 @@
 )
 "af" = (
 /turf/open/floor/plasteel,
-/obj/machinery/door/airlock/external/glass{
-    icon_state = "opening"
-}
+/obj/machinery/door/airlock/external/glass
 )
 "ah" = (
 /turf/open/floor/plasteel,

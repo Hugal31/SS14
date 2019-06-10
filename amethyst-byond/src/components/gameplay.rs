@@ -1,7 +1,8 @@
 use amethyst_core::ecs::{Component, NullStorage};
+use serde::{Serialize, Deserialize};
 
 /// Entities that blocks view
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Opaque;
 
 impl Component for Opaque {
@@ -9,7 +10,7 @@ impl Component for Opaque {
 }
 
 /// Entities that blocks air and movements
-#[derive(Copy, Clone, Default)]
+#[derive(Copy, Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Dense;
 
 impl Component for Dense {

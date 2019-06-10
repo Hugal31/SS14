@@ -14,8 +14,26 @@ use amethyst_byond::{
     components::{Coordinates, Dense, Direction, Layer, IconStateName, Opaque},
 };
 use dmm::{Datum, Literal};
+use serde::{Deserialize, Serialize};
 
 use crate::assets::PrefabDictionary;
+use crate::components::{Door};
+
+// TODO Use PrefabData derive
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct DatumPrefab {
+    pub state: String,
+    #[serde(default = "default_layer")]
+    pub layer: Layer,
+    #[serde(default)]
+    pub opacity: Option<Opaque>,
+    #[serde(default)]
+    pub dense: Option<Dense>,
+    #[serde(default)]
+    pub door: Option<Door>,
+}
+
+fn default_layer() -> Layer { Layer::Turf }
 
 pub struct MapPrefabData {
     pub coords: Coordinates,
@@ -51,6 +69,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         WriteStorage<'a, Transparent>,
         WriteStorage<'a, Dense>,
         WriteStorage<'a, Opaque>,
+        WriteStorage<'a, Door>,
     );
     type Result = ();
 
@@ -69,6 +88,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             ref mut transparents,
             ref mut dense,
             ref mut opaques,
+            ref mut doors,
         ): &mut Self::SystemData,
         _entities: &[Entity],
         _children: &[Entity],
@@ -99,11 +119,14 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             if datum.1.layer > Layer::Space {
                 transparents.insert(entity, Transparent)?;
             }
-            if datum.1.opacity {
-                opaques.insert(entity, Opaque)?;
+            if let Some(o) = datum.1.opacity {
+                opaques.insert(entity, o)?;
             }
-            if datum.1.dense {
-                dense.insert(entity, Dense)?;
+            if let Some(d) = datum.1.dense {
+                dense.insert(entity, d)?;
+            }
+            if let Some(d) = datum.1.door.clone() {
+                doors.insert(entity, d)?;
             }
         }
 

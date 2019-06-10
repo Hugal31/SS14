@@ -66,6 +66,8 @@ PrefabDictionaryDesc({
 	 (
 	     state: "closed",
 	     layer: OpenDoor,
+	     dense: Dense,
+	     door: (),
 	 )
     ),
     "/obj/machinery/door/airlock/external": (
@@ -73,6 +75,8 @@ PrefabDictionaryDesc({
 	 (
 	     state: "closed",
 	     layer: OpenDoor,
+	     dense: Dense,
+	     door: (),
 	 )
     ),
     "/obj/machinery/door/airlock/external/glass": (
@@ -80,6 +84,8 @@ PrefabDictionaryDesc({
 	 (
 	     state: "closed",
 	     layer: OpenDoor,
+	     dense: Dense,
+	     door: (),
 	 )
     ),
     "/turf/closed/wall/r_wall": (
@@ -87,8 +93,8 @@ PrefabDictionaryDesc({
 	 (
 	     state: "r_wall",
 	     layer: Turf,
-	     opacity: true,
-	     dense: true,
+	     opacity: Opaque,
+	     dense: Dense,
 	 )
     ),
     "/obj/structure/closet/secure_closet/engineering_electrical": (
@@ -110,7 +116,7 @@ PrefabDictionaryDesc({
 	 (
 	     state: "table",
 	     layer: Table,
-	     dense: true,
+	     dense: Dense,
 	 )
     ),
     "/obj/structure/fans/tiny": (

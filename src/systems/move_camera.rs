@@ -3,8 +3,9 @@ use amethyst::{
     core::Time,
     ecs::{
         Entities, Entity, Join, Read, ReadStorage, System,
-        WriteStorage,
+        Write, WriteStorage,
     },
+    shrev::EventChannel,
     input::InputHandler,
 };
 use amethyst_byond::components::{Coordinates, Dense, Direction, Moving};
@@ -12,6 +13,7 @@ use amethyst_byond::components::{Coordinates, Dense, Direction, Moving};
 use crate::{
     components::{MoveCooldown, Player},
     inputs::Input,
+    events::BumpEvent,
 };
 
 #[derive(Debug, Default)]
@@ -22,8 +24,10 @@ impl MoveCamera {
                 entity: Entity,
                 dir: Direction,
                 dense: &ReadStorage<Dense>,
+                entities: &Entities,
                 dirs: &mut WriteStorage<Direction>,
                 coords: &mut WriteStorage<Coordinates>,
+                bumps: &mut Write<EventChannel<BumpEvent>>,
                 cooldown: Option<&mut MoveCooldown>,
                 animations: &AnimationSet<Direction, Moving>,
                 animation_controls: &mut AnimationControlSet<Direction, Moving>)
@@ -47,10 +51,19 @@ impl MoveCamera {
 
         if let Some(new_coord) = player_coord.try_moved(dir) {
 
+            let mut did_bump = false;
             // Check for collisions
-            if (dense, &coords.restrict()).join()
-                .any(|(_, c)| c.get_unchecked() == &new_coord)
+            for (e, _, _) in (entities, dense, &coords.restrict()).join()
+                .filter(|(_, _, c)| c.get_unchecked() == &new_coord)
             {
+                did_bump = true;
+                bumps.single_write(BumpEvent{
+                    by: entity,
+                    bumped: e,
+                });
+            }
+
+            if did_bump {
                 return;
             }
 
@@ -79,9 +92,10 @@ impl<'a> System<'a> for MoveCamera {
         WriteStorage<'a, Direction>,
         WriteStorage<'a, MoveCooldown>,
         WriteStorage<'a, Coordinates>,
+        Write<'a, EventChannel<BumpEvent>>,
     );
 
-    fn run(&mut self, (entities, time, inputs, animations, dense, players, mut animation_controls, mut directions, mut cooldowns, mut coords): Self::SystemData) {
+    fn run(&mut self, (entities, time, inputs, animations, dense, players, mut animation_controls, mut directions, mut cooldowns, mut coords, mut bumps): Self::SystemData) {
         for dir in &Direction::CARDINALS {
             if inputs.action_is_down(&Input::Move(*dir)).unwrap_or_default() {
                 for (e, _, cooldown) in (&entities, &players, (&mut cooldowns).maybe()).join() {
@@ -89,7 +103,7 @@ impl<'a> System<'a> for MoveCamera {
                     let control_set = get_animation_set(&mut animation_controls, e)
                         .expect("The entity should be valid");
 
-                    Self::try_move(&time, e, *dir, &dense, &mut directions, &mut coords, cooldown, &animations, control_set);
+                    Self::try_move(&time, e, *dir, &dense, &entities, &mut directions, &mut coords, &mut bumps, cooldown, &animations, control_set);
                 }
             }
         }

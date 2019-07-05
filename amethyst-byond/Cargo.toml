@@ -6,11 +6,11 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst_assets = { git = "https://github.com/amethyst/amethyst.git", rev = "0829d10bee0bf2b44db6e90645f61772776a9d12", features = ["nightly"] }
-amethyst_animation = { git = "https://github.com/amethyst/amethyst.git", rev = "0829d10bee0bf2b44db6e90645f61772776a9d12", features = ["nightly"] }
-amethyst_core = { git = "https://github.com/amethyst/amethyst.git", rev = "0829d10bee0bf2b44db6e90645f61772776a9d12", features = ["nightly"] }
-amethyst_error = { git = "https://github.com/amethyst/amethyst.git", rev = "0829d10bee0bf2b44db6e90645f61772776a9d12" }
-amethyst_rendy = { git = "https://github.com/amethyst/amethyst.git", rev = "0829d10bee0bf2b44db6e90645f61772776a9d12", features = ["nightly"] }
+amethyst_assets = { version = "0.7", features = ["nightly"] }
+amethyst_animation = { version = "0.6", features = ["nightly"] }
+amethyst_core = { version = "0.6", features = ["nightly"] }
+amethyst_error = "0.1"
+amethyst_rendy = { version = "0.1", features = ["nightly"] }
 inflate = "0.4"
 png = "0.14"
 fnv = "1"

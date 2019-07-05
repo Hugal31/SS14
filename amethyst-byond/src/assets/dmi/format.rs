@@ -106,7 +106,7 @@ impl Format<DmiData> for DmiFormat {
                 border: PackedColor(0),
                 anisotropic: Anisotropic::Off,
             },
-            generate_mips: false,
+            ..Default::default()
         })
         .import_simple(bytes)?;
 

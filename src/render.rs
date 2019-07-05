@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use amethyst::{
     ecs::prelude::*,
     renderer::{
@@ -50,7 +48,7 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
     ) -> GraphBuilder<DefaultBackend, Resources> {
         self.dirty = false;
 
-        let window = <ReadExpect<'_, Arc<Window>>>::fetch(res);
+        let window = <ReadExpect<'_, Window>>::fetch(res);
 
         let surface = factory.create_surface(&window);
 
@@ -81,19 +79,11 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
             Some(ClearValue::DepthStencil(ClearDepthStencil(1.0, 0))),
         );
 
-        let opaque_pass = graph_builder.add_node(
+        let main_pass = graph_builder.add_node(
             SubpassBuilder::new()
                 .with_group(DrawFlat2DDesc::new().builder()) // Draws sprites
-                .with_group(DrawDebugLinesDesc::new().builder())
-                .with_color(color)
-                .with_depth_stencil(depth)
-                .into_pass(),
-        );
-
-        let transparent_pass = graph_builder.add_node(
-            SubpassBuilder::new()
                 .with_group(DrawFlat2DTransparentDesc::new().builder()) // Draws transparent sprites
-                .with_dependency(opaque_pass)
+                .with_group(DrawDebugLinesDesc::new().builder())
                 .with_color(color)
                 .with_depth_stencil(depth)
                 .into_pass(),
@@ -103,8 +93,7 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
         // The PresentNode takes its input and applies it to the surface.
         let _present = graph_builder.add_node(
             PresentNode::builder(factory, surface, color)
-                .with_dependency(transparent_pass)
-                .with_dependency(opaque_pass),
+                .with_dependency(main_pass),
         );
 
         graph_builder

@@ -1,7 +1,11 @@
 use std::marker::PhantomData;
 use std::path::PathBuf;
 
-use amethyst::{assets::{Completion, ProgressCounter}, ecs::Entity, prelude::*};
+use amethyst::{
+    assets::{Completion, ProgressCounter},
+    ecs::Entity,
+    prelude::*,
+};
 
 use crate::assets::{AssetsLoader as _, GameAssetsLoader};
 
@@ -33,7 +37,7 @@ impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoad
 
         match self.progress.complete() {
             Completion::Complete => {
-            info!("Loading complete!");
+                info!("Loading complete!");
                 Trans::Switch(
                     self.next_state
                         .take()
@@ -91,7 +95,7 @@ where
                 Trans::Switch(Box::new(S::from(
                     self.level_entity.expect("on start was not called!"),
                 )))
-            },
+            }
             Completion::Failed => Trans::Pop,
             Completion::Loading => Trans::None,
         }

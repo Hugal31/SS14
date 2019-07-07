@@ -6,6 +6,7 @@ edition = "2018"
 
 [dependencies]
 amethyst-byond = { path = "amethyst-byond" }
+dreammaker-runtime = { path = "dreammaker-runtime"}
 dmm = { git = "https://github.com/Hugal31/DMM.git" }
 dmm-format = { git = "https://github.com/Hugal31/DMM.git" }
 fnv = "1"
@@ -21,4 +22,6 @@ default = ["no-slow-safety-check"]
 no-slow-safety-check = ["amethyst/no-slow-safety-checks"]
 
 [profile.dev]
-opt-level = 2
+opt-level = 1
+lto = false
+overflow-checks = false

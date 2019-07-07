@@ -1,21 +1,12 @@
-use std::{fs::File, io::Read as _};
-
 use amethyst::{
     animation::{Animation, AnimationSampling, AnimationSet, InterpolationFunction, Sampler},
-    assets::{
-        AssetLoaderSystemData, AssetStorage, Format as _, Handle, Loader, ProgressCounter,
-        RonFormat,
-    },
+    assets::{AssetLoaderSystemData, AssetStorage, Loader, ProgressCounter},
     ecs::{Read, ReadExpect, World},
 };
 use amethyst_byond::{
-    assets::dmi::{Dmi, DmiFormat},
+    assets::dm::{DMFormat, DreamMakerEnvironment},
     components::{Direction, Moving, MovingChannel},
 };
-use fnv::FnvHashMap;
-use serde::{Deserialize, Serialize};
-
-use crate::prefabs::DatumPrefab;
 
 pub const SS13_SOURCE: &str = "SS13";
 
@@ -27,42 +18,6 @@ pub trait AssetsLoader {
 pub struct GameAssetsLoader;
 
 impl GameAssetsLoader {
-    fn load_datums(&self, world: &mut World, _progress: &mut ProgressCounter) {
-        // TODO Don't just parse the whole file now, use a (custom?) loader.
-        let data = {
-            let mut file = File::open("resources/assets/datums.ron").expect("file not found");
-            let mut data = Vec::new();
-            file.read_to_end(&mut data).expect("file not read");
-
-            data
-        };
-
-        let PrefabDictionaryDesc(datums) =
-            RonFormat.import_simple(data).expect("Should have parsed");
-        let mut dmi_cache = DmiCache::default();
-        let datums = PrefabDictionary(
-            datums
-                .into_iter()
-                .map(|(path, (dmi_name, prefab))| {
-                    let dmi_handle = dmi_cache
-                        .0
-                        .entry(dmi_name.clone())
-                        .or_insert_with(|| {
-                            world.exec(|load: AssetLoaderSystemData<Dmi>| {
-                                load.load_from(dmi_name.clone(), DmiFormat, SS13_SOURCE, ())
-                            })
-                        })
-                        .clone();
-
-                    (path, (dmi_handle, prefab))
-                })
-                .collect(),
-        );
-
-        world.add_resource(dmi_cache);
-        world.add_resource(datums);
-    }
-
     fn load_animations(&self, world: &mut World, _progress: &mut ProgressCounter) {
         let animation_set = world.exec(
             |(loader, sample_storage, animation_storage): (
@@ -138,22 +93,24 @@ impl GameAssetsLoader {
 
         world.add_resource(animation_set);
     }
+
+    fn load_dm(&self, world: &mut World, progress: &mut ProgressCounter) {
+        let mut dme_path = std::env::var("SS13_SOURCE")
+            .map(std::path::PathBuf::from)
+            .expect("SS13_SOURCE environment variable should be present");
+        dme_path.push("tgstation.dme");
+
+        let dm_handle = world.exec(|load: AssetLoaderSystemData<DreamMakerEnvironment>| {
+            load.load_from(dme_path.to_string_lossy(), DMFormat, SS13_SOURCE, progress)
+        });
+
+        world.add_resource(dm_handle);
+    }
 }
 
 impl AssetsLoader for GameAssetsLoader {
     fn load(&self, world: &mut World, progress: &mut ProgressCounter) {
-        self.load_datums(world, progress);
         self.load_animations(world, progress);
+        self.load_dm(world, progress);
     }
 }
-
-/// DmiCache resource
-#[derive(Default)]
-pub struct DmiCache(FnvHashMap<String, Handle<Dmi>>);
-
-/// Prefab dictionary resource
-#[derive(Clone, Debug, Default)]
-pub struct PrefabDictionary(pub FnvHashMap<String, (Handle<Dmi>, DatumPrefab)>);
-
-#[derive(Clone, Debug, Serialize, Deserialize)]
-struct PrefabDictionaryDesc(FnvHashMap<String, (String, DatumPrefab)>);

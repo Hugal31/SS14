@@ -2,7 +2,7 @@ use amethyst_animation::AnimationBundle;
 use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
 use amethyst_error::Error;
 
-use crate::assets::dmi::DmiProcessor;
+use crate::assets::{dm::DreamMakerProcessor, dmi::DmiProcessor};
 use crate::components::{Direction, Moving};
 use crate::systems;
 
@@ -27,6 +27,7 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
         AnimationBundle::<Direction, Moving>::new("animate_moving", "sample_moving")
             .build(dispatcher)?;
 
+        dispatcher.add(DreamMakerProcessor::new(), "dm_processor", &[]);
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
 
         dispatcher.add(

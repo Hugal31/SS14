@@ -3,39 +3,24 @@ pub mod formats;
 use std::convert::TryFrom as _;
 
 use amethyst::{
-    assets::{Handle, PrefabData},
+    assets::{AssetStorage, Handle, Loader, PrefabData},
     core::Transform,
-    ecs::{Entity, Read, WriteStorage},
+    ecs::{Entity, Read, ReadExpect, Write, WriteStorage},
     error::Error,
     renderer::transparent::Transparent,
 };
 use amethyst_byond::{
-    assets::dmi::Dmi,
-    components::{Coordinates, Dense, Direction, IconStateName, Layer, Opaque},
+    assets::{
+        dm::{DreamMakerEnvironment, DreamMakerHandle},
+        dmi::{Dmi, DmiFormat},
+    },
+    components::{Coordinates, Dense, Direction, IconStateName, Layer, LayerName, Opaque},
 };
 use dmm::{Datum, Literal};
-use serde::{Deserialize, Serialize};
+use dreammaker_runtime::{Instance as DMInstance, Value as DMValue};
+use fnv::FnvHashMap;
 
-use crate::assets::PrefabDictionary;
-use crate::components::Door;
-
-// TODO Use PrefabData derive
-#[derive(Clone, Debug, Serialize, Deserialize)]
-pub struct DatumPrefab {
-    pub state: String,
-    #[serde(default = "default_layer")]
-    pub layer: Layer,
-    #[serde(default)]
-    pub opacity: Option<Opaque>,
-    #[serde(default)]
-    pub dense: Option<Dense>,
-    #[serde(default)]
-    pub door: Option<Door>,
-}
-
-fn default_layer() -> Layer {
-    Layer::Turf
-}
+use crate::assets::SS13_SOURCE;
 
 pub struct MapPrefabData {
     pub coords: Coordinates,
@@ -46,22 +31,15 @@ impl MapPrefabData {
     pub fn new(coords: Coordinates, datum: Datum) -> Self {
         MapPrefabData { coords, datum }
     }
-
-    fn get_dir(&self) -> Direction {
-        match self.datum.var_edits().get("dir") {
-            Some(Literal::Number(d))
-                if *d >= i64::from(std::u8::MIN) && *d <= i64::from(std::u8::MAX) =>
-            {
-                Direction::try_from(*d as u8).unwrap_or_default()
-            }
-            _ => Default::default(),
-        }
-    }
 }
 
 impl<'a> PrefabData<'a> for MapPrefabData {
     type SystemData = (
-        Read<'a, PrefabDictionary>,
+        Read<'a, AssetStorage<DreamMakerEnvironment>>,
+        ReadExpect<'a, Loader>,
+        ReadExpect<'a, DreamMakerHandle>,
+        Write<'a, AssetStorage<Dmi>>,
+        Write<'a, DmiCache>,
         WriteStorage<'a, Coordinates>,
         WriteStorage<'a, Direction>,
         WriteStorage<'a, Layer>,
@@ -71,7 +49,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         WriteStorage<'a, Transparent>,
         WriteStorage<'a, Dense>,
         WriteStorage<'a, Opaque>,
-        WriteStorage<'a, Door>,
     );
     type Result = ();
 
@@ -80,7 +57,11 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         &self,
         entity: Entity,
         (
-            ref dic,
+            ref dm,
+            ref loader,
+            ref dm_handle,
+            ref mut dmi_storage,
+            ref mut dmi_cache,
             ref mut coords,
             ref mut dirs,
             ref mut layers,
@@ -88,52 +69,65 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             ref mut dmis,
             ref mut transforms,
             ref mut transparents,
-            ref mut dense,
-            ref mut opaques,
-            ref mut doors,
+            ref mut _dense,
+            ref mut _opaques,
         ): &mut Self::SystemData,
         _entities: &[Entity],
         _children: &[Entity],
     ) -> Result<Self::Result, Error> {
-        let dir = self.get_dir();
-        coords.insert(entity, self.coords.clone())?;
-        dirs.insert(entity, dir)?;
-        transforms.insert(entity, Default::default())?;
+        let dm_env = dm.get(dm_handle).expect("DM should have been loaded");
+        if let Some(type_idx) = dm_env.objtree.find(self.datum.path()) {
+            coords.insert(entity, self.coords.clone())?;
+            transforms.insert(entity, Default::default())?;
 
-        if let Some(datum) = dic.0.get(self.datum.path()) {
-            debug!("Added Datum {} at {:?}", self.datum.path(), self.coords);
+            let instance = DMInstance::instantiate(type_idx);
 
-            let icon_state = IconStateName(
-                self.datum
-                    .var_edit("icon_state")
-                    .and_then(|l| {
-                        if let Literal::Str(s) = l {
-                            Some(s)
-                        } else {
-                            None
-                        }
+            // Load layer and transparency
+            if let Some(layer) = instance.get_var("layer").and_then(|l| match l {
+                DMValue::Int(i) => Some(Layer(*i as u32 * 100)),
+                DMValue::Float(f) => Some(Layer((f * 100.0) as u32)),
+                _ => None,
+            }) {
+                layers.insert(entity, layer)?;
+
+                if layer > LayerName::Space.into() && layer != LayerName::Area.into() {
+                    transparents.insert(entity, Transparent)?;
+                }
+            }
+
+            // Load icon file
+            if let Some(DMValue::Resource(icon_file)) = instance.get_var("icon") {
+                let dmi_handle = dmi_cache
+                    .0
+                    .entry(icon_file.clone())
+                    .or_insert_with(|| {
+                        loader.load_from(icon_file.clone(), DmiFormat, SS13_SOURCE, (), dmi_storage)
                     })
-                    .unwrap_or(&datum.1.state)
-                    .clone(),
-            );
+                    .clone();
+                dmis.insert(entity, dmi_handle)?;
+            }
 
-            dmis.insert(entity, datum.0.clone())?;
-            icon_states.insert(entity, icon_state)?;
-            layers.insert(entity, datum.1.layer)?;
-            if datum.1.layer > Layer::Space {
-                transparents.insert(entity, Transparent)?;
+            // Load icon state
+            if let Some(Literal::Str(icon_state)) = self.datum.var_edit("icon_state") {
+                icon_states.insert(entity, IconStateName(icon_state.clone()))?;
+            } else if let Some(DMValue::String(icon_state)) = instance.get_var("icon_state") {
+                icon_states.insert(entity, IconStateName(icon_state.clone()))?;
             }
-            if let Some(o) = datum.1.opacity {
-                opaques.insert(entity, o)?;
+
+            // Load direction
+            if let Some(Literal::Number(i)) = self.datum.var_edits().get("dir") {
+                dirs.insert(entity, Direction::try_from(*i as u8).unwrap_or_default())?;
+            } else if let Some(DMValue::Int(i)) = instance.get_var("dir") {
+                dirs.insert(entity, Direction::try_from(*i as u8).unwrap_or_default())?;
             }
-            if let Some(d) = datum.1.dense {
-                dense.insert(entity, d)?;
-            }
-            if let Some(d) = datum.1.door.clone() {
-                doors.insert(entity, d)?;
-            }
+        } else {
+            warn!("Type not found: {}", self.datum.path());
         }
 
         Ok(())
     }
 }
+
+/// DmiCache resource
+#[derive(Default)]
+pub struct DmiCache(pub FnvHashMap<String, Handle<Dmi>>);

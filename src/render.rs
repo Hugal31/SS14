@@ -91,10 +91,8 @@ impl GraphCreator<DefaultBackend> for RenderGraphCreator {
 
         // Finally, add the pass to the graph.
         // The PresentNode takes its input and applies it to the surface.
-        let _present = graph_builder.add_node(
-            PresentNode::builder(factory, surface, color)
-                .with_dependency(main_pass),
-        );
+        let _present = graph_builder
+            .add_node(PresentNode::builder(factory, surface, color).with_dependency(main_pass));
 
         graph_builder
     }

@@ -28,9 +28,11 @@ fn main() -> amethyst::Result<()> {
     if let Ok(ss13_sources) = get_ss13_source() {
         start_game(level, ss13_sources)
     } else {
-        eprintln!("Could not find SS13 sources.
+        eprintln!(
+            "Could not find SS13 sources.
 Please make sure you downloaded the sources from https://github.com/tgstation/tgstation, \
-and set the SS13_SOURCE environment variable to its directory.");
+and set the SS13_SOURCE environment variable to its directory."
+        );
         Ok(())
     }
 }

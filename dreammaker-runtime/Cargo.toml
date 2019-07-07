@@ -1,0 +1,10 @@
+[package]
+name = "dreammaker-runtime"
+version = "0.1.0"
+authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+dreammaker = { git = "https://github.com/SpaceManiac/SpacemanDMM.git", tag = "suite-1.0" }
+fnv = "1"
+serde = { version = "1", features = ["derive"] }

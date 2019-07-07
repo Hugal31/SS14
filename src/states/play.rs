@@ -28,41 +28,17 @@ impl From<Entity> for PlayState {
 
 impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
     fn on_start(&mut self, data: StateData<GameData>) {
-        let player_datum = MapPrefabData {
-            coords: Coordinates(4, 4, 1),
-            datum: Datum::new("/mob/living/simple_animal/hostile/carp/megacarp"),
-        };
-        let player = data
-            .world
-            .create_entity()
-            //.with(Coordinates(4, 4, 1))
-            .with(Player)
-            .with(Moving::default()) // TOOD Remove?
-            .with(MoveCooldown::new(Duration::from_millis(250)))
-            .with(Parent {
-                entity: self.level_entity,
-            })
-            //.with(Transform::default())
-            .build();
-
+        let player = add_player(
+            data.world,
+            self.level_entity,
+            "/mob/living/simple_animal/hostile/carp/megacarp",
+        );
         initialise_camera_with_size(player, data.world, (0.0, 0.0), (15, 15));
         add_debug_lines(data.world);
-
-        data.world.exec(|mut data| {
-            player_datum
-                .add_to_entity(player, &mut data, &[player], &[])
-                .expect("Should have added prefab");
-        });
     }
 
     fn on_stop(&mut self, data: StateData<GameData>) {
         data.world.delete_entity(self.level_entity).ok();
-    }
-
-    fn update(&mut self, data: StateData<GameData>) -> Trans<GameData<'a, 'b>, SS14StateEvent> {
-        data.data.update(data.world);
-
-        Trans::None
     }
 
     fn handle_event(
@@ -74,6 +50,12 @@ impl<'a, 'b> State<GameData<'a, 'b>, SS14StateEvent> for PlayState {
             SS14StateEvent::Window(e) if is_key_down(e, VirtualKeyCode::Escape) => Trans::Pop,
             _ => Trans::None,
         }
+    }
+
+    fn update(&mut self, data: StateData<GameData>) -> Trans<GameData<'a, 'b>, SS14StateEvent> {
+        data.data.update(data.world);
+
+        Trans::None
     }
 }
 
@@ -131,4 +113,26 @@ fn add_debug_lines(world: &mut World) -> Entity {
         Srgba::new(0.0, 0.0, 1.0, 1.0),
     );
     world.create_entity().with(debug_lines).build()
+}
+
+fn add_player(world: &mut World, parent: Entity, typ: &str) -> Entity {
+    let player_datum = MapPrefabData {
+        coords: Coordinates(4, 4, 1),
+        datum: Datum::new(typ),
+    };
+    let player = world
+        .create_entity()
+        .with(Player)
+        .with(Moving::default()) // TOOD Remove?
+        .with(MoveCooldown::new(Duration::from_millis(250)))
+        .with(Parent { entity: parent })
+        .build();
+
+    world.exec(|mut data| {
+        player_datum
+            .add_to_entity(player, &mut data, &[player], &[])
+            .expect("Should have added prefab");
+    });
+
+    player
 }

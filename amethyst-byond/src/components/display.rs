@@ -9,7 +9,7 @@ use super::{Direction, IconFrame};
 
 /// Display layer for datums
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
-pub enum Layer {
+pub enum LayerName {
     Space,
     Turf,
     TurfDecal,
@@ -20,17 +20,21 @@ pub enum Layer {
     Table,
     BelowObj,
     Mob,
+    Area,
 }
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
+pub struct Layer(pub u32);
 
 impl Component for Layer {
     type Storage = VecStorage<Layer>;
 }
 
 /// From SS13 code. Multiplied by 10 to have an Ord-able representation.
-impl Into<u32> for Layer {
-    fn into(self) -> u32 {
-        use Layer::*;
-        match self {
+impl From<LayerName> for Layer {
+    fn from(name: LayerName) -> Self {
+        use LayerName::*;
+        Layer(match name {
             Space => 180,
             Turf => 200,
             TurfDecal => 203,
@@ -41,13 +45,20 @@ impl Into<u32> for Layer {
             Table => 280,
             BelowObj => 290,
             Mob => 400,
-        }
+            Area => 1_000,
+        })
     }
 }
 
 impl Ord for Layer {
     fn cmp(&self, other: &Self) -> Ordering {
-        Ord::cmp(&Into::<u32>::into(*self), &Into::<u32>::into(*other))
+        Ord::cmp(&self.0, &other.0)
+    }
+}
+
+impl Ord for LayerName {
+    fn cmp(&self, other: &Self) -> Ordering {
+        Ord::cmp(&Into::<Layer>::into(*self), &Into::<Layer>::into(*other))
     }
 }
 

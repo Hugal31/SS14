@@ -1,9 +1,12 @@
 use std::convert::TryFrom;
 
-use amethyst_core::ecs::{Component, FlaggedStorage, VecStorage};
-use serde::{Deserialize, Serialize};
+#[cfg(feature="serde")]
+use serde::{Serialize, Deserialize};
+#[cfg(feature="specs")]
+use specs::{Component, FlaggedStorage, VecStorage};
 
-#[derive(Clone, Debug, Default, Eq, PartialEq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
+#[cfg_attr(feature="serde", derive(Serialize, Deserialize))]
 pub struct Coordinates(pub u32, pub u32, pub u32);
 
 impl Coordinates {
@@ -30,11 +33,13 @@ impl From<(u32, u32, u32)> for Coordinates {
     }
 }
 
+#[cfg(feature="specs")]
 impl Component for Coordinates {
     type Storage = FlaggedStorage<Coordinates, VecStorage<Coordinates>>;
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+#[cfg_attr(feature="serde", derive(Serialize, Deserialize))]
 pub enum Direction {
     North,
     South,
@@ -72,10 +77,6 @@ impl Default for Direction {
     fn default() -> Self {
         Direction::South
     }
-}
-
-impl Component for Direction {
-    type Storage = FlaggedStorage<Direction, VecStorage<Direction>>;
 }
 
 /// In Byond, the direction is a bitfield with:
@@ -116,4 +117,9 @@ impl TryFrom<u8> for Direction {
             _ => return Err(()),
         })
     }
+}
+
+#[cfg(feature="specs")]
+impl Component for Direction {
+    type Storage = FlaggedStorage<Direction, VecStorage<Direction>>;
 }

@@ -96,6 +96,7 @@ dependencies = [
  "amethyst_core 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_error 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_rendy 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "byond 0.1.0",
  "dreammaker 0.1.0 (git+https://github.com/SpaceManiac/SpacemanDMM.git?tag=suite-1.0)",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "inflate 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -547,6 +548,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "build_const"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "byond"
+version = "0.1.0"
+dependencies = [
+ "serde 1.0.94 (registry+https://github.com/rust-lang/crates.io-index)",
+ "specs 0.14.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "byteorder"

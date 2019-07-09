@@ -553,6 +553,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "byond"
 version = "0.1.0"
 dependencies = [
+ "dreammaker-runtime 0.1.0",
  "serde 1.0.94 (registry+https://github.com/rust-lang/crates.io-index)",
  "specs 0.14.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

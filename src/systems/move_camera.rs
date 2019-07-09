@@ -1,6 +1,9 @@
+use std::time::Duration;
+
 use amethyst::{
     animation::{
-        get_animation_set, AnimationCommand, AnimationControlSet, AnimationSet, EndControl,
+        get_animation_set, AnimationCommand, AnimationControlSet, AnimationSet, ControlState,
+        EndControl, SamplerControlSet,
     },
     core::Time,
     ecs::{Entities, Entity, Join, Read, ReadStorage, System, Write, WriteStorage},
@@ -31,14 +34,11 @@ impl MoveCamera {
         cooldown: Option<&mut MoveCooldown>,
         animations: &AnimationSet<Direction, Moving>,
         animation_controls: &mut AnimationControlSet<Direction, Moving>,
+        samplers: Option<&mut SamplerControlSet<Moving>>,
     ) {
         match cooldown {
             Some(ref c) if !c.is_finished(time.absolute_time()) => return,
             _ => (),
-        }
-
-        if animation_controls.has_animation(dir) {
-            return; // Still animating
         }
 
         dirs.insert(entity, dir).ok();
@@ -75,7 +75,18 @@ impl MoveCamera {
             }
 
             // Apply the animation
-            if let Some(animation) = animations.get(&dir) {
+            if let Some(animation) = animation_controls.animations.iter().find(|a| a.0 == dir) {
+                // We could do a AnimationControlSet::set_input, but there is a bug if the animation is a its final frame
+                // So we manually grap it in the SamplerControlSet. This is fine because it is a single-node animation
+                let id = animation.1.id;
+                let samplers_control_set = samplers.expect("An animating");
+                let sampler = samplers_control_set
+                    .samplers
+                    .iter_mut()
+                    .find(|s| s.control_id == id)
+                    .expect("The sampler control set should contain an animation");
+                sampler.state = ControlState::Running(Duration::from_secs(0));
+            } else if let Some(animation) = animations.get(&dir) {
                 animation_controls.add_animation(
                     dir,
                     animation,
@@ -97,6 +108,7 @@ impl<'a> System<'a> for MoveCamera {
         ReadStorage<'a, Dense>,
         ReadStorage<'a, Player>,
         WriteStorage<'a, AnimationControlSet<Direction, Moving>>,
+        WriteStorage<'a, SamplerControlSet<Moving>>,
         WriteStorage<'a, Direction>,
         WriteStorage<'a, MoveCooldown>,
         WriteStorage<'a, Coordinates>,
@@ -113,6 +125,7 @@ impl<'a> System<'a> for MoveCamera {
             dense,
             players,
             mut animation_controls,
+            mut samplers_controls,
             mut directions,
             mut cooldowns,
             mut coords,
@@ -124,7 +137,14 @@ impl<'a> System<'a> for MoveCamera {
                 .action_is_down(&Input::Move(*dir))
                 .unwrap_or_default()
             {
-                for (e, _, cooldown) in (&entities, &players, (&mut cooldowns).maybe()).join() {
+                for (e, _, cooldown, samplers_control) in (
+                    &entities,
+                    &players,
+                    (&mut cooldowns).maybe(),
+                    (&mut samplers_controls).maybe(),
+                )
+                    .join()
+                {
                     let control_set = get_animation_set(&mut animation_controls, e)
                         .expect("The entity should be valid");
 
@@ -140,6 +160,7 @@ impl<'a> System<'a> for MoveCamera {
                         cooldown,
                         &animations,
                         control_set,
+                        samplers_control,
                     );
                 }
             }

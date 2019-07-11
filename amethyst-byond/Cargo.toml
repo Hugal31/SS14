@@ -13,6 +13,7 @@ amethyst_error = "0.1"
 amethyst_rendy = { version = "0.1", features = ["nightly"] }
 byond = { path = "../byond", features = ["serde", "specs"] }
 dreammaker = { git = "https://github.com/SpaceManiac/SpacemanDMM.git", tag = "suite-1.0" }
+dreammaker-runtime = { path = "../dreammaker-runtime" }
 inflate = "0.4"
 png = "0.14"
 fnv = "1"

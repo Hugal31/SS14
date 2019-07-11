@@ -98,6 +98,7 @@ dependencies = [
  "amethyst_rendy 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "byond 0.1.0",
  "dreammaker 0.1.0 (git+https://github.com/SpaceManiac/SpacemanDMM.git?tag=suite-1.0)",
+ "dreammaker-runtime 0.1.0",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "inflate 0.4.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",

@@ -38,6 +38,14 @@ impl Instance {
         self.vars.get_mut(name)
     }
 
+    pub fn vars(&mut self) -> &HashMap<String, Value> {
+        &self.vars
+    }
+
+    pub fn vars_mut(&mut self) -> &mut HashMap<String, Value> {
+        &mut self.vars
+    }
+
     fn populate_with_parents(&mut self, type_ref: TypeRef) {
         if let Some(parent) = type_ref.parent_type() {
             self.populate_with_parents(parent)
@@ -66,6 +74,31 @@ pub enum Value {
     String(String),
     Int(i32),
     Float(f32),
+}
+
+impl Value {
+    /// Return true if the value is TRUE, != 0, etc...
+    pub fn is_true(&self) -> bool {
+        use Value::*;
+        match self {
+            String(s) => !s.is_empty(),
+            Int(i) => *i != 0,
+            Float(f) => *f != 0.0,
+            _ => false,
+        }
+    }
+}
+
+impl From<&str> for Value {
+    fn from(s: &str) -> Self {
+        Value::String(s.to_string())
+    }
+}
+
+impl From<i32> for Value {
+    fn from(n: i32) -> Self {
+        Value::Int(n)
+    }
 }
 
 impl TryFrom<&Constant> for Value {

@@ -8,7 +8,8 @@ use amethyst::{
     },
     shrev::EventChannel,
 };
-use amethyst_byond::components::{Dense, IconFrame, IconState, IconStateName};
+use amethyst_byond::components::{IconFrame, IconState, ScriptInstance};
+use dreammaker_runtime::Value;
 
 use crate::{
     components::{Door, DoorState},
@@ -37,14 +38,13 @@ impl<'a> System<'a> for DoorSystem {
         Read<'a, EventChannel<BumpEvent>>,
         ReadStorage<'a, IconFrame>,
         ReadStorage<'a, IconState>,
-        WriteStorage<'a, Dense>,
         WriteStorage<'a, Door>,
-        WriteStorage<'a, IconStateName>,
+        WriteStorage<'a, ScriptInstance>,
     );
 
     fn run(
         &mut self,
-        (entities, time, bumps, frames, states, mut dense, mut doors, mut icons): Self::SystemData,
+        (entities, time, bumps, frames, states, mut doors, mut instances): Self::SystemData,
     ) {
         self.bumped.clear();
         self.bumped.extend(
@@ -53,12 +53,12 @@ impl<'a> System<'a> for DoorSystem {
                 .map(|e| e.bumped.id()),
         );
 
-        for (e, frame, state, door, mut icon) in (
+        for (e, frame, state, door, mut instance) in (
             &entities,
             frames.maybe(),
             &states,
             &mut doors,
-            &mut icons.restrict_mut(),
+            &mut instances.restrict_mut(),
         )
             .join()
         {
@@ -69,21 +69,29 @@ impl<'a> System<'a> for DoorSystem {
             match door.state {
                 DoorState::Close if self.bumped.contains(e.id()) => {
                     door.state = DoorState::Openning;
-                    *icon.get_mut_unchecked() = IconStateName("opening".to_string());
+                    let i = instance.get_mut_unchecked();
+                    i.0.vars_mut().insert("icon_state".to_string(), Value::from("opening"));
+                    i.0.vars_mut().insert("opacity".to_string(), Value::from(0));
                 }
                 DoorState::Openning if is_animation_finished => {
                     door.state = DoorState::Open(time.absolute_time());
-                    dense.remove(e);
-                    *icon.get_mut_unchecked() = IconStateName("open".to_string());
+                    let i = instance.get_mut_unchecked();
+                    i.0.vars_mut().insert("icon_state".to_string(), Value::from("open"));
+                    i.0.vars_mut().insert("density".to_string(), Value::from(0));
                 }
                 DoorState::Open(d) if d + DOOR_OPEN_TIME <= time.absolute_time() => {
                     door.state = DoorState::Closing;
-                    dense.insert(e, Dense).ok();
-                    *icon.get_mut_unchecked() = IconStateName("closing".to_string());
+                    let i = instance.get_mut_unchecked();
+                    i.0.vars_mut().insert("icon_state".to_string(), Value::from("closing"));
+                    i.0.vars_mut().insert("density".to_string(), Value::from(1));
                 }
                 DoorState::Closing if is_animation_finished => {
                     door.state = DoorState::Close;
-                    *icon.get_mut_unchecked() = IconStateName("closed".to_string());
+                    let i = instance.get_mut_unchecked();
+                    i.0.vars_mut().insert("icon_state".to_string(), Value::from("closed"));
+                    if !i.0.get_var("glass").map(Value::is_true).unwrap_or(false) {
+                        i.0.vars_mut().insert("opacity".to_string(), Value::from(1));
+                    }
                 }
                 _ => (),
             }

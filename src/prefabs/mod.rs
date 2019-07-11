@@ -14,13 +14,14 @@ use amethyst_byond::{
         dm::{DreamMakerEnvironment, DreamMakerHandle},
         dmi::{Dmi, DmiFormat},
     },
-    components::{Coordinates, Dense, Direction, IconStateName, Layer, LayerName, Opaque},
+    components::{Coordinates, Direction, Layer, LayerName, ScriptInstance},
 };
 use dmm::{Datum, Literal};
 use dreammaker_runtime::{Instance as DMInstance, Value as DMValue};
 use fnv::FnvHashMap;
 
 use crate::assets::SS13_SOURCE;
+use crate::components::Door;
 
 pub struct MapPrefabData {
     pub coords: Coordinates,
@@ -42,13 +43,12 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         Write<'a, DmiCache>,
         WriteStorage<'a, Coordinates>,
         WriteStorage<'a, Direction>,
+        WriteStorage<'a, ScriptInstance>,
         WriteStorage<'a, Layer>,
-        WriteStorage<'a, IconStateName>,
         WriteStorage<'a, Handle<Dmi>>,
         WriteStorage<'a, Transform>,
         WriteStorage<'a, Transparent>,
-        WriteStorage<'a, Dense>,
-        WriteStorage<'a, Opaque>,
+        WriteStorage<'a, Door>,
     );
     type Result = ();
 
@@ -64,13 +64,12 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             ref mut dmi_cache,
             ref mut coords,
             ref mut dirs,
+            ref mut instances,
             ref mut layers,
-            ref mut icon_states,
             ref mut dmis,
             ref mut transforms,
             ref mut transparents,
-            ref mut _dense,
-            ref mut _opaques,
+            ref mut doors,
         ): &mut Self::SystemData,
         _entities: &[Entity],
         _children: &[Entity],
@@ -80,7 +79,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             coords.insert(entity, self.coords.clone())?;
             transforms.insert(entity, Default::default())?;
 
-            let instance = DMInstance::instantiate(type_idx);
+            let mut instance = DMInstance::instantiate(type_idx);
 
             // Load layer and transparency
             if let Some(layer) = instance.get_var("layer").and_then(|l| match l {
@@ -109,9 +108,7 @@ impl<'a> PrefabData<'a> for MapPrefabData {
 
             // Load icon state
             if let Some(Literal::Str(icon_state)) = self.datum.var_edit("icon_state") {
-                icon_states.insert(entity, IconStateName(icon_state.clone()))?;
-            } else if let Some(DMValue::String(icon_state)) = instance.get_var("icon_state") {
-                icon_states.insert(entity, IconStateName(icon_state.clone()))?;
+                instance.vars_mut().insert("icon_state".to_string(), DMValue::String(icon_state.clone()));
             }
 
             // Load direction
@@ -120,6 +117,12 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             } else if let Some(DMValue::Int(i)) = instance.get_var("dir") {
                 dirs.insert(entity, Direction::try_from(*i as u8).unwrap_or_default())?;
             }
+
+            if instance.path().starts_with("/obj/machinery/door") {
+                doors.insert(entity, Door::default())?;
+            }
+
+            instances.insert(entity, ScriptInstance(instance))?;
         } else {
             warn!("Type not found: {}", self.datum.path());
         }

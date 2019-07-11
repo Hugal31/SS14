@@ -25,10 +25,13 @@
 /turf/open/floor/plasteel,
 /obj/structure/window/reinforced/fulltile
 )
+"ns" = (
+/turf/open/space,
+/area/space/nearstation)
 
 (0,0,1) = {"ac"}
 (1,1,1) = {"
-ad aa aa aa aa aa aa aa aa ac
+ad aa aa aa aa aa aa aa ns ac
 "}
 (2,1,1) = {"
 aa aa ab ab ab ab ab ab ab aa

@@ -31,6 +31,11 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
 
         dispatcher.add(
+            systems::SyncScriptSystem::new(),
+            "sync_script",
+            &[]
+        );
+        dispatcher.add(
             systems::SyncCoordsSystem::default(),
             "sync_coords",
             // TODO Remove move_camera
@@ -42,7 +47,7 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             &[],
         );
 
-        dispatcher.add(systems::SyncIconStateSystem::new(), "sync_icon_states", &[]);
+        dispatcher.add(systems::SyncIconStateSystem::new(), "sync_icon_states", &["sync_script"]);
         dispatcher.add(
             systems::IconStateAnimation::new(),
             "icon_state_animation",

@@ -1,3 +1,5 @@
+#![feature(option_flattening)]
+
 #[macro_use]
 extern crate log;
 

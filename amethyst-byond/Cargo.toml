@@ -12,6 +12,7 @@ amethyst_core = { version = "0.6", features = ["nightly"] }
 amethyst_error = "0.1"
 amethyst_rendy = { version = "0.1", features = ["nightly"] }
 byond = { path = "../byond", features = ["serde", "specs"] }
+byond-lua = { path = "../byond-lua" }
 dreammaker = { git = "https://github.com/SpaceManiac/SpacemanDMM.git", tag = "suite-1.0" }
 dreammaker-runtime = { path = "../dreammaker-runtime" }
 inflate = "0.4"
@@ -20,3 +21,4 @@ fnv = "1"
 log = "0.4"
 serde = { version = "1", features = ["derive"] }
 rayon = "1"
+rlua = "0.16"

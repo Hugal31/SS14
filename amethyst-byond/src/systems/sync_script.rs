@@ -1,11 +1,13 @@
+use amethyst_assets::AssetStorage;
 use amethyst_core::{
     ecs::{
         shred::DynamicSystemData, storage::ComponentEvent, BitSet, Entities, Join,
-        ReadStorage, ReaderId, Resources, System, SystemData, WriteStorage,
+        Read, ReadStorage, ReaderId, Resources, System, SystemData, Write, WriteStorage,
     },
 };
-use dreammaker_runtime::Value;
+use rlua::{Error as LuaError, Table};
 
+use crate::assets::scripting::{ScriptEnvironment, ScriptHandle};
 use crate::components::{Dense, IconStateName, Opaque, ScriptInstance};
 use super::read_ins_mod_events;
 
@@ -26,12 +28,24 @@ impl<'a> System<'a> for SyncScriptSystem {
     type SystemData = (
         Entities<'a>,
         ReadStorage<'a, ScriptInstance>,
+        Option<Read<'a, ScriptHandle>>,
+        Write<'a, AssetStorage<ScriptEnvironment>>,
         WriteStorage<'a, Dense>,
         WriteStorage<'a, IconStateName>,
         WriteStorage<'a, Opaque>,
     );
 
-    fn run(&mut self, (entities, instances, mut denses, mut icon_names, mut opaques): Self::SystemData) {
+    fn run(&mut self, (entities, instances, script_handle, mut scripts, mut denses, mut icon_names, mut opaques): Self::SystemData) {
+        let script_env = if let Some(env) = script_handle.as_ref()
+            .map(|handle| scripts.get_mut(handle))
+            .flatten()
+        {
+            env
+        } else {
+            log::warn!("No ScriptEnvironment");
+            return;
+        };
+
         self.modified.clear();
         read_ins_mod_events(
             &mut self.modified,
@@ -39,31 +53,39 @@ impl<'a> System<'a> for SyncScriptSystem {
             self.instance_event_id.as_mut().expect("setup was not called"),
         );
 
-        // TODO See if it is possible to use opaques.maybe()
-        for (entity, instance, _) in (&entities, &instances, &self.modified).join() {
-            if instance.0.get_var("opacity").map(|v| v.is_true()).unwrap_or(false) {
-                opaques.insert(entity, Opaque::default()).ok();
-            } else {
-                opaques.remove(entity);
-            }
+        script_env.root.run(|lua_ctx| {
+            let mut update_entity = |entity, instance: &ScriptInstance| -> Result<(), LuaError> {
+                let instance: Table = lua_ctx.registry_value(&instance.0)?;
 
-            if instance.0.get_var("density").map(Value::is_true).unwrap_or(false) {
-                denses.insert(entity, Dense::default()).ok();
-            } else {
-                denses.remove(entity);
-            }
+                match instance.get("opacity")? {
+                    Some(true) => { opaques.insert(entity, Opaque::default()).ok(); },
+                    _ => { opaques.remove(entity); },
+                }
 
-            if let Some(Value::String(icon_name)) = instance.0.get_var("icon_state") {
-                if !icon_names.get(entity)
-                    .map(|i| &i.0 == icon_name)
-                    .unwrap_or(false)
-                {
-                    icon_names.insert(entity, IconStateName(icon_name.to_string()))
-                        .expect("Entity should be valid");
+                match instance.get("density")? {
+                    Some(true) => { denses.insert(entity, Dense::default()).ok(); },
+                    _ => { denses.remove(entity); },
+                }
+
+                if let Some(icon_name) = instance.get("icon_state")? {
+                    if !icon_names.get(entity)
+                        .map(|i| i.0 == icon_name)
+                        .unwrap_or(false)
+                    {
+                        icon_names.insert(entity, IconStateName(icon_name))
+                            .expect("Entity should be valid");
+                    }
+                }
+
+                Ok(())
+            };
+
+            for (entity, instance, _) in (&entities, &instances, &self.modified).join() {
+                if let Err(err) = update_entity(entity, instance) {
+                    log::error!("Error while working on lua value: {}", err);
                 }
             }
-
-        }
+        });
     }
 
     fn setup(&mut self, res: &mut Resources) {

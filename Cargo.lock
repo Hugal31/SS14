@@ -97,6 +97,7 @@ dependencies = [
  "amethyst_error 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_rendy 0.1.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "byond 0.1.0",
+ "byond-lua 0.1.0",
  "dreammaker 0.1.0 (git+https://github.com/SpaceManiac/SpacemanDMM.git?tag=suite-1.0)",
  "dreammaker-runtime 0.1.0",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -104,6 +105,7 @@ dependencies = [
  "log 0.4.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "png 0.14.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rayon 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rlua 0.16.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.94 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -557,6 +559,13 @@ dependencies = [
  "dreammaker-runtime 0.1.0",
  "serde 1.0.94 (registry+https://github.com/rust-lang/crates.io-index)",
  "specs 0.14.3 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "byond-lua"
+version = "0.1.0"
+dependencies = [
+ "rlua 0.16.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -3180,6 +3189,17 @@ version = "0.8.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "rlua"
+version = "0.16.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "bitflags 1.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
+ "libc 0.2.58 (registry+https://github.com/rust-lang/crates.io-index)",
+ "num-traits 0.2.8 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "rodio"
 version = "0.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3582,6 +3602,7 @@ version = "0.1.0"
 dependencies = [
  "amethyst 0.11.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst-byond 0.1.0",
+ "byond-lua 0.1.0",
  "dmm 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "dmm-format 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "dreammaker-runtime 0.1.0",
@@ -4600,6 +4621,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum rendy-wsi 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b273e68fc57b25dc460d41a743f14018121c43b00317692b2ae4a874803b6c10"
 "checksum reqwest 0.9.18 (registry+https://github.com/rust-lang/crates.io-index)" = "00eb63f212df0e358b427f0f40aa13aaea010b470be642ad422bcbca2feff2e4"
 "checksum rgb 0.8.13 (registry+https://github.com/rust-lang/crates.io-index)" = "4f089652ca87f5a82a62935ec6172a534066c7b97be003cc8f702ee9a7a59c92"
+"checksum rlua 0.16.3 (registry+https://github.com/rust-lang/crates.io-index)" = "62fc0e980c94fe9ef795b1bb3874649c8c6e9bb67d3b90d48380ba24c69c23ea"
 "checksum rodio 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "5d0f961b254e66d147a7b550c78b01308934c97d807a34b417fd0f5a0a0f3a2d"
 "checksum ron 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)" = "17f52a24414403f81528b67488cf8edc4eda977d3af1646bb6b106a600ead78f"
 "checksum ron 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)" = "2ece421e0c4129b90e4a35b6f625e472e96c552136f5093a2f4fa2bbb75a62d5"

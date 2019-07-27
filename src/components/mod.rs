@@ -41,7 +41,7 @@ impl Component for MoveCooldown {
     type Storage = VecStorage<MoveCooldown>;
 }
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct Door {
     #[serde(default)]
     pub state: DoorState,

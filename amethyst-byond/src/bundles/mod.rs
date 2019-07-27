@@ -2,7 +2,7 @@ use amethyst_animation::AnimationBundle;
 use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
 use amethyst_error::Error;
 
-use crate::assets::{dm::DreamMakerProcessor, dmi::DmiProcessor};
+use crate::assets::{dm::DreamMakerProcessor, dmi::DmiProcessor, scripting::ScriptProcessor};
 use crate::components::{Direction, Moving};
 use crate::systems;
 
@@ -29,6 +29,7 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
 
         dispatcher.add(DreamMakerProcessor::new(), "dm_processor", &[]);
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
+        dispatcher.add(ScriptProcessor::new(), "lua_processor", &[]);
 
         dispatcher.add(
             systems::SyncScriptSystem::new(),

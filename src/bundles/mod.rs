@@ -1,5 +1,5 @@
 use amethyst::{
-    assets::PrefabLoaderSystem, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
+    assets::{PrefabLoaderSystem, Processor}, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
 };
 use amethyst_byond::ByondBundle;
 
@@ -23,7 +23,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             &["input_system"],
         );
 
-        dispatcher.add(systems::DoorSystem::new(), "door_system", &[]);
+        // dispatcher.add(systems::DoorSystem::new(), "door_system", &[]);
 
         dispatcher.add(
             systems::VisionFieldSystem::new(),

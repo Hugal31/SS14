@@ -4,7 +4,10 @@ use amethyst::{
     ecs::{Read, ReadExpect, World},
 };
 use amethyst_byond::{
-    assets::dm::{DMFormat, DreamMakerEnvironment},
+    assets::{
+        dm::{DMFormat, DreamMakerEnvironment},
+        scripting::{LuaFormat, ScriptEnvironment},
+    },
     components::{Direction, Moving, MovingChannel},
 };
 
@@ -106,11 +109,22 @@ impl GameAssetsLoader {
 
         world.add_resource(dm_handle);
     }
+
+    fn load_lua(&self, world: &mut World, progress: &mut ProgressCounter) {
+        let lua_path = "resources/code/root.lua";
+
+        let script_handle = world.exec(|load: AssetLoaderSystemData<ScriptEnvironment>| {
+            load.load(lua_path.to_string(), LuaFormat, progress)
+        });
+
+        world.add_resource(script_handle);
+    }
 }
 
 impl AssetsLoader for GameAssetsLoader {
     fn load(&self, world: &mut World, progress: &mut ProgressCounter) {
         self.load_animations(world, progress);
-        self.load_dm(world, progress);
+        // self.load_dm(world, progress);
+        self.load_lua(world, progress)
     }
 }

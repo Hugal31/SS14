@@ -1,0 +1,30 @@
+local Stack = require "obj/item/stack/class"
+local CableCoil = Stack:new{
+    name = "cable coil",
+    custom_price = 15,
+    gender = "neuter",
+    icon = 'icons/obj/power.dmi',
+    icon_state = "coil",
+    item_state = "coil",
+    lefthand_file = 'icons/mob/inhands/equipment/tools_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/equipment/tools_righthand.dmi',
+    max_amount = 30,
+    amount = 30,
+    merge_type = nil,
+    item_color = "red",
+    desc = "A coil of insulated power cable.",
+    throwforce = 0,
+    w_class = 2,
+    throw_speed = 3,
+    throw_range = 5,
+    materials = {"$metal", "$glass", },
+    flags_1 = 32,
+    slot_flags = 512,
+    attack_verb = {"whipped", "lashed", "disciplined", "flogged", },
+    singular_name = "cable piece",
+    full_w_class = 2,
+    grind_results = {"copper", },
+    usesound = 'sound/items/deconstruct.ogg',
+
+}
+return CableCoil

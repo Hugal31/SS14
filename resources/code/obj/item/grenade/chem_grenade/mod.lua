@@ -1,0 +1,22 @@
+local Self = require "obj.item.grenade.chem_grenade.class"
+return {
+    CLASS = Self,
+    holy = require "obj.item.grenade.chem_grenade.holy.mod",
+    tuberculosis = require "obj.item.grenade.chem_grenade.tuberculosis.mod",
+    bioterrorfoam = require "obj.item.grenade.chem_grenade.bioterrorfoam.mod",
+    clf3 = require "obj.item.grenade.chem_grenade.clf3.mod",
+    glitter = require "obj.item.grenade.chem_grenade.glitter.mod",
+    colorful = require "obj.item.grenade.chem_grenade.colorful.mod",
+    facid = require "obj.item.grenade.chem_grenade.facid.mod",
+    ez_clean = require "obj.item.grenade.chem_grenade.ez_clean.mod",
+    cleaner = require "obj.item.grenade.chem_grenade.cleaner.mod",
+    antiweed = require "obj.item.grenade.chem_grenade.antiweed.mod",
+    incendiary = require "obj.item.grenade.chem_grenade.incendiary.mod",
+    smart_metal_foam = require "obj.item.grenade.chem_grenade.smart_metal_foam.mod",
+    metalfoam = require "obj.item.grenade.chem_grenade.metalfoam.mod",
+    adv_release = require "obj.item.grenade.chem_grenade.adv_release.mod",
+    pyro = require "obj.item.grenade.chem_grenade.pyro.mod",
+    cryo = require "obj.item.grenade.chem_grenade.cryo.mod",
+    large = require "obj.item.grenade.chem_grenade.large.mod",
+    teargas = require "obj.item.grenade.chem_grenade.teargas.mod",
+}

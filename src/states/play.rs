@@ -116,8 +116,20 @@ fn add_debug_lines(world: &mut World) -> Entity {
 }
 
 fn add_player(world: &mut World, parent: Entity, typ: &str) -> Entity {
+    use amethyst::ecs::{Join, ReadStorage};
+    let (center_x, center_y) = world.exec(|coords: ReadStorage<Coordinates>| {
+        let mut max_x = 0;
+        let mut max_y = 0;
+        for coord in (&coords).join() {
+            max_x = std::cmp::max(max_x, coord.0);
+            max_y = std::cmp::max(max_x, coord.1);
+        }
+
+        (max_x / 2, max_y / 2)
+    });
+
     let player_datum = MapPrefabData {
-        coords: Coordinates(4, 4, 1),
+        coords: Coordinates(center_x, center_y, 1),
         datum: Datum::new(typ),
     };
     let player = world

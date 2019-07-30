@@ -1,0 +1,20 @@
+local Self = require "obj.item.twohanded.class"
+return {
+    CLASS = Self,
+    ctf = require "obj.item.twohanded.ctf.mod",
+    cult_spear = require "obj.item.twohanded.cult_spear.mod",
+    binoculars = require "obj.item.twohanded.binoculars.mod",
+    bonespear = require "obj.item.twohanded.bonespear.mod",
+    vibro_weapon = require "obj.item.twohanded.vibro_weapon.mod",
+    pitchfork = require "obj.item.twohanded.pitchfork.mod",
+    spear = require "obj.item.twohanded.spear.mod",
+    fireaxe = require "obj.item.twohanded.fireaxe.mod",
+    required = require "obj.item.twohanded.required.mod",
+    offhand = require "obj.item.twohanded.offhand.mod",
+    dualsaber = require "obj.item.twohanded.dualsaber.mod",
+    mjollnir = require "obj.item.twohanded.mjollnir.mod",
+    singularityhammer = require "obj.item.twohanded.singularityhammer.mod",
+    rcl = require "obj.item.twohanded.rcl.mod",
+    shockpaddles = require "obj.item.twohanded.shockpaddles.mod",
+    bostaff = require "obj.item.twohanded.bostaff.mod",
+}

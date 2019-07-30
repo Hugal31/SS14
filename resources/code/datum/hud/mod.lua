@@ -1,0 +1,20 @@
+local Self = require "datum.hud.class"
+return {
+    CLASS = Self,
+    swarmer = require "datum.hud.swarmer.mod",
+    revenant = require "datum.hud.revenant.mod",
+    pai = require "datum.hud.pai.mod",
+    monkey = require "datum.hud.monkey.mod",
+    robot = require "datum.hud.robot.mod",
+    human = require "datum.hud.human.mod",
+    guardian = require "datum.hud.guardian.mod",
+    ghost = require "datum.hud.ghost.mod",
+    dextrous = require "datum.hud.dextrous.mod",
+    devil = require "datum.hud.devil.mod",
+    constructs = require "datum.hud.constructs.mod",
+    blobbernaut = require "datum.hud.blobbernaut.mod",
+    blob_overmind = require "datum.hud.blob_overmind.mod",
+    larva = require "datum.hud.larva.mod",
+    alien = require "datum.hud.alien.mod",
+    ai = require "datum.hud.ai.mod",
+}

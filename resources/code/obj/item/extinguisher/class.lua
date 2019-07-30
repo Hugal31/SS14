@@ -1,0 +1,31 @@
+local Item = require "obj/item/class"
+local Extinguisher = Item:new{
+    name = "fire extinguisher",
+    desc = "A traditional red fire extinguisher.",
+    icon = 'icons/obj/items_and_weapons.dmi',
+    icon_state = "fire_extinguisher0",
+    item_state = "fire_extinguisher",
+    hitsound = 'sound/weapons/smash.ogg',
+    flags_1 = 32,
+    throwforce = 10,
+    w_class = 3,
+    throw_speed = 2,
+    throw_range = 7,
+    force = 10,
+    materials = {"$metal", },
+    attack_verb = {"slammed", "whacked", "bashed", "thunked", "battered", "bludgeoned", "thrashed", },
+    dog_fashion = nil,
+    resistance_flags = 2,
+    max_water = 50,
+    last_use = 1,
+    chem = "water",
+    safety = 1,
+    refilling = 0,
+    tanktype = nil,
+    sprite_name = "fire_extinguisher",
+    power = 5,
+    precision = 0,
+    cooling_power = 2,
+
+}
+return Extinguisher

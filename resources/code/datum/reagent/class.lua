@@ -1,0 +1,30 @@
+local Datum = require "datum/class"
+local Reagent = Datum:new{
+    name = "Reagent",
+    id = "reagent",
+    description = "",
+    specific_heat = 200,
+    taste_description = "metaphorical salt",
+    taste_mult = 1,
+    glass_name = "glass of ...what?",
+    glass_desc = "You can't really tell what this is.",
+    glass_icon_state = nil,
+    shot_glass_icon_state = nil,
+    holder = nil,
+    reagent_state = 2,
+    data = nil,
+    current_cycle = 0,
+    volume = 0,
+    color = "#000000",
+    can_synth = 1,
+    metabolization_rate = 0.4,
+    overrides_metab = 0,
+    overdose_threshold = 0,
+    addiction_threshold = 0,
+    addiction_stage = 0,
+    overdosed = 0,
+    self_consuming = 0,
+    reagent_weight = 1,
+
+}
+return Reagent

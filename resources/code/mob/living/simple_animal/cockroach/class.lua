@@ -1,0 +1,32 @@
+local SimpleAnimal = require "mob/living/simple_animal/class"
+local Cockroach = SimpleAnimal:new{
+    name = "cockroach",
+    desc = "This station is just crawling with bugs.",
+    icon_state = "cockroach",
+    icon_dead = "cockroach",
+    health = 1,
+    maxHealth = 1,
+    turns_per_move = 5,
+    loot = {nil, },
+    atmos_requirements = {"min_oxy", "max_oxy", "min_tox", "max_tox", "min_co2", "max_co2", "min_n2", "max_n2", },
+    minbodytemp = 270,
+    maxbodytemp = 10000000000000000000000000000000,
+    pass_flags = 21,
+    mob_size = 0,
+    mob_biotypes = {"organic", "bug", },
+    response_help = "pokes",
+    response_disarm = "shoos",
+    response_harm = "splats",
+    speak_emote = {"chitters", },
+    density = false,
+    ventcrawler = 2,
+    gold_core_spawnable = 2,
+    verb_say = "chitters",
+    verb_ask = "chitters inquisitively",
+    verb_exclaim = "chitters loudly",
+    verb_yell = "chitters loudly",
+    squish_chance = 50,
+    del_on_death = 1,
+
+}
+return Cockroach

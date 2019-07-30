@@ -1,0 +1,21 @@
+local Self = require "obj.item.mecha_parts.mecha_equipment.class"
+return {
+    CLASS = Self,
+    ripleyupgrade = require "obj.item.mecha_parts.mecha_equipment.ripleyupgrade.mod",
+    cable_layer = require "obj.item.mecha_parts.mecha_equipment.cable_layer.mod",
+    rcd = require "obj.item.mecha_parts.mecha_equipment.rcd.mod",
+    extinguisher = require "obj.item.mecha_parts.mecha_equipment.extinguisher.mod",
+    hydraulic_clamp = require "obj.item.mecha_parts.mecha_equipment.hydraulic_clamp.mod",
+    generator = require "obj.item.mecha_parts.mecha_equipment.generator.mod",
+    tesla_energy_relay = require "obj.item.mecha_parts.mecha_equipment.tesla_energy_relay.mod",
+    repair_droid = require "obj.item.mecha_parts.mecha_equipment.repair_droid.mod",
+    antiproj_armor_booster = require "obj.item.mecha_parts.mecha_equipment.antiproj_armor_booster.mod",
+    anticcw_armor_booster = require "obj.item.mecha_parts.mecha_equipment.anticcw_armor_booster.mod",
+    gravcatapult = require "obj.item.mecha_parts.mecha_equipment.gravcatapult.mod",
+    wormhole_generator = require "obj.item.mecha_parts.mecha_equipment.wormhole_generator.mod",
+    teleporter = require "obj.item.mecha_parts.mecha_equipment.teleporter.mod",
+    mining_scanner = require "obj.item.mecha_parts.mecha_equipment.mining_scanner.mod",
+    drill = require "obj.item.mecha_parts.mecha_equipment.drill.mod",
+    medical = require "obj.item.mecha_parts.mecha_equipment.medical.mod",
+    weapon = require "obj.item.mecha_parts.mecha_equipment.weapon.mod",
+}

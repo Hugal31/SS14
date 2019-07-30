@@ -1,0 +1,20 @@
+local Self = require "obj.item.reagent_containers.food.snacks.meat.slab.class"
+return {
+    CLASS = Self,
+    penguin = require "obj.item.reagent_containers.food.snacks.meat.slab.penguin.mod",
+    gondola = require "obj.item.reagent_containers.food.snacks.meat.slab.gondola.mod",
+    gorilla = require "obj.item.reagent_containers.food.snacks.meat.slab.gorilla.mod",
+    meatwheat = require "obj.item.reagent_containers.food.snacks.meat.slab.meatwheat.mod",
+    goliath = require "obj.item.reagent_containers.food.snacks.meat.slab.goliath.mod",
+    spider = require "obj.item.reagent_containers.food.snacks.meat.slab.spider.mod",
+    xeno = require "obj.item.reagent_containers.food.snacks.meat.slab.xeno.mod",
+    bear = require "obj.item.reagent_containers.food.snacks.meat.slab.bear.mod",
+    killertomato = require "obj.item.reagent_containers.food.snacks.meat.slab.killertomato.mod",
+    pug = require "obj.item.reagent_containers.food.snacks.meat.slab.pug.mod",
+    corgi = require "obj.item.reagent_containers.food.snacks.meat.slab.corgi.mod",
+    mouse = require "obj.item.reagent_containers.food.snacks.meat.slab.mouse.mod",
+    monkey = require "obj.item.reagent_containers.food.snacks.meat.slab.monkey.mod",
+    meatproduct = require "obj.item.reagent_containers.food.snacks.meat.slab.meatproduct.mod",
+    synthmeat = require "obj.item.reagent_containers.food.snacks.meat.slab.synthmeat.mod",
+    human = require "obj.item.reagent_containers.food.snacks.meat.slab.human.mod",
+}

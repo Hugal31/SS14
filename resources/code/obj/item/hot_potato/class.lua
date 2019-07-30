@@ -1,0 +1,30 @@
+local Item = require "obj/item/class"
+local HotPotato = Item:new{
+    name = "hot potato",
+    desc = [[A label on the side of this potato reads \"Product of DonkCo Service Wing. Activate far away from populated areas. Device will only attach to sapient creatures.\" <span class='boldnotice'>You can attack anyone with it to force it on them instead of yourself!</span>]],
+    icon = 'icons/obj/hydroponics/harvest.dmi',
+    icon_state = "potato",
+    item_flags = 128,
+    force = 0,
+    icon_off = "potato",
+    icon_on = "potato_active",
+    detonation_timerid = nil,
+    activation_time = 0,
+    timer = 600,
+    show_timer = 0,
+    reusable = 0,
+    sticky = 1,
+    forceful_attachment = 1,
+    stimulant = 1,
+    detonate_explosion = 1,
+    detonate_dev_range = 0,
+    detonate_heavy_range = 0,
+    detonate_light_range = 2,
+    detonate_flash_range = 5,
+    detonate_fire_range = 5,
+    active = 0,
+    color_val = 0,
+    current = nil,
+
+}
+return HotPotato

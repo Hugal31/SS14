@@ -1,0 +1,20 @@
+local Self = require "datum.ui_state.class"
+return {
+    CLASS = Self,
+    z_state = require "datum.ui_state.z_state.mod",
+    self_state = require "datum.ui_state.self_state.mod",
+    physical = require "datum.ui_state.physical.mod",
+    observer_state = require "datum.ui_state.observer_state.mod",
+    notcontained_state = require "datum.ui_state.notcontained_state.mod",
+    not_incapacitated_state = require "datum.ui_state.not_incapacitated_state.mod",
+    language_menu = require "datum.ui_state.language_menu.mod",
+    inventory_state = require "datum.ui_state.inventory_state.mod",
+    human_adjacent_state = require "datum.ui_state.human_adjacent_state.mod",
+    hands_state = require "datum.ui_state.hands_state.mod",
+    default = require "datum.ui_state.default.mod",
+    deep_inventory_state = require "datum.ui_state.deep_inventory_state.mod",
+    contained_state = require "datum.ui_state.contained_state.mod",
+    conscious_state = require "datum.ui_state.conscious_state.mod",
+    always_state = require "datum.ui_state.always_state.mod",
+    admin_state = require "datum.ui_state.admin_state.mod",
+}

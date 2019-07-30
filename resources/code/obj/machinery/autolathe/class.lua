@@ -1,0 +1,33 @@
+local Machinery = require "obj/machinery/class"
+local Autolathe = Machinery:new{
+    name = "autolathe",
+    desc = "It produces items using metal and glass.",
+    icon_state = "autolathe",
+    density = true,
+    use_power = 1,
+    idle_power_usage = 10,
+    active_power_usage = 100,
+    circuit = nil,
+    layer = 2.9,
+    operating = 0,
+    L = {},
+    LL = {},
+    hacked = 0,
+    disabled = 0,
+    shocked = 0,
+    hack_wire = nil,
+    disable_wire = nil,
+    shock_wire = nil,
+    busy = 0,
+    prod_coeff = 1,
+    being_built = nil,
+    stored_research = nil,
+    matching_designs = nil,
+    selected_category = nil,
+    screen = 1,
+    base_price = 25,
+    hacked_price = 50,
+    categories = {"Tools", "Electronics", "Construction", "T-Comm", "Security", "Machinery", "Medical", "Misc", "Dinnerware", "Imported", },
+
+}
+return Autolathe

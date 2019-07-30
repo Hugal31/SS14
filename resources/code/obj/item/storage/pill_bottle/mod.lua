@@ -1,0 +1,20 @@
+local Self = require "obj.item.storage.pill_bottle.class"
+return {
+    CLASS = Self,
+    floorpill = require "obj.item.storage.pill_bottle.floorpill.mod",
+    neurine = require "obj.item.storage.pill_bottle.neurine.mod",
+    penacid = require "obj.item.storage.pill_bottle.penacid.mod",
+    happiness = require "obj.item.storage.pill_bottle.happiness.mod",
+    psicodine = require "obj.item.storage.pill_bottle.psicodine.mod",
+    aranesp = require "obj.item.storage.pill_bottle.aranesp.mod",
+    lsd = require "obj.item.storage.pill_bottle.lsd.mod",
+    happy = require "obj.item.storage.pill_bottle.happy.mod",
+    zoom = require "obj.item.storage.pill_bottle.zoom.mod",
+    mining = require "obj.item.storage.pill_bottle.mining.mod",
+    stimulant = require "obj.item.storage.pill_bottle.stimulant.mod",
+    mannitol = require "obj.item.storage.pill_bottle.mannitol.mod",
+    mutadone = require "obj.item.storage.pill_bottle.mutadone.mod",
+    epinephrine = require "obj.item.storage.pill_bottle.epinephrine.mod",
+    charcoal = require "obj.item.storage.pill_bottle.charcoal.mod",
+    dice = require "obj.item.storage.pill_bottle.dice.mod",
+}

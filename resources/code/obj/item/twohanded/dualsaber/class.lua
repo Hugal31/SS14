@@ -1,0 +1,32 @@
+local Twohanded = require "obj/item/twohanded/class"
+local Dualsaber = Twohanded:new{
+    icon_state = "dualsaber0",
+    lefthand_file = 'icons/mob/inhands/weapons/swords_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/weapons/swords_righthand.dmi',
+    name = "double-bladed energy sword",
+    desc = "Handle with care.",
+    force = 3,
+    throwforce = 5,
+    throw_speed = 3,
+    throw_range = 5,
+    w_class = 2,
+    w_class_on = 4,
+    force_unwielded = 3,
+    force_wielded = 34,
+    wieldsound = 'sound/weapons/saberon.ogg',
+    unwieldsound = 'sound/weapons/saberoff.ogg',
+    hitsound = "swing_hit",
+    armour_penetration = 35,
+    item_color = "green",
+    light_color = "#00ff00",
+    attack_verb = {"attacked", "slashed", "stabbed", "sliced", "torn", "ripped", "diced", "cut", },
+    block_chance = 75,
+    max_integrity = 200,
+    armor = {"melee", "bullet", "laser", "energy", "bomb", "bio", "rad", "fire", "acid", },
+    resistance_flags = 2,
+    hacked = 0,
+    brightness_on = 6,
+    possible_colors = {"red", "blue", "green", "purple", },
+
+}
+return Dualsaber

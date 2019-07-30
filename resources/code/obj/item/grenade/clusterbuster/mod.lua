@@ -1,0 +1,20 @@
+local Self = require "obj.item.grenade.clusterbuster.class"
+return {
+    CLASS = Self,
+    slime = require "obj.item.grenade.clusterbuster.slime.mod",
+    random = require "obj.item.grenade.clusterbuster.random.mod",
+    clf3 = require "obj.item.grenade.clusterbuster.clf3.mod",
+    soap = require "obj.item.grenade.clusterbuster.soap.mod",
+    spawner_spesscarp = require "obj.item.grenade.clusterbuster.spawner_spesscarp.mod",
+    spawner_manhacks = require "obj.item.grenade.clusterbuster.spawner_manhacks.mod",
+    syndieminibomb = require "obj.item.grenade.clusterbuster.syndieminibomb.mod",
+    facid = require "obj.item.grenade.clusterbuster.facid.mod",
+    teargas = require "obj.item.grenade.clusterbuster.teargas.mod",
+    cleaner = require "obj.item.grenade.clusterbuster.cleaner.mod",
+    antiweed = require "obj.item.grenade.clusterbuster.antiweed.mod",
+    inferno = require "obj.item.grenade.clusterbuster.inferno.mod",
+    metalfoam = require "obj.item.grenade.clusterbuster.metalfoam.mod",
+    smoke = require "obj.item.grenade.clusterbuster.smoke.mod",
+    emp = require "obj.item.grenade.clusterbuster.emp.mod",
+    segment = require "obj.item.grenade.clusterbuster.segment.mod",
+}

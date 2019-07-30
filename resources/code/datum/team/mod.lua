@@ -1,0 +1,21 @@
+local Self = require "datum.team.class"
+return {
+    CLASS = Self,
+    xeno = require "datum.team.xeno.mod",
+    wizard = require "datum.team.wizard.mod",
+    nation = require "datum.team.nation.mod",
+    revolution = require "datum.team.revolution.mod",
+    pirate = require "datum.team.pirate.mod",
+    overthrow = require "datum.team.overthrow.mod",
+    nuclear = require "datum.team.nuclear.mod",
+    monkey = require "datum.team.monkey.mod",
+    hivemind = require "datum.team.hivemind.mod",
+    fugitive_hunters = require "datum.team.fugitive_hunters.mod",
+    fugitive = require "datum.team.fugitive.mod",
+    ert = require "datum.team.ert.mod",
+    clockcult = require "datum.team.clockcult.mod",
+    brother_team = require "datum.team.brother_team.mod",
+    abductor_team = require "datum.team.abductor_team.mod",
+    custom = require "datum.team.custom.mod",
+    cult = require "datum.team.cult.mod",
+}

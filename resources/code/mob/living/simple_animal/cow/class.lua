@@ -1,0 +1,32 @@
+local SimpleAnimal = require "mob/living/simple_animal/class"
+local Cow = SimpleAnimal:new{
+    name = "cow",
+    desc = "Known for their milk, just don't tip them over.",
+    icon_state = "cow",
+    icon_living = "cow",
+    icon_dead = "cow_dead",
+    icon_gib = "cow_gib",
+    gender = "female",
+    mob_biotypes = {"organic", "beast", },
+    speak = {"moo?", "moo", "MOOOOOO", },
+    speak_emote = {"moos", "moos hauntingly", },
+    emote_hear = {"brays.", },
+    emote_see = {"shakes its head.", },
+    speak_chance = 1,
+    turns_per_move = 5,
+    see_in_dark = 6,
+    butcher_results = {nil, },
+    response_help = "pets",
+    response_disarm = "gently pushes aside",
+    response_harm = "kicks",
+    attacktext = "kicks",
+    attack_sound = 'sound/weapons/punch1.ogg',
+    health = 50,
+    maxHealth = 50,
+    udder = nil,
+    gold_core_spawnable = 2,
+    blood_volume = 560,
+    do_footstep = 1,
+
+}
+return Cow

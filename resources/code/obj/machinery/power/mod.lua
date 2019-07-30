@@ -1,0 +1,23 @@
+local Self = require "obj.machinery.power.class"
+return {
+    CLASS = Self,
+    grounding_rod = require "obj.machinery.power.grounding_rod.mod",
+    tesla_coil = require "obj.machinery.power.tesla_coil.mod",
+    supermatter_crystal = require "obj.machinery.power.supermatter_crystal.mod",
+    rad_collector = require "obj.machinery.power.rad_collector.mod",
+    am_control_unit = require "obj.machinery.power.am_control_unit.mod",
+    turbine = require "obj.machinery.power.turbine.mod",
+    compressor = require "obj.machinery.power.compressor.mod",
+    tracker = require "obj.machinery.power.tracker.mod",
+    terminal = require "obj.machinery.power.terminal.mod",
+    solar_control = require "obj.machinery.power.solar_control.mod",
+    solar = require "obj.machinery.power.solar.mod",
+    rtg = require "obj.machinery.power.rtg.mod",
+    port_gen = require "obj.machinery.power.port_gen.mod",
+    generator = require "obj.machinery.power.generator.mod",
+    floodlight = require "obj.machinery.power.floodlight.mod",
+    emitter = require "obj.machinery.power.emitter.mod",
+    smes = require "obj.machinery.power.smes.mod",
+    singularity_beacon = require "obj.machinery.power.singularity_beacon.mod",
+    apc = require "obj.machinery.power.apc.mod",
+}

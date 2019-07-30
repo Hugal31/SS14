@@ -1,97 +1,112 @@
-use amethyst_assets::AssetStorage;
-use amethyst_core::{
-    ecs::{
-        shred::DynamicSystemData, storage::ComponentEvent, BitSet, Entities, Join,
-        Read, ReadStorage, ReaderId, Resources, System, SystemData, Write, WriteStorage,
-    },
+use amethyst_core::ecs::{
+    Component, Read, ReaderId, Resources, System, SystemData, Write, WriteStorage,
 };
-use rlua::{Error as LuaError, Table};
+use derivative::Derivative;
 
-use crate::assets::scripting::{ScriptEnvironment, ScriptHandle};
-use crate::components::{Dense, IconStateName, Opaque, ScriptInstance};
-use super::read_ins_mod_events;
+use crate::components::{ScriptComponent, ScriptComponentChannel, ScriptComponentUpdate};
 
-/// System to sync `ScriptInstance` properties.
-#[derive(Default)]
-pub struct SyncScriptSystem {
-    instance_event_id: Option<ReaderId<ComponentEvent>>,
-
-    modified: BitSet,
+#[derive(Derivative)]
+#[derivative(Default(bound = ""))]
+pub struct SyncZeroSizeComponentSystem<C>
+where
+    C: ScriptComponent<Value = bool>,
+{
+    reader_id: Option<ReaderId<ScriptComponentUpdate<<C as ScriptComponent>::Value>>>,
 }
 
-impl SyncScriptSystem {
-    pub fn new() -> Self { Self::default() }
+impl<C> SyncZeroSizeComponentSystem<C>
+where
+    C: ScriptComponent<Value = bool>,
+{
+    pub fn new() -> Self {
+        Self::default()
+    }
 }
 
-impl<'a> System<'a> for SyncScriptSystem {
+impl<'a, C> System<'a> for SyncZeroSizeComponentSystem<C>
+where
+    C: Component + ScriptComponent<Value = bool>,
+{
+    type SystemData = (Read<'a, ScriptComponentChannel<C>>, WriteStorage<'a, C>);
 
-    type SystemData = (
-        Entities<'a>,
-        ReadStorage<'a, ScriptInstance>,
-        Option<Read<'a, ScriptHandle>>,
-        Write<'a, AssetStorage<ScriptEnvironment>>,
-        WriteStorage<'a, Dense>,
-        WriteStorage<'a, IconStateName>,
-        WriteStorage<'a, Opaque>,
-    );
-
-    fn run(&mut self, (entities, instances, script_handle, mut scripts, mut denses, mut icon_names, mut opaques): Self::SystemData) {
-        let script_env = if let Some(env) = script_handle.as_ref()
-            .map(|handle| scripts.get_mut(handle))
-            .flatten()
-        {
-            env
-        } else {
-            log::warn!("No ScriptEnvironment");
-            return;
-        };
-
-        self.modified.clear();
-        read_ins_mod_events(
-            &mut self.modified,
-            &instances,
-            self.instance_event_id.as_mut().expect("setup was not called"),
-        );
-
-        script_env.root.run(|lua_ctx| {
-            let mut update_entity = |entity, instance: &ScriptInstance| -> Result<(), LuaError> {
-                let instance: Table = lua_ctx.registry_value(&instance.0)?;
-
-                match instance.get("opacity")? {
-                    Some(true) => { opaques.insert(entity, Opaque::default()).ok(); },
-                    _ => { opaques.remove(entity); },
+    fn run(&mut self, (events, mut components): Self::SystemData) {
+        events
+            .inner
+            .read()
+            .unwrap()
+            .read(self.reader_id.as_mut().expect("setup was not called"))
+            .for_each(|update| {
+                if update.value {
+                    components
+                        .insert(update.entity, C::from_value(update.value))
+                        .ok(); // TODO check error
+                } else {
+                    components.remove(update.entity);
                 }
-
-                match instance.get("density")? {
-                    Some(true) => { denses.insert(entity, Dense::default()).ok(); },
-                    _ => { denses.remove(entity); },
-                }
-
-                if let Some(icon_name) = instance.get("icon_state")? {
-                    if !icon_names.get(entity)
-                        .map(|i| i.0 == icon_name)
-                        .unwrap_or(false)
-                    {
-                        icon_names.insert(entity, IconStateName(icon_name))
-                            .expect("Entity should be valid");
-                    }
-                }
-
-                Ok(())
-            };
-
-            for (entity, instance, _) in (&entities, &instances, &self.modified).join() {
-                if let Err(err) = update_entity(entity, instance) {
-                    log::error!("Error while working on lua value: {}", err);
-                }
-            }
-        });
+            });
     }
 
     fn setup(&mut self, res: &mut Resources) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
+        Self::SystemData::setup(res);
 
-        let mut instances = <WriteStorage<ScriptInstance> as SystemData>::fetch(res);
-        self.instance_event_id.replace(instances.register_reader());
+        let script_component_channel = <Write<ScriptComponentChannel<C>> as SystemData>::fetch(res);
+        self.reader_id.replace(
+            script_component_channel
+                .inner
+                .write()
+                .unwrap()
+                .register_reader(),
+        );
+    }
+}
+
+#[derive(Derivative)]
+#[derivative(Default(bound = ""))]
+pub struct SyncScriptComponent<C>
+where
+    C: ScriptComponent,
+{
+    reader_id: Option<ReaderId<ScriptComponentUpdate<<C as ScriptComponent>::Value>>>,
+}
+
+impl<C> SyncScriptComponent<C>
+where
+    C: ScriptComponent,
+{
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+impl<'a, C> System<'a> for SyncScriptComponent<C>
+where
+    C: Component + ScriptComponent,
+{
+    type SystemData = (Read<'a, ScriptComponentChannel<C>>, WriteStorage<'a, C>);
+
+    fn run(&mut self, (events, mut components): Self::SystemData) {
+        events
+            .inner
+            .read()
+            .unwrap()
+            .read(self.reader_id.as_mut().expect("setup was not called"))
+            .for_each(|update| {
+                components
+                    .insert(update.entity, C::from_value(update.value.clone()))
+                    .ok(); // TODO check error
+            });
+    }
+
+    fn setup(&mut self, res: &mut Resources) {
+        Self::SystemData::setup(res);
+
+        let script_component_channel = <Write<ScriptComponentChannel<C>> as SystemData>::fetch(res);
+        self.reader_id.replace(
+            script_component_channel
+                .inner
+                .write()
+                .unwrap()
+                .register_reader(),
+        );
     }
 }

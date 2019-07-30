@@ -1,34 +1,45 @@
-local Mob = require "mob.self"
-
-local Carp = Mob:new()
-
-local Megacarp = Carp:new{
-    icon = "icons/mob/broadMobs.dmi",
-    name = "Mega Space Carp",
-    desc = "A ferocious, fang bearing creature that resembles a shark. This one seems especially ticked off.",
-    icon_state = "megacarp",
-    icon_living = "megacarp",
-    icon_dead = "megacarp_dead",
-    icon_gib = "megacarp_gib",
-    maxHealth = 20,
-    health = 20,
-    pixel_x = -16,
-    -- mob_size = MOB_SIZE_LARGE,
-
-    obj_damage = 80,
-    melee_damage_lower = 20,
-    melee_damage_upper = 20,
-
-    regen_cooldown = 0,
+local Self = require "mob.living.simple_animal.hostile.class"
+return {
+    CLASS = Self,
+    big_legion = require "mob.living.simple_animal.hostile.big_legion.mod",
+    lightgeist = require "mob.living.simple_animal.hostile.lightgeist.mod",
+    megafauna = require "mob.living.simple_animal.hostile.megafauna.mod",
+    jungle = require "mob.living.simple_animal.hostile.jungle.mod",
+    gorilla = require "mob.living.simple_animal.hostile.gorilla.mod",
+    boss = require "mob.living.simple_animal.hostile.boss.mod",
+    zombie = require "mob.living.simple_animal.hostile.zombie.mod",
+    asteroid = require "mob.living.simple_animal.hostile.asteroid.mod",
+    wizard = require "mob.living.simple_animal.hostile.wizard.mod",
+    venus_human_trap = require "mob.living.simple_animal.hostile.venus_human_trap.mod",
+    tree = require "mob.living.simple_animal.hostile.tree.mod",
+    viscerator = require "mob.living.simple_animal.hostile.viscerator.mod",
+    stickman = require "mob.living.simple_animal.hostile.stickman.mod",
+    statue = require "mob.living.simple_animal.hostile.statue.mod",
+    skeleton = require "mob.living.simple_animal.hostile.skeleton.mod",
+    russian = require "mob.living.simple_animal.hostile.russian.mod",
+    pirate = require "mob.living.simple_animal.hostile.pirate.mod",
+    netherworld = require "mob.living.simple_animal.hostile.netherworld.mod",
+    nanotrasen = require "mob.living.simple_animal.hostile.nanotrasen.mod",
+    mushroom = require "mob.living.simple_animal.hostile.mushroom.mod",
+    mimic = require "mob.living.simple_animal.hostile.mimic.mod",
+    killertomato = require "mob.living.simple_animal.hostile.killertomato.mod",
+    illusion = require "mob.living.simple_animal.hostile.illusion.mod",
+    hivebot = require "mob.living.simple_animal.hostile.hivebot.mod",
+    headcrab = require "mob.living.simple_animal.hostile.headcrab.mod",
+    faithless = require "mob.living.simple_animal.hostile.faithless.mod",
+    cat_butcherer = require "mob.living.simple_animal.hostile.cat_butcherer.mod",
+    bear = require "mob.living.simple_animal.hostile.bear.mod",
+    alien = require "mob.living.simple_animal.hostile.alien.mod",
+    guardian = require "mob.living.simple_animal.hostile.guardian.mod",
+    lizard = require "mob.living.simple_animal.hostile.lizard.mod",
+    retaliate = require "mob.living.simple_animal.hostile.retaliate.mod",
+    construct = require "mob.living.simple_animal.hostile.construct.mod",
+    mining_drone = require "mob.living.simple_animal.hostile.mining_drone.mod",
+    poison = require "mob.living.simple_animal.hostile.poison.mod",
+    carp = require "mob.living.simple_animal.hostile.carp.mod",
+    swarmer = require "mob.living.simple_animal.hostile.swarmer.mod",
+    morph = require "mob.living.simple_animal.hostile.morph.mod",
+    clockwork = require "mob.living.simple_animal.hostile.clockwork.mod",
+    blob = require "mob.living.simple_animal.hostile.blob.mod",
+    syndicate = require "mob.living.simple_animal.hostile.syndicate.mod",
 }
-
-local module = {
-    carp = {
-        CLASS = Carp,
-        megacarp = {
-            CLASS = Megacarp
-        } ,
-    }
-}
-
-return module

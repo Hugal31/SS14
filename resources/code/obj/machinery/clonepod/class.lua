@@ -1,0 +1,31 @@
+local Machinery = require "obj/machinery/class"
+local Clonepod = Machinery:new{
+    name = "cloning pod",
+    desc = "An electronically-lockable pod for growing organic tissue.",
+    density = true,
+    icon = 'icons/obj/machines/cloning.dmi',
+    icon_state = "pod_0",
+    req_access = {68, },
+    verb_say = "states",
+    circuit = nil,
+    heal_level = nil,
+    connected = nil,
+    mess = 0,
+    attempting = 0,
+    speed_coeff = nil,
+    efficiency = nil,
+    clonemind = nil,
+    grab_ghost_when = "mature",
+    internal_radio = 1,
+    radio = nil,
+    radio_key = nil,
+    radio_channel = "Medical",
+    countdown = nil,
+    unattached_flesh = nil,
+    flesh_number = 0,
+    current_insurance = nil,
+    fair_market_price = 5,
+    payment_department = "MED",
+
+}
+return Clonepod

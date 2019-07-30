@@ -1,0 +1,20 @@
+local Self = require "datum.sprite_accessory.moth_wings.class"
+return {
+    CLASS = Self,
+    snow = require "datum.sprite_accessory.moth_wings.snow.mod",
+    moonfly = require "datum.sprite_accessory.moth_wings.moonfly.mod",
+    ragged = require "datum.sprite_accessory.moth_wings.ragged.mod",
+    poison = require "datum.sprite_accessory.moth_wings.poison.mod",
+    deathhead = require "datum.sprite_accessory.moth_wings.deathhead.mod",
+    firewatch = require "datum.sprite_accessory.moth_wings.firewatch.mod",
+    punished = require "datum.sprite_accessory.moth_wings.punished.mod",
+    whitefly = require "datum.sprite_accessory.moth_wings.whitefly.mod",
+    lovers = require "datum.sprite_accessory.moth_wings.lovers.mod",
+    gothic = require "datum.sprite_accessory.moth_wings.gothic.mod",
+    royal = require "datum.sprite_accessory.moth_wings.royal.mod",
+    reddish = require "datum.sprite_accessory.moth_wings.reddish.mod",
+    atlas = require "datum.sprite_accessory.moth_wings.atlas.mod",
+    luna = require "datum.sprite_accessory.moth_wings.luna.mod",
+    monarch = require "datum.sprite_accessory.moth_wings.monarch.mod",
+    plain = require "datum.sprite_accessory.moth_wings.plain.mod",
+}

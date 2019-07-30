@@ -1,0 +1,20 @@
+local Self = require "obj.item.clothing.head.helmet.space.plasmaman.class"
+return {
+    CLASS = Self,
+    janitor = require "obj.item.clothing.head.helmet.space.plasmaman.janitor.mod",
+    botany = require "obj.item.clothing.head.helmet.space.plasmaman.botany.mod",
+    curator = require "obj.item.clothing.head.helmet.space.plasmaman.curator.mod",
+    white = require "obj.item.clothing.head.helmet.space.plasmaman.white.mod",
+    chaplain = require "obj.item.clothing.head.helmet.space.plasmaman.chaplain.mod",
+    mining = require "obj.item.clothing.head.helmet.space.plasmaman.mining.mod",
+    cargo = require "obj.item.clothing.head.helmet.space.plasmaman.cargo.mod",
+    atmospherics = require "obj.item.clothing.head.helmet.space.plasmaman.atmospherics.mod",
+    engineering = require "obj.item.clothing.head.helmet.space.plasmaman.engineering.mod",
+    robotics = require "obj.item.clothing.head.helmet.space.plasmaman.robotics.mod",
+    science = require "obj.item.clothing.head.helmet.space.plasmaman.science.mod",
+    chemist = require "obj.item.clothing.head.helmet.space.plasmaman.chemist.mod",
+    viro = require "obj.item.clothing.head.helmet.space.plasmaman.viro.mod",
+    genetics = require "obj.item.clothing.head.helmet.space.plasmaman.genetics.mod",
+    medical = require "obj.item.clothing.head.helmet.space.plasmaman.medical.mod",
+    security = require "obj.item.clothing.head.helmet.space.plasmaman.security.mod",
+}

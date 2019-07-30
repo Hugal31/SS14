@@ -1,0 +1,30 @@
+local Datum = require "datum/class"
+local Job = Datum:new{
+    title = "NOPE",
+    minimal_access = {},
+    access = {},
+    department_head = {},
+    head_announce = nil,
+    flag = 0,
+    department_flag = 0,
+    auto_deadmin_role_flags = 0,
+    faction = "None",
+    total_positions = 0,
+    spawn_positions = 0,
+    current_positions = 0,
+    supervisors = "",
+    selection_color = "#ffffff",
+    req_admin_notify = nil,
+    minimal_player_age = 0,
+    outfit = nil,
+    exp_requirements = 0,
+    exp_type = "",
+    exp_type_department = "",
+    antag_rep = 10,
+    paycheck = 5,
+    paycheck_department = "CIV",
+    mind_traits = nil,
+    display_order = 0,
+
+}
+return Job

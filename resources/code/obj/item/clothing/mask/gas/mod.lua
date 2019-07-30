@@ -1,0 +1,20 @@
+local Self = require "obj.item.clothing.mask.gas.class"
+return {
+    CLASS = Self,
+    space_ninja = require "obj.item.clothing.mask.gas.space_ninja.mod",
+    explorer = require "obj.item.clothing.mask.gas.explorer.mod",
+    sechailer = require "obj.item.clothing.mask.gas.sechailer.mod",
+    tiki_mask = require "obj.item.clothing.mask.gas.tiki_mask.mod",
+    carp = require "obj.item.clothing.mask.gas.carp.mod",
+    owl_mask = require "obj.item.clothing.mask.gas.owl_mask.mod",
+    cyborg = require "obj.item.clothing.mask.gas.cyborg.mod",
+    death_commando = require "obj.item.clothing.mask.gas.death_commando.mod",
+    sexymime = require "obj.item.clothing.mask.gas.sexymime.mod",
+    monkeymask = require "obj.item.clothing.mask.gas.monkeymask.mod",
+    mime = require "obj.item.clothing.mask.gas.mime.mod",
+    sexyclown = require "obj.item.clothing.mask.gas.sexyclown.mod",
+    clown_hat = require "obj.item.clothing.mask.gas.clown_hat.mod",
+    syndicate = require "obj.item.clothing.mask.gas.syndicate.mod",
+    plaguedoctor = require "obj.item.clothing.mask.gas.plaguedoctor.mod",
+    welding = require "obj.item.clothing.mask.gas.welding.mod",
+}

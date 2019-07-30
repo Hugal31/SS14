@@ -1,0 +1,32 @@
+local Hostile = require "mob/living/simple_animal/hostile/class"
+local Pirate = Hostile:new{
+    name = "Pirate",
+    desc = "Does what he wants cause a pirate is free.",
+    icon = 'icons/mob/simple_human.dmi',
+    icon_state = "piratemelee",
+    icon_living = "piratemelee",
+    icon_dead = "pirate_dead",
+    mob_biotypes = {"organic", "humanoid", },
+    speak_chance = 0,
+    turns_per_move = 5,
+    response_help = "pushes",
+    response_disarm = "shoves",
+    response_harm = "hits",
+    speed = 0,
+    maxHealth = 100,
+    health = 100,
+    harm_intent_damage = 5,
+    melee_damage_lower = 10,
+    melee_damage_upper = 10,
+    attacktext = "punches",
+    attack_sound = 'sound/weapons/punch1.ogg',
+    a_intent = "harm",
+    atmos_requirements = {"min_oxy", "max_oxy", "min_tox", "max_tox", "min_co2", "max_co2", "min_n2", "max_n2", },
+    unsuitable_atmos_damage = 15,
+    speak_emote = {"yarrs", },
+    loot = {nil, nil, },
+    del_on_death = 1,
+    faction = {"pirate", },
+
+}
+return Pirate

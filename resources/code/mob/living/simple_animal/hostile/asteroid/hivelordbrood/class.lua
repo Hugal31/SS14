@@ -1,0 +1,32 @@
+local Asteroid = require "mob/living/simple_animal/hostile/asteroid/class"
+local Hivelordbrood = Asteroid:new{
+    name = "hivelord brood",
+    desc = "A fragment of the original Hivelord, rallying behind its original. One isn't much of a threat, but...",
+    icon = 'icons/mob/lavaland/lavaland_monsters.dmi',
+    icon_state = "Hivelordbrood",
+    icon_living = "Hivelordbrood",
+    icon_aggro = "Hivelordbrood",
+    icon_dead = "Hivelordbrood",
+    icon_gib = "syndicate_gib",
+    mouse_opacity = 2,
+    move_to_delay = 1,
+    friendly = "buzzes near",
+    vision_range = 10,
+    speed = 3,
+    maxHealth = 1,
+    health = 1,
+    movement_type = 2,
+    harm_intent_damage = 5,
+    melee_damage_lower = 2,
+    melee_damage_upper = 2,
+    attacktext = "slashes",
+    speak_emote = {"telepathically cries", },
+    attack_sound = 'sound/weapons/pierce.ogg',
+    throw_message = "falls right through the strange body of the",
+    obj_damage = 0,
+    environment_smash = 0,
+    pass_flags = 1,
+    del_on_death = 1,
+
+}
+return Hivelordbrood

@@ -7,7 +7,6 @@ edition = "2018"
 [dependencies]
 amethyst-byond = { path = "amethyst-byond" }
 byond-lua = { path = "byond-lua" }
-dreammaker-runtime = { path = "dreammaker-runtime"}
 dmm = { git = "https://github.com/Hugal31/DMM.git" }
 dmm-format = { git = "https://github.com/Hugal31/DMM.git" }
 fnv = "1"

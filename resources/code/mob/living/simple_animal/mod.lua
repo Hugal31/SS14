@@ -1,0 +1,23 @@
+local Self = require "mob.living.simple_animal.class"
+return {
+    CLASS = Self,
+    sloth = require "mob.living.simple_animal.sloth.mod",
+    mouse = require "mob.living.simple_animal.mouse.mod",
+    chick = require "mob.living.simple_animal.chick.mod",
+    cow = require "mob.living.simple_animal.cow.mod",
+    crab = require "mob.living.simple_animal.crab.mod",
+    cockroach = require "mob.living.simple_animal.cockroach.mod",
+    butterfly = require "mob.living.simple_animal.butterfly.mod",
+    shade = require "mob.living.simple_animal.shade.mod",
+    parrot = require "mob.living.simple_animal.parrot.mod",
+    holodeck_monkey = require "mob.living.simple_animal.holodeck_monkey.mod",
+    chicken = require "mob.living.simple_animal.chicken.mod",
+    slaughter = require "mob.living.simple_animal.slaughter.mod",
+    revenant = require "mob.living.simple_animal.revenant.mod",
+    imp = require "mob.living.simple_animal.imp.mod",
+    pet = require "mob.living.simple_animal.pet.mod",
+    bot = require "mob.living.simple_animal.bot.mod",
+    hostile = require "mob.living.simple_animal.hostile.mod",
+    slime = require "mob.living.simple_animal.slime.mod",
+    drone = require "mob.living.simple_animal.drone.mod",
+}

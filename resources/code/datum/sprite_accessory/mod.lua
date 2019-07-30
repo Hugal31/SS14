@@ -1,0 +1,23 @@
+local Self = require "datum.sprite_accessory.class"
+return {
+    CLASS = Self,
+    moth_wings = require "datum.sprite_accessory.moth_wings.mod",
+    caps = require "datum.sprite_accessory.caps.mod",
+    legs = require "datum.sprite_accessory.legs.mod",
+    spines_animated = require "datum.sprite_accessory.spines_animated.mod",
+    spines = require "datum.sprite_accessory.spines.mod",
+    frills = require "datum.sprite_accessory.frills.mod",
+    wings_open = require "datum.sprite_accessory.wings_open.mod",
+    wings = require "datum.sprite_accessory.wings.mod",
+    ears = require "datum.sprite_accessory.ears.mod",
+    horns = require "datum.sprite_accessory.horns.mod",
+    snouts = require "datum.sprite_accessory.snouts.mod",
+    tails_animated = require "datum.sprite_accessory.tails_animated.mod",
+    tails = require "datum.sprite_accessory.tails.mod",
+    body_markings = require "datum.sprite_accessory.body_markings.mod",
+    socks = require "datum.sprite_accessory.socks.mod",
+    undershirt = require "datum.sprite_accessory.undershirt.mod",
+    underwear = require "datum.sprite_accessory.underwear.mod",
+    facial_hair = require "datum.sprite_accessory.facial_hair.mod",
+    hair = require "datum.sprite_accessory.hair.mod",
+}

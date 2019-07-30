@@ -1,0 +1,20 @@
+local Self = require "datum.uplink_item.ammo.class"
+return {
+    CLASS = Self,
+    bolt_action = require "datum.uplink_item.ammo.bolt_action.mod",
+    bioterror = require "datum.uplink_item.ammo.bioterror.mod",
+    toydarts = require "datum.uplink_item.ammo.toydarts.mod",
+    pistolaps = require "datum.uplink_item.ammo.pistolaps.mod",
+    rocket = require "datum.uplink_item.ammo.rocket.mod",
+    machinegun = require "datum.uplink_item.ammo.machinegun.mod",
+    carbine = require "datum.uplink_item.ammo.carbine.mod",
+    sniper = require "datum.uplink_item.ammo.sniper.mod",
+    smg = require "datum.uplink_item.ammo.smg.mod",
+    a40mm = require "datum.uplink_item.ammo.a40mm.mod",
+    revolver = require "datum.uplink_item.ammo.revolver.mod",
+    shotgun = require "datum.uplink_item.ammo.shotgun.mod",
+    pistolfire = require "datum.uplink_item.ammo.pistolfire.mod",
+    pistolhp = require "datum.uplink_item.ammo.pistolhp.mod",
+    pistolap = require "datum.uplink_item.ammo.pistolap.mod",
+    pistol = require "datum.uplink_item.ammo.pistol.mod",
+}

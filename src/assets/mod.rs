@@ -4,10 +4,7 @@ use amethyst::{
     ecs::{Read, ReadExpect, World},
 };
 use amethyst_byond::{
-    assets::{
-        dm::{DMFormat, DreamMakerEnvironment},
-        scripting::{LuaFormat, ScriptEnvironment},
-    },
+    assets::scripting::{LuaFormat, ScriptEnvironment},
     components::{Direction, Moving, MovingChannel},
 };
 
@@ -95,19 +92,6 @@ impl GameAssetsLoader {
         );
 
         world.add_resource(animation_set);
-    }
-
-    fn load_dm(&self, world: &mut World, progress: &mut ProgressCounter) {
-        let mut dme_path = std::env::var("SS13_SOURCE")
-            .map(std::path::PathBuf::from)
-            .expect("SS13_SOURCE environment variable should be present");
-        dme_path.push("tgstation.dme");
-
-        let dm_handle = world.exec(|load: AssetLoaderSystemData<DreamMakerEnvironment>| {
-            load.load_from(dme_path.to_string_lossy(), DMFormat, SS13_SOURCE, progress)
-        });
-
-        world.add_resource(dm_handle);
     }
 
     fn load_lua(&self, world: &mut World, progress: &mut ProgressCounter) {

@@ -1,6 +1,6 @@
 use amethyst::{
     core::{
-        ecs::{Entity, Read, Resources, SystemData},
+        ecs::{Read, Resources, SystemData},
         shrev::{EventChannel, ReaderId},
         EventReader,
     },
@@ -14,10 +14,4 @@ use amethyst::{
 pub enum SS14StateEvent {
     Window(WindowEvent),
     Ui(UiEvent),
-}
-
-#[derive(Clone, Debug)]
-pub struct BumpEvent {
-    pub by: Entity,
-    pub bumped: Entity,
 }

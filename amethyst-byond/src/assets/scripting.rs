@@ -1,7 +1,7 @@
 use std::fs::{canonicalize, File};
 use std::sync::Arc;
 
-use amethyst_assets::{Asset, Handle, Format, FormatValue, Processor, Source};
+use amethyst_assets::{Asset, Format, FormatValue, Handle, Processor, Source};
 use amethyst_core::ecs::VecStorage;
 use amethyst_error::{format_err, Error, ResultExt};
 use byond_lua::Scripting;
@@ -49,8 +49,6 @@ impl Format<ScriptEnvironment> for LuaFormat {
         let root = Scripting::new(&content, &root.to_string_lossy())
             .with_context(|_| format_err!("Could not load Lua script tree"))?;
 
-        Ok(FormatValue::data(ScriptEnvironment{
-            root,
-        }))
+        Ok(FormatValue::data(ScriptEnvironment { root }))
     }
 }

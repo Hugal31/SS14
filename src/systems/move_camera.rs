@@ -10,11 +10,13 @@ use amethyst::{
     input::InputHandler,
     shrev::EventChannel,
 };
-use amethyst_byond::components::{Coordinates, Dense, Direction, Moving};
+use amethyst_byond::{
+    components::{Coordinates, Dense, Direction, Moving},
+    events::BumpEvent,
+};
 
 use crate::{
     components::{MoveCooldown, Player},
-    events::BumpEvent,
     inputs::Input,
 };
 

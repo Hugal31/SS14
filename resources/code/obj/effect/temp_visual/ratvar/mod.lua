@@ -1,0 +1,22 @@
+local Self = require "obj.effect.temp_visual.ratvar.class"
+return {
+    CLASS = Self,
+    command_point = require "obj.effect.temp_visual.ratvar.command_point.mod",
+    warp_marker = require "obj.effect.temp_visual.ratvar.warp_marker.mod",
+    sigil = require "obj.effect.temp_visual.ratvar.sigil.mod",
+    component = require "obj.effect.temp_visual.ratvar.component.mod",
+    geis_binding = require "obj.effect.temp_visual.ratvar.geis_binding.mod",
+    spearbreak = require "obj.effect.temp_visual.ratvar.spearbreak.mod",
+    prolonging_prism = require "obj.effect.temp_visual.ratvar.prolonging_prism.mod",
+    ocular_warden = require "obj.effect.temp_visual.ratvar.ocular_warden.mod",
+    mending_mantra = require "obj.effect.temp_visual.ratvar.mending_mantra.mod",
+    belligerent_cast = require "obj.effect.temp_visual.ratvar.belligerent_cast.mod",
+    belligerent = require "obj.effect.temp_visual.ratvar.belligerent.mod",
+    grille = require "obj.effect.temp_visual.ratvar.grille.mod",
+    gear = require "obj.effect.temp_visual.ratvar.gear.mod",
+    window = require "obj.effect.temp_visual.ratvar.window.mod",
+    floor = require "obj.effect.temp_visual.ratvar.floor.mod",
+    wall = require "obj.effect.temp_visual.ratvar.wall.mod",
+    beam = require "obj.effect.temp_visual.ratvar.beam.mod",
+    door = require "obj.effect.temp_visual.ratvar.door.mod",
+}

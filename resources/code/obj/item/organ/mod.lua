@@ -1,0 +1,21 @@
+local Self = require "obj.item.organ.class"
+return {
+    CLASS = Self,
+    zombie_infection = require "obj.item.organ.zombie_infection.mod",
+    adamantine_resonator = require "obj.item.organ.adamantine_resonator.mod",
+    vocal_cords = require "obj.item.organ.vocal_cords.mod",
+    tail = require "obj.item.organ.tail.mod",
+    stomach = require "obj.item.organ.stomach.mod",
+    lungs = require "obj.item.organ.lungs.mod",
+    liver = require "obj.item.organ.liver.mod",
+    cyberimp = require "obj.item.organ.cyberimp.mod",
+    appendix = require "obj.item.organ.appendix.mod",
+    eyes = require "obj.item.organ.eyes.mod",
+    ears = require "obj.item.organ.ears.mod",
+    tongue = require "obj.item.organ.tongue.mod",
+    alien = require "obj.item.organ.alien.mod",
+    brain = require "obj.item.organ.brain.mod",
+    regenerative_core = require "obj.item.organ.regenerative_core.mod",
+    heart = require "obj.item.organ.heart.mod",
+    body_egg = require "obj.item.organ.body_egg.mod",
+}

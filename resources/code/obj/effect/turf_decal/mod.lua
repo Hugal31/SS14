@@ -1,0 +1,20 @@
+local Self = require "obj.effect.turf_decal.class"
+return {
+    CLASS = Self,
+    snowdin_station_sign = require "obj.effect.turf_decal.snowdin_station_sign.mod",
+    weather = require "obj.effect.turf_decal.weather.mod",
+    tile = require "obj.effect.turf_decal.tile.mod",
+    raven = require "obj.effect.turf_decal.raven.mod",
+    raven_ship_sign = require "obj.effect.turf_decal.raven_ship_sign.mod",
+    plaque = require "obj.effect.turf_decal.plaque.mod",
+    box = require "obj.effect.turf_decal.box.mod",
+    arrows = require "obj.effect.turf_decal.arrows.mod",
+    caution = require "obj.effect.turf_decal.caution.mod",
+    loading_area = require "obj.effect.turf_decal.loading_area.mod",
+    bot_red = require "obj.effect.turf_decal.bot_red.mod",
+    bot_white = require "obj.effect.turf_decal.bot_white.mod",
+    bot = require "obj.effect.turf_decal.bot.mod",
+    delivery = require "obj.effect.turf_decal.delivery.mod",
+    stripes = require "obj.effect.turf_decal.stripes.mod",
+    sand = require "obj.effect.turf_decal.sand.mod",
+}

@@ -1,0 +1,20 @@
+local Self = require "obj.item.stack.tile.class"
+return {
+    CLASS = Self,
+    sepia = require "obj.item.stack.tile.sepia.mod",
+    bluespace = require "obj.item.stack.tile.bluespace.mod",
+    plasteel = require "obj.item.stack.tile.plasteel.mod",
+    pod = require "obj.item.stack.tile.pod.mod",
+    circuit = require "obj.item.stack.tile.circuit.mod",
+    noslip = require "obj.item.stack.tile.noslip.mod",
+    fakepit = require "obj.item.stack.tile.fakepit.mod",
+    fakespace = require "obj.item.stack.tile.fakespace.mod",
+    carpet = require "obj.item.stack.tile.carpet.mod",
+    basalt = require "obj.item.stack.tile.basalt.mod",
+    wood = require "obj.item.stack.tile.wood.mod",
+    grass = require "obj.item.stack.tile.grass.mod",
+    mineral = require "obj.item.stack.tile.mineral.mod",
+    light = require "obj.item.stack.tile.light.mod",
+    bronze = require "obj.item.stack.tile.bronze.mod",
+    brass = require "obj.item.stack.tile.brass.mod",
+}

@@ -1,0 +1,21 @@
+local Self = require "obj.screen.ai.class"
+return {
+    CLASS = Self,
+    add_multicam = require "obj.screen.ai.add_multicam.mod",
+    multicam = require "obj.screen.ai.multicam.mod",
+    sensors = require "obj.screen.ai.sensors.mod",
+    image_view = require "obj.screen.ai.image_view.mod",
+    image_take = require "obj.screen.ai.image_take.mod",
+    pda_msg_show = require "obj.screen.ai.pda_msg_show.mod",
+    pda_msg_send = require "obj.screen.ai.pda_msg_send.mod",
+    state_laws = require "obj.screen.ai.state_laws.mod",
+    call_shuttle = require "obj.screen.ai.call_shuttle.mod",
+    announcement = require "obj.screen.ai.announcement.mod",
+    alerts = require "obj.screen.ai.alerts.mod",
+    crew_manifest = require "obj.screen.ai.crew_manifest.mod",
+    crew_monitor = require "obj.screen.ai.crew_monitor.mod",
+    camera_light = require "obj.screen.ai.camera_light.mod",
+    camera_track = require "obj.screen.ai.camera_track.mod",
+    camera_list = require "obj.screen.ai.camera_list.mod",
+    aicore = require "obj.screen.ai.aicore.mod",
+}

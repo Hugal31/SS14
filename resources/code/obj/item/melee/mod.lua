@@ -1,0 +1,22 @@
+local Self = require "obj.item.melee.class"
+return {
+    CLASS = Self,
+    ghost_sword = require "obj.item.melee.ghost_sword.mod",
+    cultblade = require "obj.item.melee.cultblade.mod",
+    blood_magic = require "obj.item.melee.blood_magic.mod",
+    arm_blade = require "obj.item.melee.arm_blade.mod",
+    roastingstick = require "obj.item.melee.roastingstick.mod",
+    curator_whip = require "obj.item.melee.curator_whip.mod",
+    supermatter_sword = require "obj.item.melee.supermatter_sword.mod",
+    classic_baton = require "obj.item.melee.classic_baton.mod",
+    sabre = require "obj.item.melee.sabre.mod",
+    synthetic_arm_blade = require "obj.item.melee.synthetic_arm_blade.mod",
+    flyswatter = require "obj.item.melee.flyswatter.mod",
+    baseball_bat = require "obj.item.melee.baseball_bat.mod",
+    skateboard = require "obj.item.melee.skateboard.mod",
+    chainofcommand = require "obj.item.melee.chainofcommand.mod",
+    baton = require "obj.item.melee.baton.mod",
+    powerfist = require "obj.item.melee.powerfist.mod",
+    transforming = require "obj.item.melee.transforming.mod",
+    touch_attack = require "obj.item.melee.touch_attack.mod",
+}

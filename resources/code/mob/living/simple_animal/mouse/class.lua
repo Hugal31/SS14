@@ -1,0 +1,32 @@
+local SimpleAnimal = require "mob/living/simple_animal/class"
+local Mouse = SimpleAnimal:new{
+    name = "mouse",
+    desc = "It's a nasty, ugly, evil, disease-ridden rodent.",
+    icon_state = "mouse_gray",
+    icon_living = "mouse_gray",
+    icon_dead = "mouse_gray_dead",
+    speak = {"Squeak!", "SQUEAK!", "Squeak?", },
+    speak_emote = {"squeaks", },
+    emote_hear = {"squeaks.", },
+    emote_see = {"runs in a circle.", "shakes.", },
+    speak_chance = 1,
+    turns_per_move = 5,
+    see_in_dark = 6,
+    maxHealth = 5,
+    health = 5,
+    butcher_results = {nil, },
+    response_help = "pets",
+    response_disarm = "gently pushes aside",
+    response_harm = "splats",
+    density = false,
+    ventcrawler = 2,
+    pass_flags = 21,
+    mob_size = 0,
+    mob_biotypes = {"organic", "beast", },
+    body_color = nil,
+    gold_core_spawnable = 2,
+    chew_probability = 1,
+    datum_outputs = {nil, },
+
+}
+return Mouse

@@ -1,0 +1,21 @@
+local Self = require "obj.item.vending_refill.wardrobe.class"
+return {
+    CLASS = Self,
+    viro_wardrobe = require "obj.item.vending_refill.wardrobe.viro_wardrobe.mod",
+    gene_wardrobe = require "obj.item.vending_refill.wardrobe.gene_wardrobe.mod",
+    chem_wardrobe = require "obj.item.vending_refill.wardrobe.chem_wardrobe.mod",
+    chap_wardrobe = require "obj.item.vending_refill.wardrobe.chap_wardrobe.mod",
+    law_wardrobe = require "obj.item.vending_refill.wardrobe.law_wardrobe.mod",
+    jani_wardrobe = require "obj.item.vending_refill.wardrobe.jani_wardrobe.mod",
+    chef_wardrobe = require "obj.item.vending_refill.wardrobe.chef_wardrobe.mod",
+    bar_wardrobe = require "obj.item.vending_refill.wardrobe.bar_wardrobe.mod",
+    curator_wardrobe = require "obj.item.vending_refill.wardrobe.curator_wardrobe.mod",
+    hydro_wardrobe = require "obj.item.vending_refill.wardrobe.hydro_wardrobe.mod",
+    science_wardrobe = require "obj.item.vending_refill.wardrobe.science_wardrobe.mod",
+    robo_wardrobe = require "obj.item.vending_refill.wardrobe.robo_wardrobe.mod",
+    cargo_wardrobe = require "obj.item.vending_refill.wardrobe.cargo_wardrobe.mod",
+    atmos_wardrobe = require "obj.item.vending_refill.wardrobe.atmos_wardrobe.mod",
+    engi_wardrobe = require "obj.item.vending_refill.wardrobe.engi_wardrobe.mod",
+    medi_wardrobe = require "obj.item.vending_refill.wardrobe.medi_wardrobe.mod",
+    sec_wardrobe = require "obj.item.vending_refill.wardrobe.sec_wardrobe.mod",
+}

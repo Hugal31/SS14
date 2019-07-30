@@ -1,0 +1,30 @@
+local Subsystem = require "datum/controller/subsystem/class"
+local Research = Subsystem:new{
+    name = "Research",
+    priority = 10,
+    wait = 10,
+    init_order = 75,
+    techweb_nodes = {},
+    techweb_designs = {},
+    techwebs = {},
+    science_tech = nil,
+    admin_tech = nil,
+    error_node = nil,
+    error_design = nil,
+    invalid_design_ids = {},
+    invalid_node_ids = {},
+    invalid_node_boost = {},
+    servers = {},
+    techweb_nodes_starting = {},
+    techweb_categories = {},
+    techweb_boost_items = {},
+    techweb_nodes_hidden = {},
+    techweb_point_items = {nil, },
+    errored_datums = {},
+    point_types = {},
+    single_server_income = {"General Research", },
+    multiserver_calculation = 0,
+    last_income = nil,
+
+}
+return Research

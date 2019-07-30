@@ -1,0 +1,32 @@
+local Datum = require "datum/class"
+local ClockworkScripture = Datum:new{
+    descname = "useless",
+    name = "scripture",
+    desc = "Ancient Ratvarian lore. This piece seems particularly mundane.",
+    invocations = {},
+    chanting = 0,
+    channel_time = 10,
+    power_cost = 5,
+    special_power_text = nil,
+    special_power_cost = nil,
+    slab = nil,
+    invoker = nil,
+    whispered = 0,
+    usage_tip = "This piece seems to serve no purpose and is a waste of components.",
+    invokers_required = 1,
+    multiple_invokers_used = 0,
+    multiple_invokers_optional = 0,
+    tier = "Peripheral",
+    quickbind = 0,
+    quickbind_desc = "This shouldn't be quickbindable. File a bug report!",
+    primary_component = nil,
+    important = 0,
+    sort_priority = 1,
+    neovgre_penalty = nil,
+    inathneq_penalty = nil,
+    sevtug_penalty = nil,
+    nezbere_penalty = nil,
+    nzcrentr_penalty = nil,
+
+}
+return ClockworkScripture

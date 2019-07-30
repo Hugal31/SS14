@@ -1,0 +1,22 @@
+local Self = require "datum.brain_trauma.mild.phobia.class"
+return {
+    CLASS = Self,
+    conspiracies = require "datum.brain_trauma.mild.phobia.conspiracies.mod",
+    anime = require "datum.brain_trauma.mild.phobia.anime.mod",
+    falling = require "datum.brain_trauma.mild.phobia.falling.mod",
+    birds = require "datum.brain_trauma.mild.phobia.birds.mod",
+    strangers = require "datum.brain_trauma.mild.phobia.strangers.mod",
+    aliens = require "datum.brain_trauma.mild.phobia.aliens.mod",
+    supernatural = require "datum.brain_trauma.mild.phobia.supernatural.mod",
+    authority = require "datum.brain_trauma.mild.phobia.authority.mod",
+    doctors = require "datum.brain_trauma.mild.phobia.doctors.mod",
+    robots = require "datum.brain_trauma.mild.phobia.robots.mod",
+    snakes = require "datum.brain_trauma.mild.phobia.snakes.mod",
+    skeletons = require "datum.brain_trauma.mild.phobia.skeletons.mod",
+    lizards = require "datum.brain_trauma.mild.phobia.lizards.mod",
+    greytide = require "datum.brain_trauma.mild.phobia.greytide.mod",
+    clowns = require "datum.brain_trauma.mild.phobia.clowns.mod",
+    security = require "datum.brain_trauma.mild.phobia.security.mod",
+    space = require "datum.brain_trauma.mild.phobia.space.mod",
+    spiders = require "datum.brain_trauma.mild.phobia.spiders.mod",
+}

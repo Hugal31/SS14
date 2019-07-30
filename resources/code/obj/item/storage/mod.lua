@@ -1,0 +1,22 @@
+local Self = require "obj.item.storage.class"
+return {
+    CLASS = Self,
+    pod = require "obj.item.storage.pod.mod",
+    part_replacer = require "obj.item.storage.part_replacer.mod",
+    photo_album = require "obj.item.storage.photo_album.mod",
+    spooky = require "obj.item.storage.spooky.mod",
+    wallet = require "obj.item.storage.wallet.mod",
+    toolbox = require "obj.item.storage.toolbox.mod",
+    secure = require "obj.item.storage.secure.mod",
+    lockbox = require "obj.item.storage.lockbox.mod",
+    firstaid = require "obj.item.storage.firstaid.mod",
+    fancy = require "obj.item.storage.fancy.mod",
+    book = require "obj.item.storage.book.mod",
+    bag = require "obj.item.storage.bag.mod",
+    backpack = require "obj.item.storage.backpack.mod",
+    pill_bottle = require "obj.item.storage.pill_bottle.mod",
+    crayons = require "obj.item.storage.crayons.mod",
+    box = require "obj.item.storage.box.mod",
+    briefcase = require "obj.item.storage.briefcase.mod",
+    belt = require "obj.item.storage.belt.mod",
+}

@@ -1,0 +1,33 @@
+local SimpleAnimal = require "mob/living/simple_animal/class"
+local Chick = SimpleAnimal:new{
+    name = [[\improper chick]],
+    desc = "Adorable! They make such a racket though.",
+    icon_state = "chick",
+    icon_living = "chick",
+    icon_dead = "chick_dead",
+    icon_gib = "chick_gib",
+    gender = "female",
+    mob_biotypes = {"organic", "beast", },
+    speak = {"Cherp.", "Cherp?", "Chirrup.", "Cheep!", },
+    speak_emote = {"cheeps", },
+    emote_hear = {"cheeps.", },
+    emote_see = {"pecks at the ground.", "flaps its tiny wings.", },
+    density = false,
+    speak_chance = 2,
+    turns_per_move = 2,
+    butcher_results = {nil, },
+    response_help = "pets",
+    response_disarm = "gently pushes aside",
+    response_harm = "kicks",
+    attacktext = "kicks",
+    health = 3,
+    maxHealth = 3,
+    ventcrawler = 2,
+    amount_grown = 0,
+    pass_flags = 21,
+    mob_size = 0,
+    gold_core_spawnable = 2,
+    do_footstep = 1,
+
+}
+return Chick

@@ -1,0 +1,7 @@
+local Number = require "datum/config_entry/number/class"
+local SecondTopicLimit = Number:new{
+    config_entry_value = nil,
+    min_val = 0,
+
+}
+return SecondTopicLimit

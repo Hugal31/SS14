@@ -1,0 +1,31 @@
+local Item = require "obj/item/class"
+local Cartridge = Item:new{
+    name = "generic cartridge",
+    desc = "A data cartridge for portable microcomputers.",
+    icon = 'icons/obj/pda.dmi',
+    icon_state = "cart",
+    item_state = "electronic",
+    lefthand_file = 'icons/mob/inhands/misc/devices_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/misc/devices_righthand.dmi',
+    w_class = 1,
+    radio = nil,
+    access = 0,
+    remote_door_id = "",
+    bot_access_flags = 0,
+    spam_enabled = 0,
+    host_pda = nil,
+    menu = nil,
+    active1 = nil,
+    active2 = nil,
+    active3 = nil,
+    powmonitor = nil,
+    powermonitors = {},
+    message1 = nil,
+    message2 = nil,
+    stored_data = {},
+    current_channel = nil,
+    active_bot = nil,
+    botlist = {},
+
+}
+return Cartridge

@@ -1,0 +1,30 @@
+local Datum = require "datum/class"
+local RadialMenu = Datum:new{
+    choices = {},
+    choices_icons = {},
+    choices_values = {},
+    page_data = {},
+    selected_choice = nil,
+    elements = {},
+    close_button = nil,
+    current_user = nil,
+    anchor = nil,
+    menu_holder = nil,
+    finished = 0,
+    custom_check_callback = nil,
+    next_check = 0,
+    check_delay = 20,
+    radius = 32,
+    starting_angle = 0,
+    ending_angle = 360,
+    zone = 360,
+    min_angle = 45,
+    max_elements = nil,
+    pages = 1,
+    current_page = 1,
+    hudfix_method = 1,
+    py_shift = 0,
+    entry_animation = 1,
+
+}
+return RadialMenu

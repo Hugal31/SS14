@@ -1,0 +1,20 @@
+local Self = require "area.awaymission.class"
+return {
+    CLASS = Self,
+    BMPship = require "area.awaymission.BMPship.mod",
+    wildwest = require "area.awaymission.wildwest.mod",
+    undergroundoutpost45 = require "area.awaymission.undergroundoutpost45.mod",
+    spacebattle = require "area.awaymission.spacebattle.mod",
+    snowdin = require "area.awaymission.snowdin.mod",
+    research = require "area.awaymission.research.mod",
+    moonoutpost19 = require "area.awaymission.moonoutpost19.mod",
+    challenge = require "area.awaymission.challenge.mod",
+    centcomAway = require "area.awaymission.centcomAway.mod",
+    caves = require "area.awaymission.caves.mod",
+    cabin = require "area.awaymission.cabin.mod",
+    snowforest = require "area.awaymission.snowforest.mod",
+    academy = require "area.awaymission.academy.mod",
+    vr = require "area.awaymission.vr.mod",
+    errorroom = require "area.awaymission.errorroom.mod",
+    beach = require "area.awaymission.beach.mod",
+}

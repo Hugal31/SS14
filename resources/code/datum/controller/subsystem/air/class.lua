@@ -1,0 +1,31 @@
+local Subsystem = require "datum/controller/subsystem/class"
+local Air = Subsystem:new{
+    name = "Atmospherics",
+    init_order = -1,
+    priority = 20,
+    wait = 5,
+    flags = 4,
+    runlevels = 12,
+    cost_turfs = 0,
+    cost_groups = 0,
+    cost_highpressure = 0,
+    cost_hotspots = 0,
+    cost_superconductivity = 0,
+    cost_pipenets = 0,
+    cost_atmos_machinery = 0,
+    excited_groups = {},
+    active_turfs = {},
+    hotspots = {},
+    networks = {},
+    atmos_machinery = {},
+    pipe_init_dirs_cache = {},
+    gas_reactions = {},
+    active_super_conductivity = {},
+    high_pressure_delta = {},
+    currentrun = {},
+    currentpart = 1,
+    map_loading = 1,
+    queued_for_activation = nil,
+
+}
+return Air

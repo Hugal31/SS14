@@ -16,7 +16,7 @@ impl Scripting {
     {
         let lua = Lua::new();
         // TODO Use _ENV ?
-        let set_path = format!("package.path = \"{}/?;{}/?.lua;\" .. package.path", root, root);
+        let set_path = format!("package.path = \"{}/?.lua;\" .. package.path", root);
 
         let obj_tree = lua
             .context(|lua_ctx| {
@@ -83,6 +83,13 @@ impl TypeRef {
         let new: LuaFunction = typ.get("new")?;
 
         new.call(typ)
+    }
+
+    pub fn instantiate_with<'lua, T: ToLua<'lua>>(&self, context: LuaContext<'lua>, parent: T) -> LuaResult<LuaTable<'lua>> {
+        let typ = self.get_type(context)?;
+        let new: LuaFunction = typ.get("new")?;
+
+        new.call((typ, parent))
     }
 
     fn get_type<'lua>(&self, context: LuaContext<'lua>) -> LuaResult<LuaTable<'lua>> {

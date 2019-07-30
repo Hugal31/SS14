@@ -1,0 +1,20 @@
+local Self = require "obj.item.stock_parts.cell.class"
+return {
+    CLASS = Self,
+    emergency_light = require "obj.item.stock_parts.cell.emergency_light.mod",
+    beam_rifle = require "obj.item.stock_parts.cell.beam_rifle.mod",
+    emproof = require "obj.item.stock_parts.cell.emproof.mod",
+    potato = require "obj.item.stock_parts.cell.potato.mod",
+    infinite = require "obj.item.stock_parts.cell.infinite.mod",
+    bluespace = require "obj.item.stock_parts.cell.bluespace.mod",
+    hyper = require "obj.item.stock_parts.cell.hyper.mod",
+    super = require "obj.item.stock_parts.cell.super.mod",
+    high = require "obj.item.stock_parts.cell.high.mod",
+    pulse = require "obj.item.stock_parts.cell.pulse.mod",
+    secborg = require "obj.item.stock_parts.cell.secborg.mod",
+    upgraded = require "obj.item.stock_parts.cell.upgraded.mod",
+    crap = require "obj.item.stock_parts.cell.crap.mod",
+    empty = require "obj.item.stock_parts.cell.empty.mod",
+    computer = require "obj.item.stock_parts.cell.computer.mod",
+    inducer_supply = require "obj.item.stock_parts.cell.inducer_supply.mod",
+}

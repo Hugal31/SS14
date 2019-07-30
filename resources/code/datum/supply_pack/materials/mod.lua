@@ -1,0 +1,22 @@
+local Self = require "datum.supply_pack.materials.class"
+return {
+    CLASS = Self,
+    water_vapor = require "datum.supply_pack.materials.water_vapor.mod",
+    watertank = require "datum.supply_pack.materials.watertank.mod",
+    oxygen = require "datum.supply_pack.materials.oxygen.mod",
+    nitrous_oxide_canister = require "datum.supply_pack.materials.nitrous_oxide_canister.mod",
+    nitrogen = require "datum.supply_pack.materials.nitrogen.mod",
+    hightank = require "datum.supply_pack.materials.hightank.mod",
+    fueltank = require "datum.supply_pack.materials.fueltank.mod",
+    foamtank = require "datum.supply_pack.materials.foamtank.mod",
+    carbon_dio = require "datum.supply_pack.materials.carbon_dio.mod",
+    bz = require "datum.supply_pack.materials.bz.mod",
+    wood50 = require "datum.supply_pack.materials.wood50.mod",
+    sandstone30 = require "datum.supply_pack.materials.sandstone30.mod",
+    plastic50 = require "datum.supply_pack.materials.plastic50.mod",
+    plasteel50 = require "datum.supply_pack.materials.plasteel50.mod",
+    plasteel20 = require "datum.supply_pack.materials.plasteel20.mod",
+    metal50 = require "datum.supply_pack.materials.metal50.mod",
+    glass50 = require "datum.supply_pack.materials.glass50.mod",
+    cardboard50 = require "datum.supply_pack.materials.cardboard50.mod",
+}

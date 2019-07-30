@@ -1,0 +1,20 @@
+local Self = require "datum.wires.class"
+return {
+    CLASS = Self,
+    vending = require "datum.wires.vending.mod",
+    tesla_coil = require "datum.wires.tesla_coil.mod",
+    syndicatebomb = require "datum.wires.syndicatebomb.mod",
+    suit_storage_unit = require "datum.wires.suit_storage_unit.mod",
+    robot = require "datum.wires.robot.mod",
+    radio = require "datum.wires.radio.mod",
+    rnd = require "datum.wires.rnd.mod",
+    particle_accelerator = require "datum.wires.particle_accelerator.mod",
+    mulebot = require "datum.wires.mulebot.mod",
+    microwave = require "datum.wires.microwave.mod",
+    explosive = require "datum.wires.explosive.mod",
+    emitter = require "datum.wires.emitter.mod",
+    autolathe = require "datum.wires.autolathe.mod",
+    apc = require "datum.wires.apc.mod",
+    airlock = require "datum.wires.airlock.mod",
+    airalarm = require "datum.wires.airalarm.mod",
+}

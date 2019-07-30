@@ -1,0 +1,32 @@
+local Required = require "obj/item/twohanded/required/class"
+local KineticCrusher = Required:new{
+    icon = 'icons/obj/mining.dmi',
+    icon_state = "crusher",
+    item_state = "crusher",
+    lefthand_file = 'icons/mob/inhands/weapons/hammers_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/weapons/hammers_righthand.dmi',
+    name = "proto-kinetic crusher",
+    desc = "An early design of the proto-kinetic accelerator, it is little more than a combination of various mining tools cobbled together, forming a high-tech club. While it is an effective mining tool, it did little to aid any but the most skilled and/or suicidal miners against local fauna.",
+    force = 20,
+    w_class = 4,
+    slot_flags = 1024,
+    force_unwielded = 20,
+    force_wielded = 20,
+    throwforce = 5,
+    throw_speed = 4,
+    armour_penetration = 10,
+    materials = {"$metal", "$glass", },
+    hitsound = 'sound/weapons/bladeslice.ogg',
+    attack_verb = {"smashed", "crushed", "cleaved", "chopped", "pulped", },
+    sharpness = 1,
+    actions_types = {nil, },
+    trophies = {},
+    charged = 1,
+    charge_time = 15,
+    detonation_damage = 50,
+    backstab_bonus = 30,
+    light_on = 0,
+    brightness_on = 5,
+
+}
+return KineticCrusher

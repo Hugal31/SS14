@@ -1,0 +1,31 @@
+local Hostile = require "mob/living/simple_animal/hostile/class"
+local Viscerator = Hostile:new{
+    name = "viscerator",
+    desc = "A small, twin-bladed machine capable of inflicting very deadly lacerations.",
+    icon_state = "viscerator_attack",
+    icon_living = "viscerator_attack",
+    pass_flags = 17,
+    a_intent = "harm",
+    mob_biotypes = {"robotic", },
+    health = 25,
+    maxHealth = 25,
+    melee_damage_lower = 15,
+    melee_damage_upper = 15,
+    obj_damage = 0,
+    environment_smash = 0,
+    attacktext = "cuts",
+    attack_sound = 'sound/weapons/bladeslice.ogg',
+    faction = {"Syndicate", },
+    atmos_requirements = {"min_oxy", "max_oxy", "min_tox", "max_tox", "min_co2", "max_co2", "min_n2", "max_n2", },
+    minbodytemp = 0,
+    mob_size = 0,
+    movement_type = 2,
+    limb_destroyer = 1,
+    speak_emote = {"states", },
+    bubble_icon = "syndibot",
+    gold_core_spawnable = 1,
+    del_on_death = 1,
+    deathmessage = "is smashed into pieces!",
+
+}
+return Viscerator

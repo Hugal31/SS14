@@ -5,7 +5,7 @@ use amethyst_core::ecs::{Component, DenseVecStorage, FlaggedStorage, VecStorage}
 use amethyst_rendy::sprite::{SpriteRender, SpriteSheetHandle};
 use serde::{Deserialize, Serialize};
 
-use super::{Direction, IconFrame};
+use super::{script::ScriptComponent, Direction, IconFrame};
 
 /// Display layer for datums
 #[derive(Clone, Copy, Debug, Eq, PartialEq, PartialOrd, Serialize, Deserialize)]
@@ -69,6 +69,18 @@ pub struct IconStateName(pub String);
 
 impl Component for IconStateName {
     type Storage = FlaggedStorage<IconStateName, VecStorage<IconStateName>>;
+}
+
+impl ScriptComponent for IconStateName {
+    type Value = String;
+
+    fn from_value(value: Self::Value) -> Self {
+        Self(value)
+    }
+
+    fn to_value(&self) -> Self::Value {
+        self.0.clone()
+    }
 }
 
 /// Represent the currently displayed icon in an icon state

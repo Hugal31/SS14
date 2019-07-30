@@ -1,0 +1,31 @@
+local Item = require "obj/item/class"
+local Flamethrower = Item:new{
+    name = "flamethrower",
+    desc = "You are a firestarter!",
+    icon = 'icons/obj/flamethrower.dmi',
+    icon_state = "flamethrowerbase",
+    item_state = "flamethrower_0",
+    lefthand_file = 'icons/mob/inhands/weapons/flamethrower_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/weapons/flamethrower_righthand.dmi',
+    flags_1 = 32,
+    force = 3,
+    throwforce = 10,
+    throw_speed = 1,
+    throw_range = 5,
+    w_class = 3,
+    materials = {"$metal", },
+    resistance_flags = 2,
+    status = 0,
+    lit = 0,
+    operating = 0,
+    weldtool = nil,
+    igniter = nil,
+    ptank = nil,
+    warned_admins = 0,
+    create_full = 0,
+    create_with_tank = 0,
+    igniter_type = nil,
+    trigger_guard = 1,
+
+}
+return Flamethrower

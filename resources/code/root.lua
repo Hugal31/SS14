@@ -1,23 +1,23 @@
+require "api"
+
 OBJ_TREE = {
+    procpath = require "procpath.mod",
+    savefile = require "savefile.mod",
+    mutable_appearance = require "mutable_appearance.mod",
+    image = require "image.mod",
+    database = require "database.mod",
+    regex = require "regex.mod",
+    exception = require "exception.mod",
+    matrix = require "matrix.mod",
+    icon = require "icon.mod",
+    sound = require "sound.mod",
+    client = require "client.mod",
+    world = require "world.mod",
     mob = require "mob.mod",
+    obj = require "obj.mod",
     turf = require "turf.mod",
+    area = require "area.mod",
+    atom = require "atom.mod",
+    datum = require "datum.mod",
+    list = require "list.mod",
 }
-
-local function printTypes(table, level)
-    level = level or ""
-    for k, v in pairs(table) do
-        if k ~= "CLASS" and type(v) == "table" and k ~= "__index" then
-            printTypes(v, level .. k .. '.')
-        else
-            print(level .. k)
-        end
-    end
-end
-
-printTypes(OBJ_TREE)
-
-local floor = OBJ_TREE.turf.open.floor.plasteel.CLASS:new()
-print("plane", floor.plane)
-print("name", floor.name)
-print("icon", floor.icon)
-print("icon_state", floor.icon_state)

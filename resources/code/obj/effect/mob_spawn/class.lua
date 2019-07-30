@@ -1,0 +1,30 @@
+local Effect = require "obj/effect/class"
+local MobSpawn = Effect:new{
+    name = "Unknown",
+    density = true,
+    anchored = 1,
+    mob_type = nil,
+    mob_name = "",
+    mob_gender = nil,
+    death = 1,
+    roundstart = 1,
+    instant = 0,
+    flavour_text = "The mapper forgot to set this!",
+    faction = nil,
+    permanent = 0,
+    random = 0,
+    antagonist_type = nil,
+    objectives = nil,
+    uses = 1,
+    brute_damage = 0,
+    oxy_damage = 0,
+    burn_damage = 0,
+    disease = nil,
+    mob_color = nil,
+    assignedrole = nil,
+    show_flavour = 1,
+    banType = "lavaland",
+    ghost_usable = 1,
+
+}
+return MobSpawn

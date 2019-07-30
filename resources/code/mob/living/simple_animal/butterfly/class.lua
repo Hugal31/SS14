@@ -1,0 +1,30 @@
+local SimpleAnimal = require "mob/living/simple_animal/class"
+local Butterfly = SimpleAnimal:new{
+    name = "butterfly",
+    desc = "A colorful butterfly, how'd it get up here?",
+    icon_state = "butterfly",
+    icon_living = "butterfly",
+    icon_dead = "butterfly_dead",
+    turns_per_move = 1,
+    response_help = "shoos",
+    response_disarm = "brushes aside",
+    response_harm = "squashes",
+    speak_emote = {"flutters", },
+    maxHealth = 2,
+    health = 2,
+    harm_intent_damage = 1,
+    friendly = "nudges",
+    density = false,
+    movement_type = 2,
+    pass_flags = 21,
+    ventcrawler = 2,
+    mob_size = 0,
+    mob_biotypes = {"organic", "bug", },
+    gold_core_spawnable = 2,
+    verb_say = "flutters",
+    verb_ask = "flutters inquisitively",
+    verb_exclaim = "flutters intensely",
+    verb_yell = "flutters intensely",
+
+}
+return Butterfly

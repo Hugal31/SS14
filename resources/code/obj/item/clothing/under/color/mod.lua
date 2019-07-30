@@ -1,0 +1,22 @@
+local Self = require "obj.item.clothing.under.color.class"
+return {
+    CLASS = Self,
+    rainbow = require "obj.item.clothing.under.color.rainbow.mod",
+    maroon = require "obj.item.clothing.under.color.maroon.mod",
+    brown = require "obj.item.clothing.under.color.brown.mod",
+    lightbrown = require "obj.item.clothing.under.color.lightbrown.mod",
+    darkgreen = require "obj.item.clothing.under.color.darkgreen.mod",
+    lightpurple = require "obj.item.clothing.under.color.lightpurple.mod",
+    teal = require "obj.item.clothing.under.color.teal.mod",
+    darkblue = require "obj.item.clothing.under.color.darkblue.mod",
+    yellow = require "obj.item.clothing.under.color.yellow.mod",
+    white = require "obj.item.clothing.under.color.white.mod",
+    red = require "obj.item.clothing.under.color.red.mod",
+    pink = require "obj.item.clothing.under.color.pink.mod",
+    orange = require "obj.item.clothing.under.color.orange.mod",
+    green = require "obj.item.clothing.under.color.green.mod",
+    blue = require "obj.item.clothing.under.color.blue.mod",
+    grey = require "obj.item.clothing.under.color.grey.mod",
+    black = require "obj.item.clothing.under.color.black.mod",
+    random = require "obj.item.clothing.under.color.random.mod",
+}

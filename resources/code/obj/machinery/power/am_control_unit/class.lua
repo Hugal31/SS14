@@ -1,0 +1,30 @@
+local Power = require "obj/machinery/power/class"
+local AmControlUnit = Power:new{
+    name = "antimatter control unit",
+    desc = "This device injects antimatter into connected shielding units, the more antimatter injected the more power produced.  Wrench the device to set it up.",
+    icon = 'icons/obj/machines/antimatter.dmi',
+    icon_state = "control",
+    anchored = 0,
+    density = true,
+    use_power = 1,
+    idle_power_usage = 100,
+    active_power_usage = 1000,
+    interaction_flags_atom = 7,
+    linked_shielding = nil,
+    linked_cores = nil,
+    fueljar = nil,
+    update_shield_icons = 0,
+    stability = 100,
+    exploding = 0,
+    active = 0,
+    fuel_injection = 2,
+    shield_icon_delay = 0,
+    reported_core_efficiency = 0,
+    power_cycle = 0,
+    power_cycle_delay = 4,
+    stored_core_stability = 0,
+    stored_core_stability_delay = 0,
+    stored_power = 0,
+
+}
+return AmControlUnit

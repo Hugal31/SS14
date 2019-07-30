@@ -1,0 +1,33 @@
+local Item = require "obj/item/class"
+local Clothing = Item:new{
+    name = "clothing",
+    resistance_flags = 4,
+    max_integrity = 200,
+    integrity_failure = 80,
+    damaged_clothes = 0,
+    flash_protect = 0,
+    tint = 0,
+    up = 0,
+    visor_flags = 0,
+    visor_flags_inv = 0,
+    visor_flags_cover = 0,
+    visor_vars_to_toggle = 31,
+    lefthand_file = 'icons/mob/inhands/clothing_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/clothing_righthand.dmi',
+    alt_desc = nil,
+    toggle_message = nil,
+    alt_toggle_message = nil,
+    active_sound = nil,
+    toggle_cooldown = nil,
+    cooldown = 0,
+    scan_reagents = 0,
+    blocks_shove_knockdown = 0,
+    clothing_flags = 0,
+    user_vars_to_edit = nil,
+    user_vars_remembered = nil,
+    pocket_storage_component_path = nil,
+    dynamic_hair_suffix = "",
+    dynamic_fhair_suffix = "",
+
+}
+return Clothing

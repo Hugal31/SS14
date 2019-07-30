@@ -1,0 +1,30 @@
+local DockingPort = require "obj/docking_port/class"
+local Mobile = DockingPort:new{
+    name = "shuttle",
+    icon_state = "pinonclose",
+    area_type = nil,
+    shuttle_areas = nil,
+    timer = nil,
+    last_timer_length = nil,
+    mode = "idle",
+    callTime = 100,
+    ignitionTime = 55,
+    rechargeTime = 0,
+    prearrivalTime = 0,
+    preferred_direction = 1,
+    port_direction = 1,
+    destination = nil,
+    previous = nil,
+    assigned_transit = nil,
+    launch_status = -1,
+    movement_force = {"KNOCKDOWN", "THROW", },
+    ripples = {},
+    engine_coeff = 1,
+    current_engines = 0,
+    initial_engines = 0,
+    engine_list = {},
+    can_move_docking_ports = 0,
+    hidden_turfs = {},
+
+}
+return Mobile

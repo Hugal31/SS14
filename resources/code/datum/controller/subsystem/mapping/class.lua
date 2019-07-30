@@ -1,0 +1,30 @@
+local Subsystem = require "datum/controller/subsystem/class"
+local Mapping = Subsystem:new{
+    name = "Mapping",
+    init_order = 50,
+    flags = 2,
+    nuke_tiles = {},
+    nuke_threats = {},
+    config = nil,
+    next_map_config = nil,
+    map_templates = {},
+    ruins_templates = {},
+    space_ruins_templates = {},
+    lava_ruins_templates = {},
+    shuttle_templates = {},
+    shelter_templates = {},
+    areas_in_z = {},
+    loading_ruins = 0,
+    unused_turfs = {},
+    turf_reservations = nil,
+    used_turfs = {},
+    clearing_reserved_turfs = 0,
+    station_start = nil,
+    space_levels_so_far = 0,
+    z_list = nil,
+    transit = nil,
+    empty_space = nil,
+    num_of_res_levels = 1,
+
+}
+return Mapping

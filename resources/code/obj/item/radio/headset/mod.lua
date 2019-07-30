@@ -1,0 +1,21 @@
+local Self = require "obj.item.radio.headset.class"
+return {
+    CLASS = Self,
+    chameleon = require "obj.item.radio.headset.chameleon.mod",
+    abductor = require "obj.item.radio.headset.abductor.mod",
+    silicon = require "obj.item.radio.headset.silicon.mod",
+    headset_cent = require "obj.item.radio.headset.headset_cent.mod",
+    headset_srv = require "obj.item.radio.headset.headset_srv.mod",
+    headset_cargo = require "obj.item.radio.headset.headset_cargo.mod",
+    heads = require "obj.item.radio.headset.heads.mod",
+    headset_com = require "obj.item.radio.headset.headset_com.mod",
+    headset_srvsec = require "obj.item.radio.headset.headset_srvsec.mod",
+    headset_medsci = require "obj.item.radio.headset.headset_medsci.mod",
+    headset_sci = require "obj.item.radio.headset.headset_sci.mod",
+    headset_med = require "obj.item.radio.headset.headset_med.mod",
+    headset_rob = require "obj.item.radio.headset.headset_rob.mod",
+    headset_eng = require "obj.item.radio.headset.headset_eng.mod",
+    headset_sec = require "obj.item.radio.headset.headset_sec.mod",
+    binary = require "obj.item.radio.headset.binary.mod",
+    syndicate = require "obj.item.radio.headset.syndicate.mod",
+}

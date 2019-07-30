@@ -1,0 +1,21 @@
+local Self = require "obj.item.ammo_box.magazine.class"
+return {
+    CLASS = Self,
+    toy = require "obj.item.ammo_box.magazine.toy.mod",
+    sniper_rounds = require "obj.item.ammo_box.magazine.sniper_rounds.mod",
+    tommygunm45 = require "obj.item.ammo_box.magazine.tommygunm45.mod",
+    smgm45 = require "obj.item.ammo_box.magazine.smgm45.mod",
+    smgm9mm = require "obj.item.ammo_box.magazine.smgm9mm.mod",
+    uzim9mm = require "obj.item.ammo_box.magazine.uzim9mm.mod",
+    wt550m9 = require "obj.item.ammo_box.magazine.wt550m9.mod",
+    m12g = require "obj.item.ammo_box.magazine.m12g.mod",
+    m556 = require "obj.item.ammo_box.magazine.m556.mod",
+    pistolm9mm = require "obj.item.ammo_box.magazine.pistolm9mm.mod",
+    m45 = require "obj.item.ammo_box.magazine.m45.mod",
+    m10mm = require "obj.item.ammo_box.magazine.m10mm.mod",
+    mm712x82 = require "obj.item.ammo_box.magazine.mm712x82.mod",
+    m75 = require "obj.item.ammo_box.magazine.m75.mod",
+    recharge = require "obj.item.ammo_box.magazine.recharge.mod",
+    m50 = require "obj.item.ammo_box.magazine.m50.mod",
+    internal = require "obj.item.ammo_box.magazine.internal.mod",
+}

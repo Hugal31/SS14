@@ -1,0 +1,32 @@
+local Retaliate = require "mob/living/simple_animal/hostile/retaliate/class"
+local Frog = Retaliate:new{
+    name = "frog",
+    desc = "It seems a little sad.",
+    icon_state = "frog",
+    icon_living = "frog",
+    icon_dead = "frog_dead",
+    mob_biotypes = {"organic", "beast", },
+    speak = {"ribbit", "croak", },
+    emote_see = {"hops in a circle.", "shakes.", },
+    speak_chance = 1,
+    turns_per_move = 5,
+    maxHealth = 15,
+    health = 15,
+    melee_damage_lower = 5,
+    melee_damage_upper = 5,
+    attacktext = "bites",
+    response_help = "pets",
+    response_disarm = "pokes",
+    response_harm = "splats",
+    density = false,
+    ventcrawler = 2,
+    faction = {"hostile", },
+    attack_sound = 'sound/effects/reee.ogg',
+    butcher_results = {nil, },
+    pass_flags = 21,
+    mob_size = 0,
+    gold_core_spawnable = 1,
+    stepped_sound = 'sound/effects/huuu.ogg',
+
+}
+return Frog

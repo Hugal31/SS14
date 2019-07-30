@@ -1,0 +1,32 @@
+local Bot = require "mob/living/simple_animal/bot/class"
+local Firebot = Bot:new{
+    name = [[\improper Firebot]],
+    desc = "A little fire extinguishing bot. He looks rather anxious.",
+    icon = 'icons/mob/aibots.dmi',
+    icon_state = "firebot",
+    density = false,
+    anchored = 0,
+    health = 25,
+    maxHealth = 25,
+    spacewalk = 1,
+    radio_key = nil,
+    radio_channel = "Engineering",
+    bot_type = 64,
+    model = "Firebot",
+    bot_core = nil,
+    window_id = "autoextinguisher",
+    window_name = "Mobile Fire Extinguisher v1.0",
+    path_image_color = "#FFA500",
+    target_fire = nil,
+    old_target_fire = nil,
+    internal_ext = nil,
+    last_found = 0,
+    speech_cooldown = 0,
+    detected_cooldown = 0,
+    foam_cooldown = 0,
+    extinguish_people = 1,
+    extinguish_fires = 1,
+    stationary_mode = 0,
+
+}
+return Firebot

@@ -1,0 +1,32 @@
+local Item = require "obj/item/class"
+local Construction = Item:new{
+    name = "not for ingame use",
+    desc = "A device used to rapidly build and deconstruct. Reload with metal, plasteel, glass or compressed matter cartridges.",
+    opacity = false,
+    density = false,
+    anchored = 0,
+    flags_1 = 32,
+    item_flags = 128,
+    force = 0,
+    throwforce = 10,
+    throw_speed = 3,
+    throw_range = 5,
+    w_class = 3,
+    materials = {"$metal", },
+    req_access_txt = "11",
+    armor = {"melee", "bullet", "laser", "energy", "bomb", "bio", "rad", "fire", "acid", },
+    resistance_flags = 2,
+    spark_system = nil,
+    matter = 0,
+    max_matter = 100,
+    sheetmultiplier = 4,
+    plasteelmultiplier = 3,
+    plasmarglassmultiplier = 2,
+    rglassmultiplier = 1.5,
+    no_ammo_message = [[<span class='warning'>The \'Low Ammo\' light on the device blinks yellow.</span>]],
+    has_ammobar = 0,
+    ammo_sections = 10,
+    upgrade = 0,
+
+}
+return Construction

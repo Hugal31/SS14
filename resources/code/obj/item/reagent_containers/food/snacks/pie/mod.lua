@@ -1,0 +1,21 @@
+local Self = require "obj.item.reagent_containers.food.snacks.pie.class"
+return {
+    CLASS = Self,
+    frostypie = require "obj.item.reagent_containers.food.snacks.pie.frostypie.mod",
+    dulcedebatata = require "obj.item.reagent_containers.food.snacks.pie.dulcedebatata.mod",
+    blumpkinpie = require "obj.item.reagent_containers.food.snacks.pie.blumpkinpie.mod",
+    grapetart = require "obj.item.reagent_containers.food.snacks.pie.grapetart.mod",
+    appletart = require "obj.item.reagent_containers.food.snacks.pie.appletart.mod",
+    pumpkinpie = require "obj.item.reagent_containers.food.snacks.pie.pumpkinpie.mod",
+    cherrypie = require "obj.item.reagent_containers.food.snacks.pie.cherrypie.mod",
+    applepie = require "obj.item.reagent_containers.food.snacks.pie.applepie.mod",
+    xemeatpie = require "obj.item.reagent_containers.food.snacks.pie.xemeatpie.mod",
+    plump_pie = require "obj.item.reagent_containers.food.snacks.pie.plump_pie.mod",
+    amanita_pie = require "obj.item.reagent_containers.food.snacks.pie.amanita_pie.mod",
+    tofupie = require "obj.item.reagent_containers.food.snacks.pie.tofupie.mod",
+    meatpie = require "obj.item.reagent_containers.food.snacks.pie.meatpie.mod",
+    bearypie = require "obj.item.reagent_containers.food.snacks.pie.bearypie.mod",
+    berryclafoutis = require "obj.item.reagent_containers.food.snacks.pie.berryclafoutis.mod",
+    cream = require "obj.item.reagent_containers.food.snacks.pie.cream.mod",
+    plain = require "obj.item.reagent_containers.food.snacks.pie.plain.mod",
+}

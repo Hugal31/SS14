@@ -1,0 +1,33 @@
+local Structure = require "obj/structure/class"
+local Window = Structure:new{
+    name = "window",
+    desc = "A window.",
+    icon_state = "window",
+    density = true,
+    layer = 3.2,
+    pressure_resistance = 405.3,
+    anchored = 1,
+    flags_1 = 512,
+    max_integrity = 25,
+    can_be_unanchored = 1,
+    resistance_flags = 32,
+    armor = {"melee", "bullet", "laser", "energy", "bomb", "bio", "rad", "fire", "acid", },
+    CanAtmosPass = -1,
+    rad_insulation = 0.9,
+    rad_flags = 1,
+    ini_dir = nil,
+    state = 0,
+    reinf = 0,
+    heat_resistance = 800,
+    decon_speed = 30,
+    wtype = "glass",
+    fulltile = 0,
+    glass_type = nil,
+    glass_amount = 1,
+    crack_overlay = nil,
+    real_explosion_block = nil,
+    breaksound = "shatter",
+    hitsound = 'sound/effects/Glasshit.ogg',
+
+}
+return Window

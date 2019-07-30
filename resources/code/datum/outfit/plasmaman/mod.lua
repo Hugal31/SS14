@@ -1,0 +1,23 @@
+local Self = require "datum.outfit.plasmaman.class"
+return {
+    CLASS = Self,
+    atmospherics = require "datum.outfit.plasmaman.atmospherics.mod",
+    engineering = require "datum.outfit.plasmaman.engineering.mod",
+    robotics = require "datum.outfit.plasmaman.robotics.mod",
+    science = require "datum.outfit.plasmaman.science.mod",
+    genetics = require "datum.outfit.plasmaman.genetics.mod",
+    chemist = require "datum.outfit.plasmaman.chemist.mod",
+    viro = require "datum.outfit.plasmaman.viro.mod",
+    medical = require "datum.outfit.plasmaman.medical.mod",
+    mining = require "datum.outfit.plasmaman.mining.mod",
+    cargo = require "datum.outfit.plasmaman.cargo.mod",
+    warden = require "datum.outfit.plasmaman.warden.mod",
+    detective = require "datum.outfit.plasmaman.detective.mod",
+    security = require "datum.outfit.plasmaman.security.mod",
+    janitor = require "datum.outfit.plasmaman.janitor.mod",
+    chaplain = require "datum.outfit.plasmaman.chaplain.mod",
+    curator = require "datum.outfit.plasmaman.curator.mod",
+    botany = require "datum.outfit.plasmaman.botany.mod",
+    chef = require "datum.outfit.plasmaman.chef.mod",
+    bar = require "datum.outfit.plasmaman.bar.mod",
+}

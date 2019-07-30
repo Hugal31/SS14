@@ -1,0 +1,31 @@
+local Computer = require "obj/machinery/computer/class"
+local Rdconsole = Computer:new{
+    name = "R&D Console",
+    desc = "A console used to interface with R&D tools.",
+    icon_screen = "rdcomp",
+    icon_keyboard = "rd_key",
+    stored_research = nil,
+    t_disk = nil,
+    d_disk = nil,
+    circuit = nil,
+    linked_destroy = nil,
+    linked_lathe = nil,
+    linked_imprinter = nil,
+    req_access = {7, },
+    screen = 0,
+    back = 0,
+    locked = 0,
+    tdisk_uple = 0,
+    ddisk_uple = 0,
+    selected_node_id = nil,
+    selected_design_id = nil,
+    selected_category = nil,
+    matching_design_ids = nil,
+    disk_slot_selected = nil,
+    searchstring = "",
+    searchtype = "",
+    ui_mode = 1,
+    research_control = 1,
+
+}
+return Rdconsole

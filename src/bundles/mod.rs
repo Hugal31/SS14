@@ -1,5 +1,5 @@
 use amethyst::{
-    assets::{PrefabLoaderSystem, Processor}, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
+    assets::PrefabLoaderSystem, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
 };
 use amethyst_byond::ByondBundle;
 

@@ -1,11 +1,12 @@
 pub mod formats;
 
 use std::convert::TryFrom as _;
+use std::ops::Deref as _;
 
 use amethyst::{
     assets::{AssetStorage, Handle, Loader, PrefabData},
     core::Transform,
-    ecs::{Entity, ReadExpect, Write, WriteStorage},
+    ecs::{Entity, Read, ReadExpect, Write, WriteStorage},
     error::{format_err, Error, ResultExt},
     renderer::transparent::Transparent,
 };
@@ -14,12 +15,16 @@ use amethyst_byond::{
         dmi::{Dmi, DmiFormat},
         scripting::{ScriptEnvironment, ScriptHandle},
     },
-    components::{Coordinates, Direction, Layer, LayerName, ScriptInstance},
+    components::{
+        Coordinates, Dense, Direction, Layer, LayerName, Opaque, ScriptComponentChannel,
+        ScriptComponentRef, ScriptInstance,
+    },
 };
 use dmm::{Datum, Literal};
 use fnv::FnvHashMap;
 
 use crate::assets::SS13_SOURCE;
+use amethyst_byond::components::IconStateName;
 use byond_lua::RegistryKey;
 
 pub struct MapPrefabData {
@@ -35,6 +40,9 @@ impl MapPrefabData {
 
 impl<'a> PrefabData<'a> for MapPrefabData {
     type SystemData = (
+        Read<'a, ScriptComponentChannel<IconStateName>>,
+        Read<'a, ScriptComponentChannel<Dense>>,
+        Read<'a, ScriptComponentChannel<Opaque>>,
         ReadExpect<'a, Loader>,
         ReadExpect<'a, ScriptHandle>,
         Write<'a, AssetStorage<ScriptEnvironment>>,
@@ -55,6 +63,9 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         &self,
         entity: Entity,
         (
+            ref icon_state_name_channel,
+            ref dense_channel,
+            ref opaque_channel,
             ref loader,
             ref script_handle,
             ref mut script,
@@ -71,57 +82,103 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         _entities: &[Entity],
         _children: &[Entity],
     ) -> Result<Self::Result, Error> {
-        let script_env = script.get_mut(script_handle).expect("Scripts should have been loaded");
+        let script_env = script
+            .get_mut(script_handle)
+            .expect("Scripts should have been loaded");
 
-        if let Some(type_idx) = script_env.root.get_type(self.datum.path())
+        if let Some(type_idx) = script_env
+            .root
+            .get_type(self.datum.path())
             .with_context(|_| format_err!("could not retrieve type {}", self.datum.path()))?
         {
             coords.insert(entity, self.coords.clone())?;
             transforms.insert(entity, Default::default())?;
 
-            let instance_key = script_env.root.run(|lua_ctx| -> Result<RegistryKey, Error> {
-                let instance = type_idx.instantiate(lua_ctx)?;
+            let instance_key = script_env
+                .root
+                .run(|lua_ctx| -> Result<RegistryKey, Error> {
+                    let instance = type_idx.instantiate(lua_ctx)?;
 
-                // Load layer and transparency
-                let layer: Option<Layer> = instance.get::<_, Option<u32>>("layer")?
-                    .map(|l| Layer(l));
-                let icon: Option<String> = instance.get("icon")?;
-                let dir: Option<Direction> = instance.get::<_, Option<u8>>("dir")?
-                    .map(|d| Direction::try_from(d).unwrap_or_default());
+                    // Load layer and transparency
+                    let layer: Option<Layer> = instance
+                        .get::<_, Option<f32>>("layer")?
+                        .map(|l| Layer((l * 100.0) as u32));
+                    let icon: Option<String> = instance.get("icon")?;
+                    let dir: Option<Direction> = instance
+                        .get::<_, Option<u8>>("dir")?
+                        .map(|d| Direction::try_from(d).unwrap_or_default());
 
-                if let Some(l) = layer {
-                    layers.insert(entity, l)?;
+                    let density = instance.get::<_, bool>("density")?;
+                    instance.set(
+                        "density",
+                        ScriptComponentRef::<Dense>::new(
+                            entity,
+                            density,
+                            dense_channel.deref().clone(),
+                        ),
+                    )?;
+                    let opacity = instance.get::<_, bool>("opacity")?;
+                    instance.set(
+                        "opacity",
+                        ScriptComponentRef::<Opaque>::new(
+                            entity,
+                            opacity,
+                            opaque_channel.deref().clone(),
+                        ),
+                    )?;
 
-                    if l > LayerName::Space.into() && l != LayerName::Area.into() {
-                        transparents.insert(entity, Transparent)?;
+                    if let Some(l) = layer {
+                        layers.insert(entity, l)?;
+
+                        if l > LayerName::Space.into() && l != LayerName::Area.into() {
+                            transparents.insert(entity, Transparent)?;
+                        }
                     }
-                }
 
-                if let Some(icon_file) = icon {
-                    let dmi_handle = dmi_cache
-                        .0
-                        .entry(icon_file.clone())
-                        .or_insert_with(|| {
-                            loader.load_from(icon_file, DmiFormat, SS13_SOURCE, (), dmi_storage)
-                        })
-                        .clone();
-                    dmis.insert(entity, dmi_handle)?;
-                }
+                    if let Some(icon_file) = icon {
+                        let dmi_handle = dmi_cache
+                            .0
+                            .entry(icon_file.clone())
+                            .or_insert_with(|| {
+                                loader.load_from(icon_file, DmiFormat, SS13_SOURCE, (), dmi_storage)
+                            })
+                            .clone();
+                        dmis.insert(entity, dmi_handle)?;
+                    }
 
-                // Load icon state
-                if let Some(Literal::Str(icon_state)) = self.datum.var_edit("icon_state") {
-                    instance.set("icon_state", icon_state as &str)?;
-                }
+                    // Load icon state
+                    let icon_state: Option<String> = self
+                        .datum
+                        .var_edit("icon_state")
+                        // Get DMM icon_state
+                        .and_then(Literal::as_str)
+                        .map(str::to_string)
+                        .map(Result::Ok)
+                        // Or script instance icon_state
+                        .or_else(|| instance.get::<_, Option<String>>("icon_state").transpose())
+                        .transpose()?;
 
-                // Load direction
-                if let Some(Literal::Number(i)) = self.datum.var_edits().get("dir") {
-                    dirs.insert(entity, Direction::try_from(*i as u8).unwrap_or_default())?;
-                } else if let Some(dir) = dir {
-                    dirs.insert(entity, dir)?;
-                }
+                    if let Some(icon_state) = icon_state {
+                        instance.set(
+                            "icon_state",
+                            ScriptComponentRef::<IconStateName>::new(
+                                entity,
+                                icon_state,
+                                icon_state_name_channel.deref().clone(),
+                            ),
+                        )?;
+                    }
 
-                Ok(lua_ctx.create_registry_value(instance)?)
-            }).with_context(|_| format_err!("could not instantiate"))?;
+                    // Load direction
+                    if let Some(Literal::Number(i)) = self.datum.var_edits().get("dir") {
+                        dirs.insert(entity, Direction::try_from(*i as u8).unwrap_or_default())?;
+                    } else if let Some(dir) = dir {
+                        dirs.insert(entity, dir)?;
+                    }
+
+                    Ok(lua_ctx.create_registry_value(instance)?)
+                })
+                .with_context(|_| format_err!("could not instantiate"))?;
 
             instances.insert(entity, ScriptInstance(instance_key))?;
         } else {

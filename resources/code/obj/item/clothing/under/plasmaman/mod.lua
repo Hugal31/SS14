@@ -1,0 +1,21 @@
+local Self = require "obj.item.clothing.under.plasmaman.class"
+return {
+    CLASS = Self,
+    security = require "obj.item.clothing.under.plasmaman.security.mod",
+    chemist = require "obj.item.clothing.under.plasmaman.chemist.mod",
+    genetics = require "obj.item.clothing.under.plasmaman.genetics.mod",
+    viro = require "obj.item.clothing.under.plasmaman.viro.mod",
+    robotics = require "obj.item.clothing.under.plasmaman.robotics.mod",
+    science = require "obj.item.clothing.under.plasmaman.science.mod",
+    medical = require "obj.item.clothing.under.plasmaman.medical.mod",
+    atmospherics = require "obj.item.clothing.under.plasmaman.atmospherics.mod",
+    engineering = require "obj.item.clothing.under.plasmaman.engineering.mod",
+    botany = require "obj.item.clothing.under.plasmaman.botany.mod",
+    janitor = require "obj.item.clothing.under.plasmaman.janitor.mod",
+    curator = require "obj.item.clothing.under.plasmaman.curator.mod",
+    chaplain = require "obj.item.clothing.under.plasmaman.chaplain.mod",
+    enviroslacks = require "obj.item.clothing.under.plasmaman.enviroslacks.mod",
+    chef = require "obj.item.clothing.under.plasmaman.chef.mod",
+    mining = require "obj.item.clothing.under.plasmaman.mining.mod",
+    cargo = require "obj.item.clothing.under.plasmaman.cargo.mod",
+}

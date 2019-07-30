@@ -1,0 +1,20 @@
+local Self = require "obj.item.nullrod.class"
+return {
+    CLASS = Self,
+    egyptian = require "obj.item.nullrod.egyptian.mod",
+    pitchfork = require "obj.item.nullrod.pitchfork.mod",
+    tribal_knife = require "obj.item.nullrod.tribal_knife.mod",
+    carp = require "obj.item.nullrod.carp.mod",
+    armblade = require "obj.item.nullrod.armblade.mod",
+    fedora = require "obj.item.nullrod.fedora.mod",
+    whip = require "obj.item.nullrod.whip.mod",
+    pride_hammer = require "obj.item.nullrod.pride_hammer.mod",
+    clown = require "obj.item.nullrod.clown.mod",
+    chainsaw = require "obj.item.nullrod.chainsaw.mod",
+    hammmer = require "obj.item.nullrod.hammmer.mod",
+    scythe = require "obj.item.nullrod.scythe.mod",
+    sord = require "obj.item.nullrod.sord.mod",
+    claymore = require "obj.item.nullrod.claymore.mod",
+    staff = require "obj.item.nullrod.staff.mod",
+    godhand = require "obj.item.nullrod.godhand.mod",
+}

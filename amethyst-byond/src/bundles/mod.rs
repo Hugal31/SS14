@@ -2,8 +2,8 @@ use amethyst_animation::AnimationBundle;
 use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
 use amethyst_error::Error;
 
-use crate::assets::{dm::DreamMakerProcessor, dmi::DmiProcessor, scripting::ScriptProcessor};
-use crate::components::{Direction, Moving};
+use crate::assets::{dmi::DmiProcessor, scripting::ScriptProcessor};
+use crate::components::{Dense, Direction, IconStateName, Moving, Opaque};
 use crate::systems;
 
 pub struct ByondBundle<'a> {
@@ -27,14 +27,30 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
         AnimationBundle::<Direction, Moving>::new("animate_moving", "sample_moving")
             .build(dispatcher)?;
 
-        dispatcher.add(DreamMakerProcessor::new(), "dm_processor", &[]);
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
         dispatcher.add(ScriptProcessor::new(), "lua_processor", &[]);
 
+        // Script systems
         dispatcher.add(
-            systems::SyncScriptSystem::new(),
-            "sync_script",
-            &[]
+            systems::script::UpdateScriptWorldSystem::new(),
+            "update_script_world",
+            &[],
+        );
+        dispatcher.add(systems::BumpSystem::new(), "bump_system", &[]);
+        dispatcher.add(
+            systems::SyncZeroSizeComponentSystem::<Dense>::new(),
+            "sync_denses",
+            &["update_script_world"],
+        );
+        dispatcher.add(
+            systems::SyncZeroSizeComponentSystem::<Opaque>::new(),
+            "sync_opaques",
+            &["update_script_world"],
+        );
+        dispatcher.add(
+            systems::SyncScriptComponent::<IconStateName>::new(),
+            "sync_icon_state_names",
+            &["update_script_world"],
         );
         dispatcher.add(
             systems::SyncCoordsSystem::default(),
@@ -48,7 +64,11 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             &[],
         );
 
-        dispatcher.add(systems::SyncIconStateSystem::new(), "sync_icon_states", &["sync_script"]);
+        dispatcher.add(
+            systems::SyncIconStateSystem::new(),
+            "sync_icon_states",
+            &["sync_icon_state_names"],
+        );
         dispatcher.add(
             systems::IconStateAnimation::new(),
             "icon_state_animation",

@@ -1,4 +1,3 @@
-use dreammaker_runtime::Instance;
 #[cfg(feature="serde")]
 use serde::{Serialize, Deserialize};
 
@@ -8,5 +7,5 @@ use crate::components::Coordinates;
 #[cfg_attr(feature="serde", derive(Serialize, Deserialize))]
 pub struct Entity {
     pub coords: Coordinates,
-    pub instance: Instance,
+    // pub instance: Instance,
 }

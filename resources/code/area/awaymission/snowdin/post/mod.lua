@@ -1,0 +1,21 @@
+local Self = require "area.awaymission.snowdin.post.class"
+return {
+    CLASS = Self,
+    broken_shuttle = require "area.awaymission.snowdin.post.broken_shuttle.mod",
+    mining_dock = require "area.awaymission.snowdin.post.mining_dock.mod",
+    cavern2 = require "area.awaymission.snowdin.post.cavern2.mod",
+    cavern1 = require "area.awaymission.snowdin.post.cavern1.mod",
+    mining_main = require "area.awaymission.snowdin.post.mining_main.mod",
+    minipost = require "area.awaymission.snowdin.post.minipost.mod",
+    garage = require "area.awaymission.snowdin.post.garage.mod",
+    research = require "area.awaymission.snowdin.post.research.mod",
+    custodials = require "area.awaymission.snowdin.post.custodials.mod",
+    engineering = require "area.awaymission.snowdin.post.engineering.mod",
+    kitchen = require "area.awaymission.snowdin.post.kitchen.mod",
+    dorm = require "area.awaymission.snowdin.post.dorm.mod",
+    gateway = require "area.awaymission.snowdin.post.gateway.mod",
+    messhall = require "area.awaymission.snowdin.post.messhall.mod",
+    hydro = require "area.awaymission.snowdin.post.hydro.mod",
+    secpost = require "area.awaymission.snowdin.post.secpost.mod",
+    medbay = require "area.awaymission.snowdin.post.medbay.mod",
+}

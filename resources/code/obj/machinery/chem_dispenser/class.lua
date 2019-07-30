@@ -1,0 +1,30 @@
+local Machinery = require "obj/machinery/class"
+local ChemDispenser = Machinery:new{
+    name = "chem dispenser",
+    desc = "Creates and dispenses chemicals.",
+    density = true,
+    icon = 'icons/obj/chemical.dmi',
+    icon_state = "dispenser",
+    use_power = 1,
+    idle_power_usage = 40,
+    interaction_flags_machine = 11,
+    resistance_flags = 34,
+    circuit = nil,
+    cell = nil,
+    powerefficiency = 0.1,
+    amount = 30,
+    recharge_amount = 10,
+    recharge_counter = 0,
+    beaker_overlay = nil,
+    working_state = "dispenser_working",
+    nopower_state = "dispenser_nopower",
+    has_panel_overlay = 1,
+    macroresolution = 1,
+    beaker = nil,
+    dispensable_reagents = {"hydrogen", "lithium", "carbon", "nitrogen", "oxygen", "fluorine", "sodium", "aluminium", "silicon", "phosphorus", "sulfur", "chlorine", "potassium", "iron", "copper", "mercury", "radium", "water", "ethanol", "sugar", "sacid", "welding_fuel", "silver", "iodine", "bromine", "stable_plasma", },
+    upgrade_reagents = {"oil", "ash", "acetone", "saltpetre", "ammonia", "diethylamine", },
+    emagged_reagents = {"space_drugs", "morphine", "carpotoxin", "mine_salve", "toxin", },
+    saved_recipes = {},
+
+}
+return ChemDispenser

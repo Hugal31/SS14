@@ -1,0 +1,32 @@
+local Datum = require "datum/class"
+local Disease = Datum:new{
+    visibility_flags = 0,
+    disease_flags = 7,
+    spread_flags = 56,
+    form = "Virus",
+    name = "No disease",
+    desc = "",
+    agent = "some microbes",
+    spread_text = "",
+    cure_text = "",
+    stage = 1,
+    max_stages = 0,
+    stage_prob = 4,
+    viable_mobtypes = {},
+    affected_mob = nil,
+    cures = {},
+    infectivity = 65,
+    cure_chance = 8,
+    carrier = 0,
+    bypasses_immunity = 0,
+    permeability_mod = 1,
+    severity = "Harmless",
+    required_organs = {},
+    needs_all_cures = 1,
+    strain_data = {},
+    infectable_biotypes = {"organic", },
+    process_dead = 0,
+    copy_type = nil,
+
+}
+return Disease

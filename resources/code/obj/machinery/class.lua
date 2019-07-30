@@ -1,0 +1,33 @@
+local Obj = require "obj/class"
+local Machinery = Obj:new{
+    name = "machinery",
+    icon = 'icons/obj/stationobjs.dmi',
+    desc = "Some kind of machine.",
+    verb_say = "beeps",
+    verb_yell = "blares",
+    pressure_resistance = 15,
+    max_integrity = 200,
+    layer = 2.9,
+    anchored = 1,
+    interaction_flags_atom = 6,
+    stat = 0,
+    use_power = 1,
+    idle_power_usage = 0,
+    active_power_usage = 0,
+    power_channel = 1,
+    component_parts = nil,
+    panel_open = 0,
+    state_open = 0,
+    critical_machine = 0,
+    occupant_typecache = nil,
+    occupant = nil,
+    speed_process = 0,
+    circuit = nil,
+    damage_deflection = 0,
+    interaction_flags_machine = 92,
+    fair_market_price = 69,
+    market_verb = "Customer",
+    payment_department = "ENG",
+
+}
+return Machinery

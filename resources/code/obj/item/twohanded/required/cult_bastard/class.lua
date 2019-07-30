@@ -1,0 +1,31 @@
+local Required = require "obj/item/twohanded/required/class"
+local CultBastard = Required:new{
+    name = "bloody bastard sword",
+    desc = "An enormous sword used by Nar'Sien cultists to rapidly harvest the souls of non-believers.",
+    w_class = 5,
+    block_chance = 50,
+    throwforce = 20,
+    force = 35,
+    armour_penetration = 45,
+    throw_speed = 1,
+    throw_range = 3,
+    sharpness = 1,
+    light_color = "#ff0000",
+    attack_verb = {"cleaved", "slashed", "torn", "hacked", "ripped", "diced", "carved", },
+    icon_state = "cultbastard",
+    item_state = "cultbastard",
+    hitsound = 'sound/weapons/bladeslice.ogg',
+    lefthand_file = 'icons/mob/inhands/64x64_lefthand.dmi',
+    righthand_file = 'icons/mob/inhands/64x64_righthand.dmi',
+    inhand_x_dimension = 64,
+    inhand_y_dimension = 64,
+    actions_types = {},
+    item_flags = 16,
+    jaunt = nil,
+    linked_action = nil,
+    spinning = 0,
+    spin_cooldown = 250,
+    dash_toggled = 1,
+
+}
+return CultBastard

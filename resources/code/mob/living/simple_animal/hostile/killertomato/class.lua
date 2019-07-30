@@ -1,0 +1,30 @@
+local Hostile = require "mob/living/simple_animal/hostile/class"
+local Killertomato = Hostile:new{
+    name = "Killer Tomato",
+    desc = "It's a horrifyingly enormous beef tomato, and it's packing extra beef!",
+    icon_state = "tomato",
+    icon_living = "tomato",
+    icon_dead = "tomato_dead",
+    gender = "neuter",
+    speak_chance = 0,
+    turns_per_move = 5,
+    maxHealth = 30,
+    health = 30,
+    see_in_dark = 3,
+    butcher_results = {nil, },
+    response_help = "prods",
+    response_disarm = "pushes aside",
+    response_harm = "smacks",
+    melee_damage_lower = 8,
+    melee_damage_upper = 12,
+    attacktext = "slams",
+    attack_sound = 'sound/weapons/punch1.ogg',
+    ventcrawler = 2,
+    faction = {"plants", },
+    atmos_requirements = {"min_oxy", "max_oxy", "min_tox", "max_tox", "min_co2", "max_co2", "min_n2", "max_n2", },
+    minbodytemp = 150,
+    maxbodytemp = 500,
+    gold_core_spawnable = 1,
+
+}
+return Killertomato

@@ -1,0 +1,30 @@
+local Hivelord = require "mob/living/simple_animal/hostile/asteroid/hivelord/class"
+local Legion = Hivelord:new{
+    name = "legion",
+    desc = "You can still see what was once a human under the shifting mass of corruption.",
+    icon = 'icons/mob/lavaland/lavaland_monsters.dmi',
+    icon_state = "legion",
+    icon_living = "legion",
+    icon_aggro = "legion",
+    icon_dead = "legion",
+    icon_gib = "syndicate_gib",
+    mob_biotypes = {"organic", "humanoid", },
+    mouse_opacity = 1,
+    obj_damage = 60,
+    melee_damage_lower = 15,
+    melee_damage_upper = 15,
+    attacktext = "lashes out at",
+    speak_emote = {"echoes", },
+    attack_sound = 'sound/weapons/pierce.ogg',
+    throw_message = "bounces harmlessly off of",
+    crusher_loot = nil,
+    loot = {nil, },
+    brood_type = nil,
+    del_on_death = 1,
+    stat_attack = 2,
+    robust_searching = 1,
+    dwarf_mob = 0,
+    stored_mob = nil,
+
+}
+return Legion

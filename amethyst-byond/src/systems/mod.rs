@@ -18,7 +18,7 @@ use amethyst_core::ecs::{
     storage::ComponentEvent, BitSet, Component, ReadStorage, ReaderId, Tracked,
 };
 
-/// Read insert and modify events
+/// Read insert and modify `ComponentEvent`s
 fn read_ins_mod_events<T>(
     modified: &mut BitSet,
     storage: &ReadStorage<T>,

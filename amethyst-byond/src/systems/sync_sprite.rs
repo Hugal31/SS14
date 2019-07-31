@@ -9,8 +9,8 @@ use amethyst_core::{
 use amethyst_rendy::sprite::SpriteRender;
 
 use crate::assets::dmi::Dmi;
-
 use crate::components::{Direction, IconFrame, IconState, IconStateName};
+use super::read_ins_mod_events;
 
 /// Sync the sprites of the entities whith an `IconState`
 #[derive(Debug, Default)]
@@ -26,25 +26,6 @@ pub struct SyncSpritesSystem {
 impl SyncSpritesSystem {
     pub fn new() -> Self {
         Self::default()
-    }
-
-    fn read_events<T>(
-        modified: &mut BitSet,
-        storage: &ReadStorage<T>,
-        reader: &mut ReaderId<ComponentEvent>,
-    ) where
-        T: Component,
-        T::Storage: Tracked,
-    {
-        storage
-            .channel()
-            .read(reader)
-            .for_each(|event| match event {
-                ComponentEvent::Inserted(id) | ComponentEvent::Modified(id) => {
-                    modified.add(*id);
-                }
-                _ => (),
-            })
     }
 }
 
@@ -63,19 +44,22 @@ impl<'a> System<'a> for SyncSpritesSystem {
     ) {
         // Read modifications
         self.modified.clear();
-        Self::read_events(
+        read_ins_mod_events(&mut self.modified,
+                            &states,
+                            self.icons_event_id.as_mut().expect("setup was not called"));
+        read_ins_mod_events(
             &mut self.modified,
             &states,
             self.icons_event_id.as_mut().expect("setup was not called"),
         );
-        Self::read_events(
+        read_ins_mod_events(
             &mut self.modified,
             &directions,
             self.directions_event_id
                 .as_mut()
                 .expect("setup was not called"),
         );
-        Self::read_events(
+        read_ins_mod_events(
             &mut self.modified,
             &frames,
             self.frames_event_id.as_mut().expect("setup was not called"),

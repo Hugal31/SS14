@@ -1,7 +1,6 @@
-use amethyst_assets::AssetStorage;
 use amethyst_core::{
     ecs::{
-        shred::DynamicSystemData, BitSet, Join, Read, ReaderId, Resources, System, Write,
+        shred::DynamicSystemData, BitSet, Join, Read, ReaderId, Resources, System, WriteExpect,
         WriteStorage,
     },
     shrev::EventChannel,
@@ -11,9 +10,9 @@ use amethyst_error::{format_err, Error, ResultExt};
 use rlua::{Function, Table};
 
 use crate::{
-    assets::scripting::{ScriptEnvironment, ScriptHandle},
     components::ScriptInstance,
     events::BumpEvent,
+    resources::script::ScriptEnvironment,
 };
 
 #[derive(Default)]
@@ -32,27 +31,16 @@ impl BumpSystem {
 impl<'a> System<'a> for BumpSystem {
     type SystemData = (
         Read<'a, EventChannel<BumpEvent>>,
-        Option<Read<'a, ScriptHandle>>,
-        Write<'a, AssetStorage<ScriptEnvironment>>,
+        WriteExpect<'a, ScriptEnvironment>,
         WriteStorage<'a, ScriptInstance>,
     );
 
-    fn run(&mut self, (bumps, script_handle, mut scripts, mut instances): Self::SystemData) {
+    fn run(&mut self, (bumps, mut script_env, mut instances): Self::SystemData) {
         self.bumped.extend(
             bumps
                 .read(self.bumps_event_id.as_mut().expect("setup was not called"))
                 .map(|e| e.bumped.id()),
         );
-
-        let script_env = if let Some(env) = script_handle
-            .as_ref()
-            .map(|handle| scripts.get_mut(handle))
-            .flatten()
-        {
-            env
-        } else {
-            return;
-        };
 
         let result = script_env.root.run(|lua_ctx| -> Result<(), Error> {
             for (mut instance_key, _) in (&mut instances.restrict_mut(), &self.bumped).join() {

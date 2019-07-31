@@ -2,7 +2,7 @@ use amethyst_animation::AnimationBundle;
 use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
 use amethyst_error::Error;
 
-use crate::assets::{dmi::DmiProcessor, scripting::ScriptProcessor};
+use crate::assets::dmi::DmiProcessor;
 use crate::components::{Dense, Direction, IconStateName, Moving, Opaque};
 use crate::systems;
 
@@ -28,7 +28,6 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             .build(dispatcher)?;
 
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
-        dispatcher.add(ScriptProcessor::new(), "lua_processor", &[]);
 
         // Script systems
         dispatcher.add(

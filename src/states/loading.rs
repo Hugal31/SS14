@@ -2,9 +2,15 @@ use std::marker::PhantomData;
 use std::path::PathBuf;
 
 use amethyst::{
-    assets::{Completion, ProgressCounter},
+    assets::{Completion, Progress, ProgressCounter, Tracker},
     ecs::Entity,
     prelude::*,
+};
+use amethyst_byond::{
+    components::{Dense, IconStateName, Opaque, ScriptComponentChannel},
+    resources::script::{
+        ScriptComponentFactory, ScriptEnvironment, ScriptWorld, ScriptWorldData,
+    }
 };
 
 use crate::assets::{AssetsLoader as _, GameAssetsLoader};
@@ -28,6 +34,44 @@ impl<'a, 'b, E: Send + Sync + 'static> AssetsLoaderState<'a, 'b, E> {
 impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoaderState<'a, 'b, E> {
     fn on_start(&mut self, data: StateData<GameData<'a, 'b>>) {
         let StateData { world, .. } = data;
+
+        // Load and store script_env
+        // TODO Better handling of error, or create in main
+        {
+            let mut progress = &mut self.progress;
+            progress.add_assets(1);
+            let tracker = Box::new(progress.create_tracker());
+            match ScriptEnvironment::new_empty() {
+                Ok(script_env) => {
+                    world.add_resource(script_env);
+                    tracker.success()
+                },
+                Err(e) => tracker.fail(0, "Lua", "Script root".to_string(), e),
+            }
+        }
+        // Create ScriptWorld
+        {
+            let factory = {
+                let denses = world.read_resource::< ScriptComponentChannel::<Dense> > ();
+                let icon_states = world.read_resource::< ScriptComponentChannel::<IconStateName> > ();
+                let opaques = world.read_resource::< ScriptComponentChannel::<Opaque> > ();
+                ScriptComponentFactory::new(
+                    denses.clone(),
+                    icon_states.clone(),
+                    opaques.clone(),
+                )
+            };
+
+            let script_world = ScriptWorld::new(ScriptWorldData::new(factory));
+            world.add_resource(script_world.clone());
+
+            {
+                let mut script_env = world.write_resource::<ScriptEnvironment>();
+                script_env.root.run(|lua_ctx| {
+                    lua_ctx.globals().set("WORLD", script_world)
+                }).unwrap();
+            }
+        }
 
         self.to_load.load(world, &mut self.progress);
     }

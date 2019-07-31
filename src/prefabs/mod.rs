@@ -1,24 +1,23 @@
 pub mod formats;
 
+use std::collections::HashMap;
 use std::convert::TryFrom as _;
 use std::ops::Deref as _;
 
 use amethyst::{
     assets::{AssetStorage, Handle, Loader, PrefabData},
     core::Transform,
-    ecs::{Entity, Read, ReadExpect, Write, WriteStorage},
+    ecs::{Entity, Read, ReadExpect, Write, WriteExpect, WriteStorage},
     error::{format_err, Error, ResultExt},
     renderer::transparent::Transparent,
 };
 use amethyst_byond::{
-    assets::{
-        dmi::{Dmi, DmiFormat},
-        scripting::{ScriptEnvironment, ScriptHandle},
-    },
+    assets::dmi::{Dmi, DmiFormat},
     components::{
         Coordinates, Dense, Direction, Layer, LayerName, Opaque, ScriptComponentChannel,
         ScriptComponentRef, ScriptInstance,
     },
+    resources::script::{ScriptEntity, ScriptEnvironment},
 };
 use dmm::{Datum, Literal};
 use fnv::FnvHashMap;
@@ -40,12 +39,8 @@ impl MapPrefabData {
 
 impl<'a> PrefabData<'a> for MapPrefabData {
     type SystemData = (
-        Read<'a, ScriptComponentChannel<IconStateName>>,
-        Read<'a, ScriptComponentChannel<Dense>>,
-        Read<'a, ScriptComponentChannel<Opaque>>,
         ReadExpect<'a, Loader>,
-        ReadExpect<'a, ScriptHandle>,
-        Write<'a, AssetStorage<ScriptEnvironment>>,
+        WriteExpect<'a, ScriptEnvironment>,
         Write<'a, AssetStorage<Dmi>>,
         Write<'a, DmiCache>,
         WriteStorage<'a, Coordinates>,
@@ -63,12 +58,8 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         &self,
         entity: Entity,
         (
-            ref icon_state_name_channel,
-            ref dense_channel,
-            ref opaque_channel,
             ref loader,
-            ref script_handle,
-            ref mut script,
+            ref mut script_env,
             ref mut dmi_storage,
             ref mut dmi_cache,
             ref mut coords,
@@ -82,10 +73,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         _entities: &[Entity],
         _children: &[Entity],
     ) -> Result<Self::Result, Error> {
-        let script_env = script
-            .get_mut(script_handle)
-            .expect("Scripts should have been loaded");
-
         if let Some(type_idx) = script_env
             .root
             .get_type(self.datum.path())
@@ -97,7 +84,20 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             let instance_key = script_env
                 .root
                 .run(|lua_ctx| -> Result<RegistryKey, Error> {
-                    let instance = type_idx.instantiate(lua_ctx)?;
+                    let root_instance = lua_ctx.create_table()?;
+                    root_instance.set("entity", ScriptEntity(entity))?;
+                    // Fill with DMM values
+                    if let Some(icon_state) = self
+                        .datum
+                        .var_edit("icon_state")
+                        .and_then(Literal::as_str)
+                        .map(str::to_string)
+                    {
+                        root_instance.set("icon_state", icon_state);
+                    }
+                    // TODO Add dir, etc..
+
+                    let instance = type_idx.instantiate_with(lua_ctx, root_instance)?;
 
                     // Load layer and transparency
                     let layer: Option<Layer> = instance
@@ -107,25 +107,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                     let dir: Option<Direction> = instance
                         .get::<_, Option<u8>>("dir")?
                         .map(|d| Direction::try_from(d).unwrap_or_default());
-
-                    let density = instance.get::<_, bool>("density")?;
-                    instance.set(
-                        "density",
-                        ScriptComponentRef::<Dense>::new(
-                            entity,
-                            density,
-                            dense_channel.deref().clone(),
-                        ),
-                    )?;
-                    let opacity = instance.get::<_, bool>("opacity")?;
-                    instance.set(
-                        "opacity",
-                        ScriptComponentRef::<Opaque>::new(
-                            entity,
-                            opacity,
-                            opaque_channel.deref().clone(),
-                        ),
-                    )?;
 
                     if let Some(l) = layer {
                         layers.insert(entity, l)?;
@@ -144,29 +125,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                             })
                             .clone();
                         dmis.insert(entity, dmi_handle)?;
-                    }
-
-                    // Load icon state
-                    let icon_state: Option<String> = self
-                        .datum
-                        .var_edit("icon_state")
-                        // Get DMM icon_state
-                        .and_then(Literal::as_str)
-                        .map(str::to_string)
-                        .map(Result::Ok)
-                        // Or script instance icon_state
-                        .or_else(|| instance.get::<_, Option<String>>("icon_state").transpose())
-                        .transpose()?;
-
-                    if let Some(icon_state) = icon_state {
-                        instance.set(
-                            "icon_state",
-                            ScriptComponentRef::<IconStateName>::new(
-                                entity,
-                                icon_state,
-                                icon_state_name_channel.deref().clone(),
-                            ),
-                        )?;
                     }
 
                     // Load direction

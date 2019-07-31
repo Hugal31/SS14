@@ -82,6 +82,18 @@ local Atom = Datum:new{
     light_color = nil,
     light = nil,
     light_sources = nil,
-
 }
+
+function Atom:new(o)
+    o = o or {}
+    setmetatable(o, self)
+    self.__index = self
+    if o.entity then
+        o.density = WORLD:create_component(o.entity, "density", o.density)
+        o.icon_state = WORLD:create_component(o.entity, "icon_state", o.icon_state)
+        o.opacity = WORLD:create_component(o.entity, "opacity", o.opacity)
+    end
+    return o
+end
+
 return Atom

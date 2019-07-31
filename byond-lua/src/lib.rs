@@ -11,31 +11,50 @@ pub struct Scripting {
 unsafe impl Sync for Scripting {}
 
 impl Scripting {
-    pub fn new<S>(source: &S, root: &str) -> LuaResult<Self>
-        where S: ?Sized + AsRef<[u8]>
-    {
+    pub fn new_empty() -> LuaResult<Self> {
         let lua = Lua::new();
-        // TODO Use _ENV ?
-        let set_path = format!("package.path = \"{}/?.lua;\" .. package.path", root);
+        // Make an empty obj_tree for now
+        let obj_tree = lua.context(|lua_ctx| {
+            let table = lua_ctx.create_table()?;
 
-        let obj_tree = lua
-            .context(|lua_ctx| {
-                lua_ctx.load(&set_path)
-                    .exec()?;
-                lua_ctx.load(source)
-                    .exec()?;
+            lua_ctx.create_registry_value(table)
+        })?;
 
-                let obj_tree_ref: LuaValue = lua_ctx.globals().get("OBJ_TREE")?;
-                match obj_tree_ref {
-                    LuaValue::Table(_) => lua_ctx.create_registry_value(obj_tree_ref),
-                    _ => Err(LuaError::RuntimeError("OBJ_TREE not found".into())),
-                }
-            })?;
-
-        Ok(Scripting {
+        Ok(Self {
             lua,
             obj_tree
         })
+    }
+
+    pub fn new<S>(source: &S, root_path: &str) -> LuaResult<Self>
+        where S: ?Sized + AsRef<[u8]>
+    {
+        let mut this = Self::new_empty()?;
+        this.load_source(source, root_path)?;
+
+        Ok(this)
+    }
+
+    pub fn load_source<S>(&mut self, source: &S, root_path: &str) -> LuaResult<()>
+        where S: ?Sized + AsRef<[u8]>
+    {
+        // TODO Use _ENV ?
+        let set_path = format!("package.path = \"{}/?.lua;\" .. package.path", root_path);
+        let obj_tree = self.run(|lua_ctx| {
+            lua_ctx.load(&set_path)
+                .exec()?;
+            lua_ctx.load(source)
+                .exec()?;
+
+            let obj_tree_ref: LuaValue = lua_ctx.globals().get("OBJ_TREE")?;
+            match obj_tree_ref {
+                LuaValue::Table(_) => lua_ctx.create_registry_value(obj_tree_ref),
+                _ => Err(LuaError::RuntimeError("OBJ_TREE not found".into())),
+            }
+        })?;
+
+        self.obj_tree = obj_tree;
+        Ok(())
     }
 
     pub fn run<F, R>(&mut self, f: F) -> R

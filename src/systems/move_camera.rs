@@ -14,6 +14,8 @@ use amethyst_byond::{
     components::{Coordinates, Dense, Direction, Moving},
     events::BumpEvent,
 };
+#[cfg(feature = "profiler")]
+use thread_profiler::profile_scope;
 
 use crate::{
     components::{MoveCooldown, Player},
@@ -134,6 +136,9 @@ impl<'a> System<'a> for MoveCamera {
             mut bumps,
         ): Self::SystemData,
     ) {
+        #[cfg(feature = "profiler")]
+        profile_scope!("MoveCamera::run");
+
         for dir in &Direction::CARDINALS {
             if inputs
                 .action_is_down(&Input::Move(*dir))

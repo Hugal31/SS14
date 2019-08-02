@@ -12,14 +12,17 @@ dmm-format = { git = "https://github.com/Hugal31/DMM.git" }
 fnv = "1"
 log = "0.4"
 serde = { version ="1", features = ["derive"] }
+thread_profiler = { version = "0.3", optional = true }
 
 [dependencies.amethyst]
 version = "0.11"
 features = ["nightly", "vulkan"]
 
 [features]
-default = ["no-slow-safety-check"]
+default = ["no-slow-safety-check", "vulkan"]
+vulkan = ["amethyst/vulkan"]
 no-slow-safety-check = ["amethyst/no-slow-safety-checks"]
+profiler = ["thread_profiler", "thread_profiler/thread_profiler", "amethyst/profiler", "amethyst-byond/profiler"]
 
 [profile.dev]
 opt-level = 2

@@ -21,6 +21,11 @@ log = "0.4"
 serde = { version = "1", features = ["derive"] }
 rayon = "1"
 rlua = "0.16"
+thread_profiler = { version = "0.3", optional = true }
 
 [dev-dependencies]
 derivative = "1"
+
+[features]
+default = []
+profiler = ["thread_profiler", "thread_profiler/thread_profiler"]

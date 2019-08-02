@@ -4,6 +4,9 @@ use amethyst::{
 };
 use amethyst_byond::components::{Coordinates, Direction, Opaque};
 
+#[cfg(feature = "profiler")]
+use thread_profiler::profile_scope;
+
 use crate::components::Player;
 
 pub struct VisionFieldSystem {
@@ -105,6 +108,9 @@ impl<'a> System<'a> for VisionFieldSystem {
     );
 
     fn run(&mut self, (entities, players, coords, opaques, mut hiddens): Self::SystemData) {
+        #[cfg(feature = "profiler")]
+        profile_scope!("VisionFieldSystem::run");
+
         if let Some(player_coord) = (&players, &coords).join().map(|(_, c)| c).next() {
             self.in_range.clear();
 

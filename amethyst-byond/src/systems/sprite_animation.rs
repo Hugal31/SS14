@@ -2,6 +2,8 @@ use amethyst_core::{
     ecs::{Join, Read, ReadStorage, System, WriteStorage},
     timing::Time,
 };
+#[cfg(feature = "profiler")]
+use thread_profiler::profile_scope;
 
 use crate::components::{IconFrame, IconState};
 
@@ -22,6 +24,9 @@ impl<'a> System<'a> for IconStateAnimation {
     );
 
     fn run(&mut self, (time, states, mut frames): Self::SystemData) {
+        #[cfg(feature = "profiler")]
+        profile_scope!("IconStateAnimation::run");
+
         if time.frame_number() % 5 == 0 {
             let now = time.absolute_time();
             for (state, mut frame) in (&states, &mut frames.restrict_mut()).join() {

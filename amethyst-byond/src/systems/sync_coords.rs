@@ -6,6 +6,8 @@ use amethyst_core::{
     Transform,
 };
 use amethyst_rendy::transparent::Transparent;
+#[cfg(feature = "profiler")]
+use thread_profiler::profile_scope;
 
 use crate::components::{Coordinates, Moving};
 
@@ -25,6 +27,9 @@ impl<'a> System<'a> for SyncCoordsSystem {
     );
 
     fn run(&mut self, (cells, movings, transparents, mut transforms): Self::SystemData) {
+        #[cfg(feature = "profiler")]
+        profile_scope!("SyncCoordSystem::run");
+
         let coords_event_id = self.coords_event_id.as_mut().expect("setup was not called");
 
         // Read modifications

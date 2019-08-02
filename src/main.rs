@@ -3,20 +3,23 @@ use std::time::Duration;
 
 use amethyst::{
     self,
-    assets::{Processor, Source},
+    assets::Source,
     core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
     error::{format_err, ResultExt},
     input::InputBundle,
     prelude::*,
-    renderer::{sprite::SpriteSheet, types::DefaultBackend, RenderingSystem},
+    renderer::{
+        bundle::RenderingBundle,
+        plugins::{RenderDebugLines, RenderToWindow},
+        types::DefaultBackend,
+    },
     utils::application_root_dir,
-    window::WindowBundle,
 };
 
 use ss14::{
     assets::{self, GameAssetsLoader},
     bundles, events, inputs,
-    render::RenderGraphCreator as SS14RenderGraph,
+    render::RenderLayeredSprites,
     states,
 };
 
@@ -49,26 +52,23 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
     let bindings_config_path = assets_dir.join(BINDINGS_CONFIG_PATH);
     let level = level.unwrap_or_else(|| assets_dir.join("levels/test_level.dmm"));
 
-    let game_data = GameDataBuilder::<f32>::default()
+    let game_data = GameDataBuilder::default()
         .with_bundle(
             InputBundle::<inputs::Input>::new().with_bindings_from_file(bindings_config_path)?,
         )?
         .with_bundle(bundles::GameBundle)?
-        // The WindowBundle provides all the scaffolding for opening a window and drawing to it
-        .with_bundle(WindowBundle::from_config_path(display_config_path))?
         // Add the transform bundle which handles tracking entity positions
         .with_bundle(TransformBundle::new().with_dep(bundles::GameBundle::TRANSFORM_DEPS))?
-        // A Processor system is added to handle loading spritesheets.
-        .with(
-            Processor::<SpriteSheet>::new(),
-            "sprite_sheet_processor",
-            &[],
-        )
-        // The renderer must be executed on the same thread consecutively, so we initialize it as thread_local
-        // which will always execute on the main thread.
-        .with_thread_local(RenderingSystem::<DefaultBackend, _>::new(
-            SS14RenderGraph::default(),
-        ));
+        // TODO Use custom rendering bundle to avoid useless MeshProcessor and others?
+        .with_bundle(
+            RenderingBundle::<DefaultBackend>::new()
+                .with_plugin(
+                    RenderToWindow::from_config_path(display_config_path)
+                        .with_clear([0.0, 0.0, 0.0, 1.0]),
+                )
+                .with_plugin(RenderLayeredSprites::default())
+                .with_plugin(RenderDebugLines::default()),
+        )?;
 
     let initial_state = states::loading::LoadLevelAsset::<states::play::PlayState>::new(level);
     let initial_state = states::loading::AssetsLoaderState::new(
@@ -79,7 +79,7 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
     let mut game =
         CoreApplication::<_, _, events::SS14StateEventReader>::build(assets_dir, initial_state)?
             .with_frame_limit(
-                FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
+                FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(10)),
                 60,
             )
             .with_source(assets::SS13_SOURCE, ss13_source)

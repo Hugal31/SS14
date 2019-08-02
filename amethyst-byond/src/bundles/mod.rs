@@ -62,11 +62,6 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             // TODO Remove move_camera
             &["move_camera", "sample_moving"],
         );
-        dispatcher.add(
-            systems::SpriteLayerSortingSystem::new(),
-            "layer_sorting",
-            &[],
-        );
 
         dispatcher.add(
             systems::SyncIconStateSystem::new(),

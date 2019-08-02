@@ -11,7 +11,7 @@ use amethyst::{
 };
 use amethyst_byond::{
     assets::dmi::{Dmi, DmiFormat},
-    components::{Coordinates, Direction, Layer, LayerName, ScriptComponentRef, ScriptInstance},
+    components::{Coordinates, Direction, Layer, LayerName, ScriptInstance},
     resources::script::{ScriptEntity, ScriptEnvironment},
 };
 use dmm::{Datum, Literal};

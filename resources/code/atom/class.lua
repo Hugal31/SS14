@@ -90,6 +90,7 @@ function Atom:new(o)
     self.__index = self
     if o.entity then
         o.density = WORLD:create_component(o.entity, "density", o.density)
+        o.dir = WORLD:create_component(o.entity, "dir", o.dir)
         o.icon_state = WORLD:create_component(o.entity, "icon_state", o.icon_state)
         o.opacity = WORLD:create_component(o.entity, "opacity", o.opacity)
     end

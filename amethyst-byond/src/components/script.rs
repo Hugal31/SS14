@@ -1,3 +1,4 @@
+use std::convert::TryInto;
 use std::sync::{Arc, RwLock};
 
 use amethyst_core::{
@@ -5,6 +6,7 @@ use amethyst_core::{
     shrev::EventChannel,
 };
 use derivative::Derivative;
+use byond::components::Direction;
 
 use rlua::prelude::*;
 
@@ -28,6 +30,18 @@ pub trait ScriptComponent {
     fn from_value(value: Self::Value) -> Self;
 
     fn to_value(&self) -> Self::Value;
+}
+
+impl ScriptComponent for Direction {
+    type Value = Option<u8>;
+
+    fn from_value(value: Self::Value) -> Self {
+        value.map(|v| v.try_into().unwrap_or_default()).unwrap_or_default()
+    }
+
+    fn to_value(&self) -> Self::Value {
+        Some(self.clone().into())
+    }
 }
 
 #[derive(Clone, Derivative)]
@@ -102,43 +116,3 @@ pub struct ScriptComponentUpdate<T> {
     pub entity: Entity,
     pub value: T,
 }
-
-/*pub struct Atom {
-    pub icon: String,
-    pub icon_state: String,
-    pub opacity: bool,
-    pub density: bool,
-}
-
-impl LuaUserData for Atom {
-    fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
-        methods.add_meta_method(LuaMetaMethod::Index, |lua_ctx, this: &Atom, name: LuaString| {
-            log::debug!("Atom:__index(\"{}\")", name.to_str().unwrap_or("[NON-UTF-8 str]"));
-
-            match name.to_str() {
-                Ok("icon") => Ok((&this.icon as &str).to_lua(lua_ctx)?),
-                Ok("icon_state") => Ok((&this.icon_state as &str).to_lua(lua_ctx)?),
-                Ok("density") => Ok(LuaValue::Boolean(this.density)),
-                Ok("opacity") => Ok(LuaValue::Boolean(this.opacity)),
-                Ok(_name) => Ok(LuaNil),
-                Err(e) => Err(e)
-            }
-        });
-
-        methods.add_meta_method_mut(LuaMetaMethod::NewIndex, |lua_ctx, this: &mut Atom, (name, value): (LuaString, LuaValue)| {
-            log::debug!("Atom:__newindex(\"{}\", {:?})", name.to_str().unwrap_or("[NON-UTF-8 str]"), value);
-
-            match name.to_str() {
-                Ok("icon") => this.icon = String::from_lua(value, lua_ctx)?,
-                Ok("icon_state") => this.icon_state = String::from_lua(value, lua_ctx)?,
-                Ok("density") => this.density = bool::from_lua(value, lua_ctx)?,
-                Ok("opacity") => this.opacity = bool::from_lua(value, lua_ctx)?,
-                Ok(name) => { log::warn!("Atom:_newindex does not knows the field {}", name) },
-                Err(e) => return Err(e),
-            };
-
-            Ok(())
-        });
-    }
-}
-*/

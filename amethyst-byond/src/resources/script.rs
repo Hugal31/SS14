@@ -9,7 +9,7 @@ use amethyst_error::{format_err, Error, ResultExt};
 use byond_lua::Scripting;
 use rlua::prelude::*;
 
-use crate::components::{Dense, IconStateName, Opaque, ScriptComponentRef, ScriptComponentChannel};
+use crate::components::{Direction, Dense, IconStateName, Opaque, ScriptComponentRef, ScriptComponentChannel};
 
 pub struct ScriptEnvironment {
     pub root: Scripting,
@@ -118,6 +118,7 @@ impl LuaUserData for ScriptWorld {
 /// TODO Use Any, or something like that ?
 pub struct ScriptComponentFactory {
     denses: ScriptComponentChannel<Dense>,
+    dirs: ScriptComponentChannel<Direction>,
     icon_states: ScriptComponentChannel<IconStateName>,
     opaques: ScriptComponentChannel<Opaque>,
 }
@@ -126,11 +127,13 @@ pub struct ScriptComponentFactory {
 impl ScriptComponentFactory {
     pub fn new(
         denses: ScriptComponentChannel<Dense>,
+        dirs: ScriptComponentChannel<Direction>,
         icon_states: ScriptComponentChannel<IconStateName>,
         opaques: ScriptComponentChannel<Opaque>,
     ) -> Self {
         Self {
             denses,
+            dirs,
             icon_states,
             opaques,
         }
@@ -139,6 +142,7 @@ impl ScriptComponentFactory {
     fn create_component<'lua>(&self, lua_ctx: LuaContext<'lua>, entity: Entity, typ: &str, value: LuaValue<'lua>) -> LuaResult<LuaValue<'lua>> {
         match typ {
             "density" => ScriptComponentRef::new(entity, FromLua::from_lua(value, lua_ctx)?, self.denses.clone()).to_lua(lua_ctx),
+            "dir" => ScriptComponentRef::new(entity, FromLua::from_lua(value, lua_ctx)?, self.dirs.clone()).to_lua(lua_ctx),
             "icon_state" => ScriptComponentRef::new(entity, FromLua::from_lua(value, lua_ctx)?, self.icon_states.clone()).to_lua(lua_ctx),
             "opacity" => ScriptComponentRef::new(entity, FromLua::from_lua(value, lua_ctx)?, self.opaques.clone()).to_lua(lua_ctx),
             _ => Err(LuaError::RuntimeError(format!("Unknown component type \"{}\"", typ))),

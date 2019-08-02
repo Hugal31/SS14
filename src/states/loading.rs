@@ -7,10 +7,8 @@ use amethyst::{
     prelude::*,
 };
 use amethyst_byond::{
-    components::{Dense, IconStateName, Opaque, ScriptComponentChannel},
-    resources::script::{
-        ScriptComponentFactory, ScriptEnvironment, ScriptWorld, ScriptWorldData,
-    }
+    components::{Dense, Direction, IconStateName, Opaque, ScriptComponentChannel},
+    resources::script::{ScriptComponentFactory, ScriptEnvironment, ScriptWorld, ScriptWorldData},
 };
 
 use crate::assets::{AssetsLoader as _, GameAssetsLoader};
@@ -45,18 +43,20 @@ impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoad
                 Ok(script_env) => {
                     world.add_resource(script_env);
                     tracker.success()
-                },
+                }
                 Err(e) => tracker.fail(0, "Lua", "Script root".to_string(), e),
             }
         }
         // Create ScriptWorld
         {
             let factory = {
-                let denses = world.read_resource::< ScriptComponentChannel::<Dense> > ();
-                let icon_states = world.read_resource::< ScriptComponentChannel::<IconStateName> > ();
-                let opaques = world.read_resource::< ScriptComponentChannel::<Opaque> > ();
+                let denses = world.read_resource::<ScriptComponentChannel<Dense>>();
+                let dirs = world.read_resource::<ScriptComponentChannel<Direction>>();
+                let icon_states = world.read_resource::<ScriptComponentChannel<IconStateName>>();
+                let opaques = world.read_resource::<ScriptComponentChannel<Opaque>>();
                 ScriptComponentFactory::new(
                     denses.clone(),
+                    dirs.clone(),
                     icon_states.clone(),
                     opaques.clone(),
                 )
@@ -67,9 +67,10 @@ impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoad
 
             {
                 let mut script_env = world.write_resource::<ScriptEnvironment>();
-                script_env.root.run(|lua_ctx| {
-                    lua_ctx.globals().set("WORLD", script_world)
-                }).unwrap();
+                script_env
+                    .root
+                    .run(|lua_ctx| lua_ctx.globals().set("WORLD", script_world))
+                    .unwrap();
             }
         }
 

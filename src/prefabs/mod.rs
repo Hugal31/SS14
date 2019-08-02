@@ -1,29 +1,23 @@
 pub mod formats;
 
-use std::collections::HashMap;
 use std::convert::TryFrom as _;
-use std::ops::Deref as _;
 
 use amethyst::{
     assets::{AssetStorage, Handle, Loader, PrefabData},
     core::Transform,
-    ecs::{Entity, Read, ReadExpect, Write, WriteExpect, WriteStorage},
+    ecs::{Entity, ReadExpect, Write, WriteExpect, WriteStorage},
     error::{format_err, Error, ResultExt},
     renderer::transparent::Transparent,
 };
 use amethyst_byond::{
     assets::dmi::{Dmi, DmiFormat},
-    components::{
-        Coordinates, Dense, Direction, Layer, LayerName, Opaque, ScriptComponentChannel,
-        ScriptComponentRef, ScriptInstance,
-    },
+    components::{Coordinates, Direction, Layer, LayerName, ScriptComponentRef, ScriptInstance},
     resources::script::{ScriptEntity, ScriptEnvironment},
 };
 use dmm::{Datum, Literal};
 use fnv::FnvHashMap;
 
 use crate::assets::SS13_SOURCE;
-use amethyst_byond::components::IconStateName;
 use byond_lua::RegistryKey;
 
 pub struct MapPrefabData {
@@ -44,7 +38,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
         Write<'a, AssetStorage<Dmi>>,
         Write<'a, DmiCache>,
         WriteStorage<'a, Coordinates>,
-        WriteStorage<'a, Direction>,
         WriteStorage<'a, ScriptInstance>,
         WriteStorage<'a, Layer>,
         WriteStorage<'a, Handle<Dmi>>,
@@ -63,7 +56,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
             ref mut dmi_storage,
             ref mut dmi_cache,
             ref mut coords,
-            ref mut dirs,
             ref mut instances,
             ref mut layers,
             ref mut dmis,
@@ -93,9 +85,23 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                         .and_then(Literal::as_str)
                         .map(str::to_string)
                     {
-                        root_instance.set("icon_state", icon_state);
+                        root_instance.set("icon_state", icon_state)?;
                     }
-                    // TODO Add dir, etc..
+                    if let Some(dir) = self
+                        .datum
+                        .var_edits()
+                        .get("dir")
+                        .and_then(Literal::as_number)
+                        .map(|d| {
+                            if d <= std::u8::MAX as i64 && d >= std::u8::MIN as i64 {
+                                Direction::try_from(d as u8).unwrap_or_default()
+                            } else {
+                                Direction::default()
+                            }
+                        })
+                    {
+                        root_instance.set("dir", Into::<u8>::into(dir))?;
+                    }
 
                     let instance = type_idx.instantiate_with(lua_ctx, root_instance)?;
 
@@ -104,9 +110,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                         .get::<_, Option<f32>>("layer")?
                         .map(|l| Layer((l * 100.0) as u32));
                     let icon: Option<String> = instance.get("icon")?;
-                    let dir: Option<Direction> = instance
-                        .get::<_, Option<u8>>("dir")?
-                        .map(|d| Direction::try_from(d).unwrap_or_default());
 
                     if let Some(l) = layer {
                         layers.insert(entity, l)?;
@@ -125,13 +128,6 @@ impl<'a> PrefabData<'a> for MapPrefabData {
                             })
                             .clone();
                         dmis.insert(entity, dmi_handle)?;
-                    }
-
-                    // Load direction
-                    if let Some(Literal::Number(i)) = self.datum.var_edits().get("dir") {
-                        dirs.insert(entity, Direction::try_from(*i as u8).unwrap_or_default())?;
-                    } else if let Some(dir) = dir {
-                        dirs.insert(entity, dir)?;
                     }
 
                     Ok(lua_ctx.create_registry_value(instance)?)

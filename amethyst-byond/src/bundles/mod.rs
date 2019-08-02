@@ -42,6 +42,11 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             &["update_script_world"],
         );
         dispatcher.add(
+            systems::SyncScriptComponent::<Direction>::new(),
+            "sync_dirs",
+            &["update_script_world"],
+        );
+        dispatcher.add(
             systems::SyncZeroSizeComponentSystem::<Opaque>::new(),
             "sync_opaques",
             &["update_script_world"],

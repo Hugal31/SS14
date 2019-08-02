@@ -4,11 +4,11 @@
 
 Featuring:
 
-- DMI loading
-- Some kind of hardcoded list of available objects
+- DMM (maps) and DMI (images) loading
 - Basic vision system
 - Spite animations
-- Doors!
+- Basic Lua scripting:
+  - Doors !
 
 [What it looks like](https://i.imgur.com/q56VU7r.gif)
 

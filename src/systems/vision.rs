@@ -2,7 +2,8 @@ use amethyst::{
     core::Hidden,
     ecs::{BitSet, Entities, Join, ReadStorage, System, WriteStorage},
 };
-use amethyst_byond::components::{Coordinates, Direction, Opaque};
+use amethyst_byond::components::{Coordinates, Opaque};
+use los2d::{Coord as LosCoord, DiamondLos, LosAlgorithm, MapProvider};
 
 #[cfg(feature = "profiler")]
 use thread_profiler::profile_scope;
@@ -11,6 +12,7 @@ use crate::components::Player;
 
 pub struct VisionFieldSystem {
     in_range: BitSet,
+    los_algorithm: DiamondLos,
 }
 
 /// Apply hidden to all entities with coordinates, then remove somes.
@@ -18,6 +20,7 @@ impl VisionFieldSystem {
     pub fn new() -> Self {
         Self {
             in_range: BitSet::new(),
+            los_algorithm: DiamondLos::new(0),
         }
     }
 
@@ -26,75 +29,6 @@ impl VisionFieldSystem {
         cell.2 == player.2
             && ((max(player.0, 7) - 7)..=player.0 + 7).contains(&cell.0)
             && ((max(player.1, 7) - 7)..=player.1 + 7).contains(&cell.1)
-    }
-
-    /// Build the vision field from a cell
-    fn build_vision(
-        &self,
-        start: &Coordinates,
-        dirs: &[Direction],
-        entities: &Entities,
-        coords: &ReadStorage<Coordinates>,
-        opaques: &ReadStorage<Opaque>,
-        hiddens: &mut WriteStorage<Hidden>,
-        max_iter: u32,
-    ) {
-        if max_iter == 0 {
-            return;
-        }
-
-        self.remove_hidden(start, entities, coords, hiddens);
-
-        if (coords, opaques, &self.in_range)
-            .join()
-            .any(|(c, _, _)| c == start)
-        {
-            return;
-        }
-
-        for next_dir in dirs {
-            if let Some(next) = start.try_moved(*next_dir) {
-                self.build_vision(
-                    &next,
-                    Self::next_vision_dirs(*next_dir),
-                    entities,
-                    coords,
-                    opaques,
-                    hiddens,
-                    max_iter - 1,
-                );
-            }
-        }
-    }
-
-    fn remove_hidden(
-        &self,
-        coord: &Coordinates,
-        entities: &Entities,
-        coords: &ReadStorage<Coordinates>,
-        hiddens: &mut WriteStorage<Hidden>,
-    ) {
-        (entities, coords, &self.in_range)
-            .join()
-            .filter(|(_, c, _)| *c == coord)
-            .for_each(|(e, _, _)| {
-                hiddens.remove(e);
-            });
-    }
-
-    fn next_vision_dirs(dir: Direction) -> &'static [Direction] {
-        use Direction::*;
-
-        match dir {
-            North => &[North, NorthEast, NorthWest],
-            East => &[East, NorthEast, SouthEast],
-            South => &[South, SouthEast, SouthWest],
-            West => &[West, NorthWest, SouthWest],
-            NorthEast => &[NorthEast],
-            NorthWest => &[NorthWest],
-            SouthEast => &[SouthEast],
-            SouthWest => &[SouthWest],
-        }
     }
 }
 
@@ -126,21 +60,58 @@ impl<'a> System<'a> for VisionFieldSystem {
                 }
             }
 
-            // Basic algorithm
-            for dir in &Direction::ALL {
-                if let Some(cell) = player_coord.try_moved(*dir) {
-                    let allowed_directions = Self::next_vision_dirs(*dir);
-                    self.build_vision(
-                        &cell,
-                        allowed_directions,
-                        &entities,
-                        &coords,
-                        &opaques,
-                        &mut hiddens,
-                        8,
-                    );
-                }
-            }
+            let mut map_provider = VisionMapProvider {
+                in_range: &self.in_range,
+                z_level: player_coord.2,
+                entities: &entities,
+                coords: &coords,
+                opaques: &opaques,
+                hiddens: &mut hiddens,
+            };
+
+            self.los_algorithm.compute_los(
+                LosCoord(player_coord.0 as i32, player_coord.1 as i32),
+                15,
+                &mut map_provider,
+            );
         }
+    }
+}
+
+struct VisionMapProvider<'a, 's: 'a> {
+    in_range: &'a BitSet,
+    z_level: u32,
+    entities: &'a Entities<'s>,
+    coords: &'a ReadStorage<'s, Coordinates>,
+    opaques: &'a ReadStorage<'s, Opaque>,
+    hiddens: &'a mut WriteStorage<'s, Hidden>,
+}
+
+impl<'a, 's: 'a> MapProvider for VisionMapProvider<'a, 's> {
+    fn is_blocking(&self, coord: LosCoord) -> bool {
+        (self.coords, self.opaques, self.in_range)
+            .join()
+            .any(|(c, _, _)| c.0 == coord.0 as u32 && c.1 == coord.1 as u32 && c.2 == self.z_level)
+    }
+
+    fn bounds(&self) -> (LosCoord, LosCoord) {
+        (LosCoord(0, 0), LosCoord(std::i32::MAX, std::i32::MAX))
+    }
+
+    fn mark_as_visible(&mut self, coord: LosCoord) {
+        let VisionMapProvider {
+            in_range,
+            z_level,
+            entities,
+            coords,
+            hiddens,
+            ..
+        } = self;
+        (*entities, *coords, *in_range)
+            .join()
+            .filter(|(_, c, _)| c.0 == coord.0 as u32 && c.1 == coord.1 as u32 && c.2 == *z_level)
+            .for_each(|(e, _, _)| {
+                hiddens.remove(e);
+            });
     }
 }

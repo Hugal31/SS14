@@ -1884,6 +1884,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "los2d"
+version = "0.1.0"
+source = "git+https://github.com/Hugal31/los2d.git#c5868663a556767199681e58f03388b26e94e693"
+
+[[package]]
 name = "lyon_geom"
 version = "0.12.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3589,6 +3594,7 @@ dependencies = [
  "dmm-format 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "los2d 0.1.0 (git+https://github.com/Hugal31/los2d.git)",
  "serde 1.0.98 (registry+https://github.com/rust-lang/crates.io-index)",
  "thread_profiler 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -4466,6 +4472,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum lock_api 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)" = "ed946d4529956a20f2d63ebe1b69996d5a2137c91913fe3ebbeff957f5bca7ff"
 "checksum log 0.3.9 (registry+https://github.com/rust-lang/crates.io-index)" = "e19e8d5c34a3e0e2223db8e060f9e8264aeeb5c5fc64a4ee9965c062211c024b"
 "checksum log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)" = "14b6052be84e6b71ab17edffc2eeabf5c2c3ae1fdb464aae35ac50c67a44e1f7"
+"checksum los2d 0.1.0 (git+https://github.com/Hugal31/los2d.git)" = "<none>"
 "checksum lyon_geom 0.12.7 (registry+https://github.com/rust-lang/crates.io-index)" = "bdb9bf1f1d43be9a9cc2343a7a096dc113cc25337a13e8f99721b01d1d548b60"
 "checksum lyon_path 0.12.0 (registry+https://github.com/rust-lang/crates.io-index)" = "e9dc8e0746b7cca11960b602f7fe037bb067746a01eab4aa502fed1494544843"
 "checksum lzw 0.10.0 (registry+https://github.com/rust-lang/crates.io-index)" = "7d947cbb889ed21c2a84be6ffbaebf5b4e0f4340638cba0444907e38b56be084"

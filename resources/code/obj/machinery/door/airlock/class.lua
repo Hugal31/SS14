@@ -56,4 +56,24 @@ local Airlock = Door:new{
     airlock_overlays = nil,
 
 }
+
+function Airlock:open()
+    Door.open(self)
+
+    WORLD:play_sound(self.doorOpen)
+end
+
+function Airlock:close()
+    Door.close(self)
+
+    WORLD:play_sound(self.doorClose)
+end
+
+WORLD:load_asset(Airlock.doorOpen)
+WORLD:load_asset(Airlock.doorClose)
+WORLD:load_asset(Airlock.doorDeni)
+WORLD:load_asset(Airlock.boltUp)
+WORLD:load_asset(Airlock.boltDown)
+WORLD:load_asset(Airlock.noPower)
+
 return Airlock

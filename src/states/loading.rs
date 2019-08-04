@@ -11,7 +11,7 @@ use amethyst_byond::{
     resources::script::{ScriptComponentFactory, ScriptEnvironment, ScriptWorld, ScriptWorldData},
 };
 
-use crate::assets::{AssetsLoader as _, GameAssetsLoader};
+use crate::assets::{AssetsLoader as _, GameAssetsLoader, SS13_SOURCE};
 
 pub struct AssetsLoaderState<'a, 'b, E: Send + Sync + 'static> {
     next_state: Option<Box<dyn State<GameData<'a, 'b>, E>>>,
@@ -49,20 +49,7 @@ impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoad
         }
         // Create ScriptWorld
         {
-            let factory = {
-                let denses = world.read_resource::<ScriptComponentChannel<Dense>>();
-                let dirs = world.read_resource::<ScriptComponentChannel<Direction>>();
-                let icon_states = world.read_resource::<ScriptComponentChannel<IconStateName>>();
-                let opaques = world.read_resource::<ScriptComponentChannel<Opaque>>();
-                ScriptComponentFactory::new(
-                    denses.clone(),
-                    dirs.clone(),
-                    icon_states.clone(),
-                    opaques.clone(),
-                )
-            };
-
-            let script_world = ScriptWorld::new(ScriptWorldData::new(factory));
+            let script_world = ScriptWorld::new(ScriptWorldData::new(SS13_SOURCE, &mut world.res));
             world.add_resource(script_world.clone());
 
             {

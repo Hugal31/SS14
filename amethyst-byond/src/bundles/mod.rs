@@ -1,3 +1,4 @@
+use amethyst_audio::{OggFormat, Source};
 use amethyst_animation::AnimationBundle;
 use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
 use amethyst_error::Error;
@@ -28,6 +29,7 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             .build(dispatcher)?;
 
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
+        dispatcher.add(systems::loader::AssetLoaderSystem::<Source, _>::new(OggFormat), "audio_asset_loader", &[]);
 
         // Script systems
         dispatcher.add(
@@ -54,6 +56,11 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
         dispatcher.add(
             systems::SyncScriptComponent::<IconStateName>::new(),
             "sync_icon_state_names",
+            &["update_script_world"],
+        );
+        dispatcher.add(
+            systems::script::SoundEventSystem::default(),
+            "sound_event",
             &["update_script_world"],
         );
         dispatcher.add(

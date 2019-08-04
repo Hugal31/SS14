@@ -7,6 +7,7 @@ edition = "2018"
 
 [dependencies]
 amethyst_assets = { version = "0.8", features = ["nightly"] }
+amethyst_audio = { version = "0.7", features = ["nightly"] }
 amethyst_animation = { version = "0.7", features = ["nightly"] }
 amethyst_core = { version = "0.7", features = ["nightly"] }
 amethyst_error = "0.2"

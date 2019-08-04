@@ -4,6 +4,7 @@ use std::time::Duration;
 use amethyst::{
     self,
     assets::Source,
+    audio::AudioBundle,
     core::{frame_limiter::FrameRateLimitStrategy, transform::TransformBundle},
     error::{format_err, ResultExt},
     input::InputBundle,
@@ -59,6 +60,7 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
         .with_bundle(bundles::GameBundle)?
         // Add the transform bundle which handles tracking entity positions
         .with_bundle(TransformBundle::new().with_dep(bundles::GameBundle::TRANSFORM_DEPS))?
+        .with_bundle(AudioBundle::default())?
         // TODO Use custom rendering bundle to avoid useless MeshProcessor and others?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()

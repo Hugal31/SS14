@@ -94,6 +94,7 @@ version = "0.1.0"
 dependencies = [
  "amethyst_animation 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_assets 0.8.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "amethyst_audio 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_core 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_error 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "amethyst_rendy 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",

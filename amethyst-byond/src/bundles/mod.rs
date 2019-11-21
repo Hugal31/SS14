@@ -1,6 +1,6 @@
 use amethyst_audio::{OggFormat, Source};
 use amethyst_animation::AnimationBundle;
-use amethyst_core::{ecs::prelude::DispatcherBuilder, SystemBundle};
+use amethyst_core::{ecs::{DispatcherBuilder, World}, SystemBundle};
 use amethyst_error::Error;
 
 use crate::assets::dmi::DmiProcessor;
@@ -24,9 +24,9 @@ impl<'a> ByondBundle<'a> {
 }
 
 impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
-    fn build(self, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
+    fn build(self, world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
         AnimationBundle::<Direction, Moving>::new("animate_moving", "sample_moving")
-            .build(dispatcher)?;
+            .build(world, dispatcher)?;
 
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
         dispatcher.add(systems::loader::AssetLoaderSystem::<Source, _>::new(OggFormat), "audio_asset_loader", &[]);

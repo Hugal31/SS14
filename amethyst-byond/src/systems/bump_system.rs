@@ -1,7 +1,7 @@
 use amethyst_core::{
     ecs::{
-        shred::DynamicSystemData, BitSet, Join, Read, ReaderId, Resources, System, WriteExpect,
-        WriteStorage,
+        shred::DynamicSystemData, BitSet, Join, Read, ReaderId, System, World,
+        WriteExpect, WriteStorage,
     },
     shrev::EventChannel,
 };
@@ -67,10 +67,10 @@ impl<'a> System<'a> for BumpSystem {
         self.bumped.clear();
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
+    fn setup(&mut self, world: &mut World) {
+        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
 
-        let mut bumps = res.fetch_mut::<EventChannel<BumpEvent>>();
+        let mut bumps = world.fetch_mut::<EventChannel<BumpEvent>>();
         self.bumps_event_id.replace(bumps.register_reader());
     }
 }

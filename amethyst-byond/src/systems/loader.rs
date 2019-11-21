@@ -5,7 +5,7 @@ use std::sync::{Arc, RwLock};
 use amethyst_assets::{Asset, AssetLoaderSystemData, Format};
 use amethyst_core::{
     ecs::{
-        Read, ReaderId, Resources, System, SystemData, Write,
+        Read, ReaderId, System, SystemData, Write, World
     },
     shrev::EventChannel,
 };
@@ -89,9 +89,9 @@ impl<'a, A, F> System<'a> for AssetLoaderSystem<A, F>
             }
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        Self::SystemData::setup(res);
+    fn setup(&mut self, world: &mut World) {
+        Self::SystemData::setup(world);
 
-        self.reader_id.replace(res.fetch_mut::<AssetLoaderEventChannel<A>>().register_reader());
+        self.reader_id.replace(world.fetch_mut::<AssetLoaderEventChannel<A>>().register_reader());
     }
 }

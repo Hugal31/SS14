@@ -1,7 +1,7 @@
 use amethyst::{
     animation::{Animation, AnimationSampling, AnimationSet, InterpolationFunction, Sampler},
     assets::{AssetStorage, Loader, Progress, ProgressCounter, Tracker},
-    ecs::{Read, ReadExpect, World},
+    ecs::{Read, ReadExpect, World, WorldExt},
 };
 use amethyst_byond::{
     components::{Direction, Moving, MovingChannel},

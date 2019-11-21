@@ -1,6 +1,6 @@
 use amethyst::{
     core::{
-        ecs::{Read, Resources, SystemData},
+        ecs::{Read, SystemData, World},
         shrev::{EventChannel, ReaderId},
         EventReader,
     },

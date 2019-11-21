@@ -1,7 +1,7 @@
 use amethyst_core::{
     ecs::{
         shred::DynamicSystemData, storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
-        Resources, System, SystemData, WriteStorage,
+        System, SystemData, World, WriteStorage,
     },
     Transform,
 };
@@ -70,10 +70,10 @@ impl<'a> System<'a> for SyncCoordsSystem {
         }
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
+    fn setup(&mut self, world: &mut World) {
+        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
 
-        let mut coords = <WriteStorage<Coordinates> as SystemData>::fetch(res);
+        let mut coords = <WriteStorage<Coordinates> as SystemData>::fetch(world);
         self.coords_event_id.replace(coords.register_reader());
     }
 }

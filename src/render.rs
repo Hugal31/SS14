@@ -1,5 +1,5 @@
 use amethyst::{
-    ecs::{DispatcherBuilder, Resources},
+    ecs::{DispatcherBuilder, World},
     error::Error,
     renderer::{
         bundle::{RenderOrder, RenderPlan, RenderPlugin, Target},
@@ -23,7 +23,7 @@ impl RenderLayeredSprites {
 }
 
 impl<B: Backend> RenderPlugin<B> for RenderLayeredSprites {
-    fn on_build<'a, 'b>(&mut self, builder: &mut DispatcherBuilder<'a, 'b>) -> Result<(), Error> {
+    fn on_build<'a, 'b>(&mut self, _world: &mut World, builder: &mut DispatcherBuilder<'a, 'b>) -> Result<(), Error> {
         builder.add(SpriteLayerSortingSystem::new(), "layer_sorting", &[]);
 
         Ok(())
@@ -33,7 +33,7 @@ impl<B: Backend> RenderPlugin<B> for RenderLayeredSprites {
         &mut self,
         plan: &mut RenderPlan<B>,
         _factory: &mut Factory<B>,
-        _res: &Resources,
+        _world: &World,
     ) -> Result<(), Error> {
         plan.extend_target(self.target, |ctx| {
             ctx.add(RenderOrder::Opaque, DrawFlat2DDesc::new().builder())?;

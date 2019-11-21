@@ -1,6 +1,4 @@
 #![feature(drain_filter)]
-#![feature(duration_float)]
-#![feature(option_flattening)]
 
 #[macro_use]
 extern crate log;

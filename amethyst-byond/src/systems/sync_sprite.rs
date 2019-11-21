@@ -2,7 +2,7 @@ use amethyst_assets::{AssetStorage, Handle};
 use amethyst_core::{
     ecs::{
         shred::DynamicSystemData, storage::ComponentEvent, BitSet, Component, Entities, Join, Read,
-        ReadStorage, ReaderId, Resources, System, SystemData, Tracked, WriteStorage,
+        ReadStorage, ReaderId,  System, SystemData, Tracked, World, WriteStorage,
     },
     Time,
 };
@@ -83,21 +83,21 @@ impl<'a> System<'a> for SyncSpritesSystem {
         }
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
+    fn setup(&mut self, world: &mut World) {
+        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
 
         {
-            let mut icons = <WriteStorage<IconState> as SystemData>::fetch(res);
+            let mut icons = <WriteStorage<IconState> as SystemData>::fetch(world);
             self.icons_event_id.replace(icons.register_reader());
         }
 
         {
-            let mut dirs = <WriteStorage<Direction> as SystemData>::fetch(res);
+            let mut dirs = <WriteStorage<Direction> as SystemData>::fetch(world);
             self.directions_event_id.replace(dirs.register_reader());
         }
 
         {
-            let mut frames = <WriteStorage<IconFrame> as SystemData>::fetch(res);
+            let mut frames = <WriteStorage<IconFrame> as SystemData>::fetch(world);
             self.frames_event_id.replace(frames.register_reader());
         }
     }
@@ -194,16 +194,16 @@ impl<'a> System<'a> for SyncIconStateSystem {
         self.done.clear();
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), res);
+    fn setup(&mut self, world: &mut World) {
+        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
 
         {
-            let mut icons = <WriteStorage<IconStateName> as SystemData>::fetch(res);
+            let mut icons = <WriteStorage<IconStateName> as SystemData>::fetch(world);
             self.icons_event_id.replace(icons.register_reader());
         }
 
         {
-            let mut dmis = <WriteStorage<Handle<Dmi>> as SystemData>::fetch(res);
+            let mut dmis = <WriteStorage<Handle<Dmi>> as SystemData>::fetch(world);
             self.dmi_event_id.replace(dmis.register_reader());
         }
     }

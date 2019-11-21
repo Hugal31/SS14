@@ -1,5 +1,6 @@
 use amethyst::{
-    assets::PrefabLoaderSystem, core::SystemBundle, ecs::DispatcherBuilder, error::Error,
+    assets::PrefabLoaderSystemDesc, core::{SystemBundle, SystemDesc as _},
+    ecs::{DispatcherBuilder, World}, error::Error,
 };
 use amethyst_byond::ByondBundle;
 
@@ -13,9 +14,9 @@ impl GameBundle {
 }
 
 impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
-    fn build(self, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
+    fn build(self, world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
         // Asset loading
-        dispatcher.add(PrefabLoaderSystem::<MapPrefabData>::default(), "", &[]);
+        dispatcher.add(PrefabLoaderSystemDesc::<MapPrefabData>::default().build(world), "", &[]);
 
         dispatcher.add(
             systems::MoveCamera::default(),
@@ -33,7 +34,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
 
         ByondBundle::new()
             .with_dep(&["move_camera"])
-            .build(dispatcher)?;
+            .build(world, dispatcher)?;
 
         Ok(())
     }

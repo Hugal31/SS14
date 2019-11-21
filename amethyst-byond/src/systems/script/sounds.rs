@@ -3,7 +3,7 @@ use std::sync::{Arc, RwLock};
 use amethyst_assets::AssetStorage;
 use amethyst_audio::{output::{Output, init_output}, Source as AudioSource};
 use amethyst_core::{
-    ecs::{Read, ReaderId, Resources, System, SystemData},
+    ecs::{Read, ReaderId, System, SystemData, World},
     shrev::EventChannel,
 };
 
@@ -42,10 +42,10 @@ impl<'a> System<'a> for SoundEventSystem {
             }
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        init_output(res);
-        Self::SystemData::setup(res);
+    fn setup(&mut self, world: &mut World) {
+        init_output(world);
+        Self::SystemData::setup(world);
 
-        self.reader_id.replace(res.fetch_mut::<Arc<RwLock<EventChannel<SoundEvent>>>>().write().unwrap().register_reader());
+        self.reader_id.replace(world.fetch_mut::<Arc<RwLock<EventChannel<SoundEvent>>>>().write().unwrap().register_reader());
     }
 }

@@ -1,5 +1,5 @@
 use amethyst_core::ecs::{
-    Component, Read, ReaderId, Resources, System, SystemData, Write, WriteStorage,
+    Component, Read, ReaderId, System, SystemData, World, Write, WriteStorage,
 };
 use derivative::Derivative;
 
@@ -46,10 +46,10 @@ where
             });
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        Self::SystemData::setup(res);
+    fn setup(&mut self, world: &mut World) {
+        Self::SystemData::setup(world);
 
-        let script_component_channel = <Write<ScriptComponentChannel<C>> as SystemData>::fetch(res);
+        let script_component_channel = <Write<ScriptComponentChannel<C>> as SystemData>::fetch(world);
         self.reader_id.replace(
             script_component_channel
                 .inner
@@ -97,10 +97,10 @@ where
             });
     }
 
-    fn setup(&mut self, res: &mut Resources) {
-        Self::SystemData::setup(res);
+    fn setup(&mut self, world: &mut World) {
+        Self::SystemData::setup(world);
 
-        let script_component_channel = <Write<ScriptComponentChannel<C>> as SystemData>::fetch(res);
+        let script_component_channel = <Write<ScriptComponentChannel<C>> as SystemData>::fetch(world);
         self.reader_id.replace(
             script_component_channel
                 .inner

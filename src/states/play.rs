@@ -3,7 +3,7 @@ use std::time::Duration;
 use amethyst::{
     assets::PrefabData,
     core::{Parent, Transform},
-    ecs::{Builder as _, Entity, World},
+    ecs::{Builder as _, Entity, World, WorldExt as _},
     input::is_key_down,
     renderer::camera::{Camera, Projection},
     winit::VirtualKeyCode,

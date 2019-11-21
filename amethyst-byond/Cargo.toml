@@ -6,12 +6,12 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst_assets = { version = "0.8", features = ["nightly"] }
-amethyst_audio = { version = "0.7", features = ["nightly"] }
-amethyst_animation = { version = "0.7", features = ["nightly"] }
-amethyst_core = { version = "0.7", features = ["nightly"] }
-amethyst_error = "0.2"
-amethyst_rendy = { version = "0.2", features = ["nightly"] }
+amethyst_assets = { version = "0.9.1", features = ["nightly"] }
+amethyst_animation = { version = "0.8.1", features = ["nightly"] }
+amethyst_audio = { version = "0.8", features = ["nightly"] }
+amethyst_core = { version = "0.8.1", features = ["nightly"] }
+amethyst_error = "0.3"
+amethyst_rendy = { version = "0.3", features = ["nightly"] }
 byond = { path = "../byond", features = ["serde", "specs"] }
 byond-lua = { path = "../byond-lua" }
 derivative = "1"

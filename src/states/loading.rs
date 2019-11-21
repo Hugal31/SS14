@@ -49,8 +49,8 @@ impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoad
         }
         // Create ScriptWorld
         {
-            let script_world = ScriptWorld::new(ScriptWorldData::new(SS13_SOURCE, &mut world.res));
-            world.add_resource(script_world.clone());
+            let script_world = ScriptWorld::new(ScriptWorldData::new(SS13_SOURCE, world));
+            world.insert(script_world.clone());
 
             {
                 let mut script_env = world.write_resource::<ScriptEnvironment>();

@@ -1,7 +1,6 @@
 use std::time::Duration;
 
 use amethyst::core::ecs::{Component, NullStorage, VecStorage};
-use serde::{Deserialize, Serialize};
 
 #[derive(Default)]
 pub struct Player;
@@ -39,29 +38,4 @@ impl MoveCooldown {
 
 impl Component for MoveCooldown {
     type Storage = VecStorage<MoveCooldown>;
-}
-
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
-pub struct Door {
-    #[serde(default)]
-    pub state: DoorState,
-}
-
-impl Component for Door {
-    type Storage = VecStorage<Door>;
-}
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq, Serialize, Deserialize)]
-pub enum DoorState {
-    /// The door is open, the duration is the date of the openning.
-    Open(Duration),
-    Openning,
-    Close,
-    Closing,
-}
-
-impl Default for DoorState {
-    fn default() -> Self {
-        DoorState::Close
-    }
 }

@@ -5,7 +5,7 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst = "0.13.2"
+amethyst = "0.14.0"
 amethyst-byond = { path = "amethyst-byond" }
 byond-lua = { path = "byond-lua" }
 dmm = { git = "https://github.com/Hugal31/DMM.git" }

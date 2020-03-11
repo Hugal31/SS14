@@ -65,7 +65,7 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
                 .with_plugin(
-                    RenderToWindow::from_config_path(display_config_path)
+                    RenderToWindow::from_config_path(display_config_path)?
                         .with_clear([0.0, 0.0, 0.0, 1.0]),
                 )
                 .with_plugin(RenderLayeredSprites::default())

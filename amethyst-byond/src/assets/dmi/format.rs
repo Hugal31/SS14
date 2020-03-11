@@ -92,20 +92,7 @@ impl Format<DmiData> for DmiFormat {
             format: None,
             repr: Repr::Srgb,
             kind: TextureKind::D2,
-            sampler_info: SamplerInfo {
-                min_filter: Filter::Nearest,
-                mag_filter: Filter::Nearest,
-                mip_filter: Filter::Nearest,
-                wrap_mode: (WrapMode::Tile, WrapMode::Tile, WrapMode::Tile),
-                lod_bias: 0.0.into(),
-                lod_range: std::ops::Range {
-                    start: 0.0.into(),
-                    end: 8000.0.into(),
-                },
-                comparison: None,
-                border: PackedColor(0),
-                anisotropic: Anisotropic::Off,
-            },
+            sampler_info: SamplerInfo::new(Filter::Nearest, WrapMode::Tile),
             ..Default::default()
         })
         .import_simple(bytes)?;

@@ -6,10 +6,7 @@ use amethyst::{
     ecs::Entity,
     prelude::*,
 };
-use amethyst_byond::{
-    components::{Dense, Direction, IconStateName, Opaque, ScriptComponentChannel},
-    resources::script::{ScriptComponentFactory, ScriptEnvironment, ScriptWorld, ScriptWorldData},
-};
+use amethyst_byond::resources::script::{ScriptEnvironment, ScriptWorld, ScriptWorldData};
 
 use crate::assets::{AssetsLoader as _, GameAssetsLoader, SS13_SOURCE};
 
@@ -41,7 +38,7 @@ impl<'a, 'b, E: Send + Sync + 'static> State<GameData<'a, 'b>, E> for AssetsLoad
             let tracker = Box::new(progress.create_tracker());
             match ScriptEnvironment::new_empty() {
                 Ok(script_env) => {
-                    world.add_resource(script_env);
+                    world.insert(script_env);
                     tracker.success()
                 }
                 Err(e) => tracker.fail(0, "Lua", "Script root".to_string(), e),

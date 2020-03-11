@@ -1,31 +1,46 @@
 use amethyst_assets::{AssetStorage, Handle};
 use amethyst_core::{
     ecs::{
-        shred::DynamicSystemData, storage::ComponentEvent, BitSet, Component, Entities, Join, Read,
-        ReadStorage, ReaderId,  System, SystemData, Tracked, World, WriteStorage,
+        storage::ComponentEvent, BitSet, Component, Entities, Join, Read, ReadStorage, ReaderId,
+        System, SystemData, Tracked, World, WriteStorage,
     },
+    SystemDesc,
     Time,
 };
+use amethyst_derive::SystemDesc;
 use amethyst_rendy::sprite::SpriteRender;
 
 use crate::assets::dmi::Dmi;
 use crate::components::{Direction, IconFrame, IconState, IconStateName};
 use super::read_ins_mod_events;
 
-/// Sync the sprites of the entities whith an `IconState`
-#[derive(Debug, Default)]
+/// Sync the sprites of the entities with an `IconState`
+#[derive(SystemDesc)]
+#[system_desc(name(SyncSpritesSystemDesc))]
 pub struct SyncSpritesSystem {
-    icons_event_id: Option<ReaderId<ComponentEvent>>,
-    directions_event_id: Option<ReaderId<ComponentEvent>>,
-    frames_event_id: Option<ReaderId<ComponentEvent>>,
-    dmi_event_id: Option<ReaderId<ComponentEvent>>,
+    #[system_desc(flagged_storage_reader(IconState))]
+    icons_event_id: ReaderId<ComponentEvent>,
+    #[system_desc(flagged_storage_reader(Direction))]
+    directions_event_id: ReaderId<ComponentEvent>,
+    #[system_desc(flagged_storage_reader(IconFrame))]
+    frames_event_id: ReaderId<ComponentEvent>,
 
+    #[system_desc(skip)]
     modified: BitSet,
 }
 
 impl SyncSpritesSystem {
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(
+        icons_event_id: ReaderId<ComponentEvent>,
+        directions_event_id: ReaderId<ComponentEvent>,
+        frames_event_id: ReaderId<ComponentEvent>
+    ) -> Self {
+        Self {
+            icons_event_id,
+            directions_event_id,
+            frames_event_id,
+            modified: Default::default(),
+        }
     }
 }
 
@@ -46,23 +61,21 @@ impl<'a> System<'a> for SyncSpritesSystem {
         self.modified.clear();
         read_ins_mod_events(&mut self.modified,
                             &states,
-                            self.icons_event_id.as_mut().expect("setup was not called"));
+                            &mut self.icons_event_id);
         read_ins_mod_events(
             &mut self.modified,
             &states,
-            self.icons_event_id.as_mut().expect("setup was not called"),
+            &mut self.icons_event_id,
         );
         read_ins_mod_events(
             &mut self.modified,
             &directions,
-            self.directions_event_id
-                .as_mut()
-                .expect("setup was not called"),
+            &mut self.directions_event_id,
         );
         read_ins_mod_events(
             &mut self.modified,
             &frames,
-            self.frames_event_id.as_mut().expect("setup was not called"),
+            &mut self.frames_event_id,
         );
 
         // Sync sprites
@@ -82,41 +95,52 @@ impl<'a> System<'a> for SyncSpritesSystem {
             sprite_renders.insert(e, sprite).ok();
         }
     }
+}
 
-    fn setup(&mut self, world: &mut World) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
+#[derive(Default)]
+pub struct SyncIconStateSystemDesc;
 
-        {
-            let mut icons = <WriteStorage<IconState> as SystemData>::fetch(world);
-            self.icons_event_id.replace(icons.register_reader());
-        }
+impl<'a, 'b> SystemDesc<'a, 'b, SyncIconStateSystem> for SyncIconStateSystemDesc {
+    fn build(self, world: &mut World) -> SyncIconStateSystem {
+        <SyncIconStateSystem as System>::SystemData::setup(world);
 
-        {
-            let mut dirs = <WriteStorage<Direction> as SystemData>::fetch(world);
-            self.directions_event_id.replace(dirs.register_reader());
-        }
+        let icons_event_id = WriteStorage::<IconStateName>::fetch(world)
+            .register_reader();
+        let dmi_event_id = WriteStorage::<Handle<Dmi>>::fetch(world)
+            .register_reader();
 
-        {
-            let mut frames = <WriteStorage<IconFrame> as SystemData>::fetch(world);
-            self.frames_event_id.replace(frames.register_reader());
-        }
+        SyncIconStateSystem::new(icons_event_id, dmi_event_id)
     }
 }
 
 /// Sync the `IconStateName` and `Handle<Dmi>` to `IconState`.
-#[derive(Debug, Default)]
+/// TODO Use derive
+//#[derive(SystemDesc)]
+//#[system_desc(name(SyncIconStateSystemDesc))]
 pub struct SyncIconStateSystem {
-    icons_event_id: Option<ReaderId<ComponentEvent>>,
-    dmi_event_id: Option<ReaderId<ComponentEvent>>,
+    //#[system_desc(flagged_storage_reader(IconStateName))]
+    icons_event_id: ReaderId<ComponentEvent>,
+    //#[system_desc(flagged_storage_reader(Handle<Dmi>))]
+    dmi_event_id: ReaderId<ComponentEvent>,
 
+    //#[system_desc(skip)]
     modified: BitSet,
     /// Assets successfully synced
+    //#[system_desc(skip)]
     done: BitSet,
 }
 
 impl SyncIconStateSystem {
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(
+        icons_event_id: ReaderId<ComponentEvent>,
+        dmi_event_id: ReaderId<ComponentEvent>,
+    ) -> Self {
+        Self {
+            icons_event_id,
+            dmi_event_id,
+            modified: Default::default(),
+            done: Default::default(),
+        }
     }
 
     fn read_events<T>(
@@ -158,12 +182,12 @@ impl<'a> System<'a> for SyncIconStateSystem {
         Self::read_events(
             &mut self.modified,
             &dmi_handles,
-            self.dmi_event_id.as_mut().expect("setup was not called"),
+            &mut self.dmi_event_id,
         );
         Self::read_events(
             &mut self.modified,
             &state_names,
-            self.icons_event_id.as_mut().expect("setup was not called"),
+            &mut self.icons_event_id,
         );
 
         // Sync sprites
@@ -192,19 +216,5 @@ impl<'a> System<'a> for SyncIconStateSystem {
             self.modified.remove(done);
         }
         self.done.clear();
-    }
-
-    fn setup(&mut self, world: &mut World) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
-
-        {
-            let mut icons = <WriteStorage<IconStateName> as SystemData>::fetch(world);
-            self.icons_event_id.replace(icons.register_reader());
-        }
-
-        {
-            let mut dmis = <WriteStorage<Handle<Dmi>> as SystemData>::fetch(world);
-            self.dmi_event_id.replace(dmis.register_reader());
-        }
     }
 }

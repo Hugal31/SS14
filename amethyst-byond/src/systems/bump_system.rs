@@ -1,10 +1,12 @@
 use amethyst_core::{
     ecs::{
-        shred::DynamicSystemData, BitSet, Join, Read, ReaderId, System, World,
+        BitSet, Join, Read, ReaderId, System, SystemData, World,
         WriteExpect, WriteStorage,
     },
     shrev::EventChannel,
+    SystemDesc,
 };
+use amethyst_derive::SystemDesc;
 use amethyst_error::{format_err, Error, ResultExt};
 
 use rlua::{Function, Table};
@@ -15,16 +17,27 @@ use crate::{
     resources::script::ScriptEnvironment,
 };
 
-#[derive(Default)]
-pub struct BumpSystem {
-    bumps_event_id: Option<ReaderId<BumpEvent>>,
+//pub struct BumpSystemDesc;
 
+//impl SystemDesc for BumpSystem {
+//}
+
+#[derive(SystemDesc)]
+#[system_desc(name(BumpSystemDesc))]
+pub struct BumpSystem {
+    #[system_desc(event_channel_reader)]
+    bumps_event_id: ReaderId<BumpEvent>,
+
+    #[system_desc(skip)]
     bumped: BitSet,
 }
 
 impl BumpSystem {
-    pub fn new() -> Self {
-        Self::default()
+    pub fn new(bumps_event_id: ReaderId<BumpEvent>) -> Self {
+        Self {
+            bumps_event_id,
+            bumped: Default::default(),
+        }
     }
 }
 
@@ -38,7 +51,7 @@ impl<'a> System<'a> for BumpSystem {
     fn run(&mut self, (bumps, mut script_env, mut instances): Self::SystemData) {
         self.bumped.extend(
             bumps
-                .read(self.bumps_event_id.as_mut().expect("setup was not called"))
+                .read(&mut self.bumps_event_id)
                 .map(|e| e.bumped.id()),
         );
 
@@ -65,12 +78,5 @@ impl<'a> System<'a> for BumpSystem {
         }
 
         self.bumped.clear();
-    }
-
-    fn setup(&mut self, world: &mut World) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
-
-        let mut bumps = world.fetch_mut::<EventChannel<BumpEvent>>();
-        self.bumps_event_id.replace(bumps.register_reader());
     }
 }

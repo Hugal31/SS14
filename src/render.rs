@@ -23,7 +23,11 @@ impl RenderLayeredSprites {
 }
 
 impl<B: Backend> RenderPlugin<B> for RenderLayeredSprites {
-    fn on_build<'a, 'b>(&mut self, _world: &mut World, builder: &mut DispatcherBuilder<'a, 'b>) -> Result<(), Error> {
+    fn on_build<'a, 'b>(
+        &mut self,
+        _world: &mut World,
+        builder: &mut DispatcherBuilder<'a, 'b>,
+    ) -> Result<(), Error> {
         builder.add(SpriteLayerSortingSystem::new(), "layer_sorting", &[]);
 
         Ok(())

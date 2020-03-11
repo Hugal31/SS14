@@ -10,6 +10,7 @@ amethyst_assets = "0.10.0"
 amethyst_animation = "0.9.0"
 amethyst_audio = "0.9.0"
 amethyst_core = "0.9.0"
+amethyst_derive = "0.7"
 amethyst_error = "0.4.0"
 amethyst_rendy = "0.4.0"
 byond = { path = "../byond", features = ["serde", "specs"] }

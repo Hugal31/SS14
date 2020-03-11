@@ -1,9 +1,10 @@
 use amethyst_audio::{OggFormat, Source};
 use amethyst_animation::AnimationBundle;
-use amethyst_core::{ecs::{DispatcherBuilder, World}, SystemBundle};
+use amethyst_core::{ecs::{DispatcherBuilder, World, shrev::EventChannel}, SystemBundle, SystemDesc};
 use amethyst_error::Error;
 
 use crate::assets::dmi::DmiProcessor;
+use crate::events::{BumpEvent};
 use crate::components::{Dense, Direction, IconStateName, Moving, Opaque};
 use crate::systems;
 
@@ -29,7 +30,9 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             .build(world, dispatcher)?;
 
         dispatcher.add(DmiProcessor::new(), "dmi_processor", &[]);
-        dispatcher.add(systems::loader::AssetLoaderSystem::<Source, _>::new(OggFormat), "audio_asset_loader", &[]);
+        dispatcher.add(systems::loader::AssetLoaderSystemDesc::<Source, _>::new(OggFormat).build(world),
+                       "audio_asset_loader",
+                       &[]);
 
         // Script systems
         dispatcher.add(
@@ -37,41 +40,42 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             "update_script_world",
             &[],
         );
-        dispatcher.add(systems::BumpSystem::new(), "bump_system", &[]);
+        world.insert(EventChannel::<BumpEvent>::new());
+        dispatcher.add(systems::BumpSystemDesc.build(world), "bump_system", &[]);
         dispatcher.add(
-            systems::SyncZeroSizeComponentSystem::<Dense>::new(),
+            systems::SyncZeroSizeComponentSystemDesc::<Dense>::default().build(world),
             "sync_denses",
             &["update_script_world"],
         );
         dispatcher.add(
-            systems::SyncScriptComponent::<Direction>::new(),
+            systems::SyncScriptComponentSystemDesc::<Direction>::default().build(world),
             "sync_dirs",
             &["update_script_world"],
         );
         dispatcher.add(
-            systems::SyncZeroSizeComponentSystem::<Opaque>::new(),
+            systems::SyncZeroSizeComponentSystemDesc::<Opaque>::default().build(world),
             "sync_opaques",
             &["update_script_world"],
         );
         dispatcher.add(
-            systems::SyncScriptComponent::<IconStateName>::new(),
+            systems::SyncScriptComponentSystemDesc::<IconStateName>::default().build(world),
             "sync_icon_state_names",
             &["update_script_world"],
         );
         dispatcher.add(
-            systems::script::SoundEventSystem::default(),
+            systems::script::SoundEventSystemDesc::default().build(world),
             "sound_event",
             &["update_script_world"],
         );
         dispatcher.add(
-            systems::SyncCoordsSystem::default(),
+            systems::SyncCoordsSystemDesc::default().build(world),
             "sync_coords",
             // TODO Remove move_camera
             &["move_camera", "sample_moving"],
         );
 
         dispatcher.add(
-            systems::SyncIconStateSystem::new(),
+            systems::SyncIconStateSystemDesc::default().build(world),
             "sync_icon_states",
             &["sync_icon_state_names"],
         );
@@ -81,7 +85,7 @@ impl<'a, 'b, 'd> SystemBundle<'a, 'b> for ByondBundle<'d> {
             &["sync_icon_states"],
         );
         dispatcher.add(
-            systems::SyncSpritesSystem::new(),
+            systems::SyncSpritesSystemDesc::default().build(world),
             "sync_sprites",
             &["icon_state_animation"],
         );

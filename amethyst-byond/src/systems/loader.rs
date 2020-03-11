@@ -8,6 +8,7 @@ use amethyst_core::{
         Read, ReaderId, System, SystemData, Write, World
     },
     shrev::EventChannel,
+    SystemDesc,
 };
 use derivative::Derivative;
 
@@ -42,19 +43,45 @@ pub enum AssetLoaderEvent {
     }
 }
 
-/// System to load assets on certain events
-#[derive(Debug)]
-pub struct AssetLoaderSystem<A, F> {
+pub struct AssetLoaderSystemDesc<A, F> {
     format: F,
-    reader_id: Option<ReaderId<AssetLoaderEvent>>,
-    _marker: PhantomData<(A, F)>,
+    _marker: PhantomData<A>,
 }
 
-impl<A, F> AssetLoaderSystem<A, F> {
+impl<A, F> AssetLoaderSystemDesc<A, F> {
     pub fn new(format: F) -> Self {
         Self {
             format,
-            reader_id: Default::default(),
+            _marker: Default::default(),
+        }
+    }
+}
+
+impl<'a, 'b, A, F> SystemDesc<'a, 'b, AssetLoaderSystem<A, F>> for AssetLoaderSystemDesc<A, F>
+    where A: Asset,
+          F: Format<A::Data> + Clone
+{
+    fn build(self, world: &mut World) -> AssetLoaderSystem<A, F> {
+        <AssetLoaderSystem<A, F> as System>::SystemData::setup(world);
+
+        let reader_id = world.fetch_mut::<AssetLoaderEventChannel<A>>().register_reader();
+
+        AssetLoaderSystem::new(self.format, reader_id)
+    }
+}
+
+/// System to load assets on certain events
+pub struct AssetLoaderSystem<A, F> {
+    format: F,
+    reader_id: ReaderId<AssetLoaderEvent>,
+    _marker: PhantomData<A>,
+}
+
+impl<A, F> AssetLoaderSystem<A, F> {
+    pub fn new(format: F, reader_id: ReaderId<AssetLoaderEvent>) -> Self {
+        Self {
+            format,
+            reader_id,
             _marker: Default::default(),
         }
     }
@@ -73,7 +100,7 @@ impl<'a, A, F> System<'a> for AssetLoaderSystem<A, F>
     );
 
     fn run(&mut self, (loader, events, mut dict): Self::SystemData) {
-        for event in events.read().read(self.reader_id.as_mut().expect("setup to have been call"))
+        for event in events.read().read(&mut self.reader_id)
             {
                 match event {
                     AssetLoaderEvent::Load { name, source } => {
@@ -87,11 +114,5 @@ impl<'a, A, F> System<'a> for AssetLoaderSystem<A, F>
                     },
                 }
             }
-    }
-
-    fn setup(&mut self, world: &mut World) {
-        Self::SystemData::setup(world);
-
-        self.reader_id.replace(world.fetch_mut::<AssetLoaderEventChannel<A>>().register_reader());
     }
 }

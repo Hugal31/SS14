@@ -1,21 +1,35 @@
 use amethyst_core::{
     ecs::{
-        shred::DynamicSystemData, storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
+        storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
         System, SystemData, World, WriteStorage,
     },
     Transform,
+    SystemDesc,
 };
+use amethyst_derive::SystemDesc;
 use amethyst_rendy::transparent::Transparent;
 #[cfg(feature = "profiler")]
 use thread_profiler::profile_scope;
 
 use crate::components::{Coordinates, Moving};
 
-#[derive(Debug, Default)]
+#[derive(SystemDesc)]
+#[system_desc(name(SyncCoordsSystemDesc))]
 pub struct SyncCoordsSystem {
-    coords_event_id: Option<ReaderId<ComponentEvent>>,
+    #[system_desc(flagged_storage_reader(Coordinates))]
+    coords_event_id: ReaderId<ComponentEvent>,
 
+    #[system_desc(skip)]
     to_sync: BitSet,
+}
+
+impl SyncCoordsSystem {
+    pub fn new(coords_event_id: ReaderId<ComponentEvent>) -> SyncCoordsSystem {
+        Self {
+            coords_event_id,
+            to_sync: Default::default(),
+        }
+    }
 }
 
 impl<'a> System<'a> for SyncCoordsSystem {
@@ -30,13 +44,11 @@ impl<'a> System<'a> for SyncCoordsSystem {
         #[cfg(feature = "profiler")]
         profile_scope!("SyncCoordSystem::run");
 
-        let coords_event_id = self.coords_event_id.as_mut().expect("setup was not called");
-
         // Read modifications
         self.to_sync.clear();
         cells
             .channel()
-            .read(coords_event_id)
+            .read(&mut self.coords_event_id)
             .for_each(|event| match event {
                 ComponentEvent::Inserted(id) | ComponentEvent::Modified(id) => {
                     self.to_sync.add(*id);
@@ -68,12 +80,5 @@ impl<'a> System<'a> for SyncCoordsSystem {
                 z,
             );
         }
-    }
-
-    fn setup(&mut self, world: &mut World) {
-        <Self::SystemData as DynamicSystemData>::setup(&self.accessor(), world);
-
-        let mut coords = <WriteStorage<Coordinates> as SystemData>::fetch(world);
-        self.coords_event_id.replace(coords.register_reader());
     }
 }

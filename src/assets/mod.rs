@@ -91,7 +91,7 @@ impl GameAssetsLoader {
             },
         );
 
-        world.add_resource(animation_set);
+        world.insert(animation_set);
     }
 
     fn load_lua_root(&self, world: &mut World, progress: &mut ProgressCounter) {

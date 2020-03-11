@@ -1,9 +1,9 @@
 use std::convert::TryInto;
-use std::sync::{Arc, RwLock};
+use std::sync::{Arc, RwLock, RwLockReadGuard, RwLockWriteGuard};
 
 use amethyst_core::{
     ecs::{Component, DenseVecStorage, Entity, FlaggedStorage},
-    shrev::EventChannel,
+    shrev::{EventChannel, ReaderId},
 };
 use derivative::Derivative;
 use byond::components::Direction;
@@ -50,7 +50,28 @@ pub struct ScriptComponentChannel<T>
 where
     T: ScriptComponent,
 {
-    pub inner: Arc<RwLock<EventChannel<ScriptComponentUpdate<T::Value>>>>,
+    inner: Arc<RwLock<EventChannel<ScriptComponentUpdate<T::Value>>>>,
+}
+
+impl<T> ScriptComponentChannel<T>
+    where T: ScriptComponent
+{
+    pub fn register_reader(&self) -> ReaderId<ScriptComponentUpdate<T::Value>> {
+        self.inner.write()
+            .expect("Was poisoned")
+            .register_reader()
+    }
+
+    pub fn read(&self) -> RwLockReadGuard<EventChannel<ScriptComponentUpdate<T::Value>>> {
+        self.inner.read()
+            .expect("Was poisoned")
+    }
+
+    pub fn write(&self) -> RwLockWriteGuard<EventChannel<ScriptComponentUpdate<T::Value>>> {
+        self.inner.write()
+            .expect("Was poisoned")
+    }
+
 }
 
 pub struct ScriptComponentRef<T>

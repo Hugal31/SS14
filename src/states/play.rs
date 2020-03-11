@@ -94,7 +94,7 @@ fn add_debug_lines(world: &mut World) -> Entity {
         },
     };
 
-    world.add_resource(DebugLines::new());
+    world.insert(DebugLines::new());
 
     let mut debug_lines = DebugLinesComponent::new();
     debug_lines.add_direction(

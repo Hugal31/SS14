@@ -6,12 +6,12 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst_assets = { version = "0.9.1", features = ["nightly"] }
-amethyst_animation = { version = "0.8.1", features = ["nightly"] }
-amethyst_audio = { version = "0.8", features = ["nightly"] }
-amethyst_core = { version = "0.8.1", features = ["nightly"] }
+amethyst_assets = "0.9.1"
+amethyst_animation = "0.8.1"
+amethyst_audio = "0.8"
+amethyst_core = "0.8.1"
 amethyst_error = "0.3"
-amethyst_rendy = { version = "0.3", features = ["nightly"] }
+amethyst_rendy = "0.3"
 byond = { path = "../byond", features = ["serde", "specs"] }
 byond-lua = { path = "../byond-lua" }
 derivative = "1"
@@ -30,3 +30,10 @@ derivative = "1"
 [features]
 default = []
 profiler = ["thread_profiler", "thread_profiler/thread_profiler"]
+nightly = [
+        "amethyst_assets/nightly",
+        "amethyst_animation/nightly",
+        "amethyst_audio/nightly",
+        "amethyst_core/nightly",
+        "amethyst_rendy/nightly",
+]

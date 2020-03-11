@@ -5,6 +5,7 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+amethyst = "0.13.2"
 amethyst-byond = { path = "amethyst-byond" }
 byond-lua = { path = "byond-lua" }
 dmm = { git = "https://github.com/Hugal31/DMM.git" }
@@ -15,15 +16,12 @@ los2d = { git = "https://github.com/Hugal31/los2d.git"}
 serde = { version ="1", features = ["derive"] }
 thread_profiler = { version = "0.3", optional = true }
 
-[dependencies.amethyst]
-version = "0.13.2"
-features = ["nightly", "vulkan"]
-
 [features]
 default = ["no-slow-safety-check", "vulkan"]
 vulkan = ["amethyst/vulkan"]
 no-slow-safety-check = ["amethyst/no-slow-safety-checks"]
 profiler = ["thread_profiler", "thread_profiler/thread_profiler", "amethyst/profiler", "amethyst-byond/profiler"]
+nightly = ["amethyst/nightly"]
 
 [profile.dev]
 opt-level = 2

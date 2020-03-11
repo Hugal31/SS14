@@ -27,9 +27,14 @@ impl<'a> System<'a> for UpdateScriptWorldSystem {
             let mut data = world.write();
             data.update_time(&time);
 
-            data.callbacks
-                .drain_filter(|c| c.0 <= time.absolute_time())
-                .collect::<Vec<_>>()
+	    // TODO use drain filter
+	    let mut callbacks = Vec::new();
+	    std::mem::swap(&mut callbacks, &mut data.callbacks);
+            let (passed_callbacks, mut later_callbacks) = callbacks.into_iter()
+                .partition(|c| c.0 <= time.absolute_time());
+	    std::mem::swap(&mut later_callbacks, &mut data.callbacks);
+
+	    passed_callbacks
         };
 
         if !callbacks.is_empty() {

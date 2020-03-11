@@ -23,6 +23,7 @@ use ss14::{
     render::RenderLayeredSprites,
     states,
 };
+use amethyst_imgui::RenderImgui;
 
 const DISPLAY_CONFIG_PATH: &str = "display.ron";
 const BINDINGS_CONFIG_PATH: &str = "inputs.ron";
@@ -58,6 +59,7 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
             InputBundle::<inputs::Input>::new().with_bindings_from_file(bindings_config_path)?,
         )?
         .with_bundle(bundles::GameBundle)?
+        .with_bundle(bundles::DebugGuiBundle)?
         // Add the transform bundle which handles tracking entity positions
         .with_bundle(TransformBundle::new().with_dep(bundles::GameBundle::TRANSFORM_DEPS))?
         .with_bundle(AudioBundle::default())?
@@ -69,7 +71,8 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
                         .with_clear([0.0, 0.0, 0.0, 1.0]),
                 )
                 .with_plugin(RenderLayeredSprites::default())
-                .with_plugin(RenderDebugLines::default()),
+                .with_plugin(RenderDebugLines::default())
+		.with_plugin(RenderImgui::<inputs::Input>::default()),
         )?;
 
     let initial_state = states::loading::LoadLevelAsset::<states::play::PlayState>::new(level);

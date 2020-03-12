@@ -48,15 +48,15 @@ impl<'a> System<'a> for VisionFieldSystem {
         if let Some(player_coord) = (&players, &coords).join().map(|(_, c)| c).next() {
             self.in_range.clear();
 
-            // Make close entities hidden
+            // Make all entities hidden, and get in range ones.
             for (e, coord) in (&entities, &coords).join() {
-                if Self::in_range(player_coord, coord) {
-                    if coord == player_coord {
-                        hiddens.remove(e);
-                    } else {
+                if coord == player_coord {
+                    hiddens.remove(e);
+                } else {
+                    if Self::in_range(player_coord, coord) {
                         self.in_range.add(e.id());
-                        hiddens.insert(e, Hidden).ok();
                     }
+                    hiddens.insert(e, Hidden).ok();
                 }
             }
 

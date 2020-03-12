@@ -50,7 +50,7 @@ pub struct DebugGuiBundle;
 
 impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
     fn build(self, world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
-	dispatcher.add(
+        dispatcher.add(
             systems::imgui::AssetsDebugGuiSystemDesc.build(world),
             "debug_asset_gui",
             &[],

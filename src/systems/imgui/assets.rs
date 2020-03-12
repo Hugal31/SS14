@@ -1,6 +1,6 @@
 use amethyst::{
     assets::{AssetStorage, Handle},
-    derive::SystemDesc,
+    core::SystemDesc,
     ecs::{
         shred::ResourceId,
         shrev::{EventChannel, ReaderId},
@@ -18,48 +18,33 @@ use amethyst_imgui::{
 };
 
 use crate::inputs::Input;
+use super::ClosableSystem;
 
-#[derive(SystemDesc)]
-#[system_desc(name(AssetsDebugGuiSystemDesc))]
 pub struct AssetsDebugGuiSystem {
-    #[system_desc(event_channel_reader)]
-    input_reader: ReaderId<InputEvent<Input>>,
+    closable_system: ClosableSystem,
     /// Whether or not the gui is opened.
-    #[system_desc(skip)]
-    opened: bool,
-    #[system_desc(skip)]
     texture_bitset: BitSet,
 }
 
 impl AssetsDebugGuiSystem {
     fn new(input_reader: ReaderId<InputEvent<Input>>) -> Self {
         Self {
-            input_reader,
-            opened: false,
+            closable_system: ClosableSystem::new(input_reader, Input::ToggleAssetInfo),
             texture_bitset: BitSet::new(),
         }
     }
 
-    fn handle_inputs(&mut self, inputs: &EventChannel<InputEvent<Input>>) {
-        for _ in inputs
-            .read(&mut self.input_reader)
-            .filter(is_toggle_asset_pressed)
-        {
-            self.opened = !self.opened;
-        }
-    }
-
-    fn draw_window(&mut self, data: &<Self as System>::SystemData) {
+    fn show_window(&mut self, data: &<Self as System>::SystemData) {
         amethyst_imgui::with(|ui| {
-            let mut opened = self.opened;
+            let mut opened = self.closable_system.opened;
             imgui::Window::new(&im_str!("Assets info"))
                 .opened(&mut opened)
-                .build(ui, || self.list_textures(ui, data));
-            self.opened = opened;
+                .build(ui, || self.show_texture_list(ui, data));
+            self.closable_system.opened = opened;
         });
     }
 
-    fn list_textures(&mut self, ui: &imgui::Ui, data: &<Self as System>::SystemData) {
+    fn show_texture_list(&mut self, ui: &imgui::Ui, data: &<Self as System>::SystemData) {
         self.texture_bitset.clear();
 
         for sprite_render in (&data.sprite_renders).join() {
@@ -68,34 +53,43 @@ impl AssetsDebugGuiSystem {
                 let texture_handle = &sprite_sheet.texture;
                 if !self.texture_bitset.contains(texture_handle.id()) {
                     self.texture_bitset.add(texture_handle.id());
-                    self.list_texture(ui, texture_handle, data);
+                    self.show_texture_bullet(ui, texture_handle, data);
                 }
             }
         }
     }
 
-    fn list_texture(
+    fn show_texture_bullet(
         &self,
         ui: &imgui::Ui,
         texture: &Handle<Texture>,
         data: &<Self as System>::SystemData,
     ) {
         ui.bullet_text(&im_str!("Texture #{}", texture.id()));
-        let mut context = data.imgui_context.lock().unwrap();
 
         if ui.is_item_hovered() {
-            if !context.textures.iter().any(|h| h.id() == texture.id()) {
-                context.textures.push(texture.clone());
-            }
-
-            ui.tooltip(|| {
-                imgui::Image::new(
-                    imgui::TextureId::from(texture.id() as usize),
-                    [255.0, 255.0],
-                )
-                .build(ui);
-            });
+            self.show_texture_tooltip(ui, texture, data);
         }
+    }
+
+    fn show_texture_tooltip(
+        &self,
+        ui: &imgui::Ui,
+        texture: &Handle<Texture>,
+        data: &<Self as System>::SystemData,
+    ) {
+        let mut context = data.imgui_context.lock().unwrap();
+        if !context.textures.iter().any(|h| h.id() == texture.id()) {
+            context.textures.push(texture.clone());
+        }
+
+        ui.tooltip(|| {
+            imgui::Image::new(
+                imgui::TextureId::from(texture.id() as usize),
+                [255.0, 255.0],
+            )
+                .build(ui);
+        });
     }
 }
 
@@ -103,25 +97,31 @@ impl<'s> System<'s> for AssetsDebugGuiSystem {
     type SystemData = AssetsDebugGuiSystemData<'s>;
 
     fn run(&mut self, data: Self::SystemData) {
-        self.handle_inputs(&data.inputs);
+        self.closable_system.run(&data.closeable_system_data);
 
-        if self.opened {
-            self.draw_window(&data);
+        if self.closable_system.opened {
+            self.show_window(&data);
         }
+    }
+}
+
+pub struct AssetsDebugGuiSystemDesc;
+
+impl SystemDesc<'_, '_, AssetsDebugGuiSystem> for AssetsDebugGuiSystemDesc {
+    fn build(self, world: &mut World) -> AssetsDebugGuiSystem {
+        <AssetsDebugGuiSystem as System>::SystemData::setup(world);
+
+        let mut events = world.fetch_mut::<EventChannel<InputEvent<Input>>>();
+        let reader_id = events.register_reader();
+
+        AssetsDebugGuiSystem::new(reader_id)
     }
 }
 
 #[derive(SystemData)]
 pub struct AssetsDebugGuiSystemData<'s> {
-    inputs: Read<'s, EventChannel<InputEvent<Input>>>,
+    closeable_system_data: <ClosableSystem as System<'s>>::SystemData,
     imgui_context: ReadExpect<'s, ImguiStatePtr>,
     sprite_sheets: Read<'s, AssetStorage<SpriteSheet>>,
     sprite_renders: ReadStorage<'s, SpriteRender>,
-}
-
-fn is_toggle_asset_pressed(event: &&InputEvent<Input>) -> bool {
-    match event {
-        InputEvent::ActionPressed(Input::ToggleAssetInfo) => true,
-        _ => false,
-    }
 }

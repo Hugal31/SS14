@@ -79,7 +79,7 @@ impl Format<DmiData> for DmiFormat {
     // TODO: We are reading the beginning three times!
     fn import_simple(&self, bytes: Vec<u8>) -> Result<DmiData, Error> {
         use amethyst_rendy::rendy::{
-            hal::image::{Anisotropic, Filter, PackedColor, SamplerInfo, WrapMode},
+            hal::image::{Filter, SamplerInfo, WrapMode},
             texture::image::{Repr, TextureKind},
         };
 

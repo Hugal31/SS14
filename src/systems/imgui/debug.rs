@@ -1,8 +1,7 @@
 use std::time::Duration;
 
 use amethyst::{
-    core::{Hidden, Time},
-    derive::SystemDesc,
+    core::{Hidden, Time, SystemDesc},
     ecs::{
         shred::ResourceId,
         shrev::{EventChannel, ReaderId},
@@ -12,25 +11,17 @@ use amethyst::{
     renderer::sprite::SpriteRender,
     utils::fps_counter::FpsCounter,
 };
-use amethyst_imgui::imgui::im_str;
+use amethyst_imgui::imgui::{self, im_str};
 use float_ord::FloatOrd;
 
 use crate::inputs::Input;
+use super::ClosableSystem;
 
-#[derive(SystemDesc)]
-#[system_desc(name(GlobalDebugGuiSystemDesc))]
 pub struct GlobalDebugGuiSystem {
-    /// The reader for the input events.
-    #[system_desc(event_channel_reader)]
-    input_reader: ReaderId<InputEvent<Input>>,
-    /// Whether or not the gui is opened.
-    #[system_desc(skip)]
-    opened: bool,
+    closable_system: ClosableSystem,
     /// FPS mean during the last 20 seconds.
-    #[system_desc(skip)]
     frame_times: [f32; GlobalDebugGuiSystem::N_FPS_SAMPLES],
     /// Date since we pushed a new frame_time value.
-    #[system_desc(skip)]
     last_frame_time_recorded: Duration,
 }
 
@@ -43,16 +34,15 @@ impl GlobalDebugGuiSystem {
 
     fn new(input_reader: ReaderId<InputEvent<Input>>) -> Self {
         Self {
-            input_reader,
-            opened: false,
+            closable_system: ClosableSystem::new(input_reader, Input::ToggleDebugInfo),
             frame_times: [0.0f32; GlobalDebugGuiSystem::N_FPS_SAMPLES],
             last_frame_time_recorded: Duration::new(0, 0),
         }
     }
 
     fn handle_events(&mut self, data: &<Self as System>::SystemData) {
+        self.closable_system.run(&data.closeable_system_data);
         self.handle_fps_counter(&data.time, &data.fps_counter);
-        self.handle_inputs(&data.inputs);
     }
 
     fn handle_fps_counter(&mut self, time: &Time, fps_counter: &FpsCounter) {
@@ -79,44 +69,28 @@ impl GlobalDebugGuiSystem {
         };
     }
 
-    fn handle_inputs(&mut self, inputs: &EventChannel<InputEvent<Input>>) {
-        for _ in inputs.read(&mut self.input_reader).filter(|e| {
-            if let InputEvent::ActionPressed(Input::ToggleDebugInfo) = e {
-                true
-            } else {
-                false
-            }
-        }) {
-            self.opened = !self.opened;
-        }
-    }
-
-    fn draw_window(&mut self, data: &<Self as System>::SystemData) {
+    fn show_window(&mut self, data: &<Self as System>::SystemData) {
         amethyst_imgui::with(|ui| {
-            let mut opened = self.opened;
+            let mut opened = self.closable_system.opened;
             amethyst_imgui::imgui::Window::new(&im_str!("Debug info"))
                 .opened(&mut opened)
                 .build(ui, || {
-                    let (fps_min, fps_max) = self.min_max_fps();
-                    ui.plot_lines(
-                        &im_str!("FPS: {}", data.fps_counter.sampled_fps()),
-                        &self.frame_times,
-                    )
-                    .scale_min(fps_min)
-                    .scale_max(fps_max)
-                    .build();
-                    ui.tree_node(im_str!("Entities details")).build(|| {
-                        let stats = DebugStats::from(data);
-                        ui.bullet_text(&im_str!("Total: {}", stats.total_entities));
-                        ui.bullet_text(&im_str!("Visible entities: {}", stats.visible_entities));
-                        ui.bullet_text(&im_str!(
-                            "Visible entities with sprite: {}",
-                            stats.visible_entities_with_sprite
-                        ));
-                    });
+                    self.show_fps_details(ui, data);
+                    self.show_entities_details(ui, data);
                 });
-            self.opened = opened;
+            self.closable_system.opened = opened;
         });
+    }
+
+    fn show_fps_details(&self, ui: &imgui::Ui, data: &<Self as System>::SystemData) {
+        let (fps_min, fps_max) = self.min_max_fps();
+        ui.plot_lines(
+            &im_str!("FPS: {}", data.fps_counter.sampled_fps()),
+            &self.frame_times,
+        )
+            .scale_min(fps_min)
+            .scale_max(fps_max)
+            .build();
     }
 
     fn min_max_fps(&self) -> (f32, f32) {
@@ -137,6 +111,18 @@ impl GlobalDebugGuiSystem {
                 .0,
         )
     }
+
+    fn show_entities_details(&self, ui: &imgui::Ui, data: &<Self as System>::SystemData) {
+        ui.tree_node(im_str!("Entities details")).build(|| {
+            let stats = DebugStats::from(data);
+            ui.bullet_text(&im_str!("Total: {}", stats.total_entities));
+            ui.bullet_text(&im_str!("Visible entities: {}", stats.visible_entities));
+            ui.bullet_text(&im_str!(
+                            "Visible entities with sprite: {}",
+                            stats.visible_entities_with_sprite
+                        ));
+        });
+    }
 }
 
 impl<'s> System<'s> for GlobalDebugGuiSystem {
@@ -145,16 +131,29 @@ impl<'s> System<'s> for GlobalDebugGuiSystem {
     fn run(&mut self, data: Self::SystemData) {
         self.handle_events(&data);
 
-        if self.opened {
-            self.draw_window(&data);
+        if self.closable_system.opened {
+            self.show_window(&data);
         }
+    }
+}
+
+pub struct GlobalDebugGuiSystemDesc;
+
+impl SystemDesc<'_, '_, GlobalDebugGuiSystem> for GlobalDebugGuiSystemDesc {
+    fn build(self, world: &mut World) -> GlobalDebugGuiSystem {
+        <GlobalDebugGuiSystem as System>::SystemData::setup(world);
+
+        let mut events = world.fetch_mut::<EventChannel<InputEvent<Input>>>();
+        let reader_id = events.register_reader();
+
+        GlobalDebugGuiSystem::new(reader_id)
     }
 }
 
 #[derive(SystemData)]
 pub struct GlobalDebugGuiSystemData<'s> {
+    closeable_system_data: <ClosableSystem as System<'s>>::SystemData,
     entities: Entities<'s>,
-    inputs: Read<'s, EventChannel<InputEvent<Input>>>,
     time: Read<'s, Time>,
     fps_counter: Read<'s, FpsCounter>,
     hidden: ReadStorage<'s, Hidden>,

@@ -30,8 +30,6 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
             &["input_system"],
         );
 
-        // dispatcher.add(systems::DoorSystem::new(), "door_system", &[]);
-
         dispatcher.add(
             systems::VisionFieldSystem::new(),
             "vision_field",
@@ -52,7 +50,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
     fn build(self, world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
         dispatcher.add(
             systems::imgui::AssetsDebugGuiSystemDesc.build(world),
-            "debug_asset_gui",
+            "debug_assets_gui",
             &[],
         );
         dispatcher.add(
@@ -63,7 +61,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
         dispatcher.add(
             systems::imgui::GlobalDebugGuiSystemDesc.build(world),
             "debug_global_gui",
-            &["fps_counter", "debug_asset_gui"],
+            &["fps_counter", "debug_assets_gui"],
         );
 
         Ok(())

@@ -1,10 +1,9 @@
 use amethyst_core::{
     ecs::{
         storage::ComponentEvent, BitSet, Join, ReadStorage, ReaderId,
-        System, SystemData, World, WriteStorage,
+        System, SystemData, WriteStorage,
     },
     Transform,
-    SystemDesc,
 };
 use amethyst_derive::SystemDesc;
 use amethyst_rendy::transparent::Transparent;

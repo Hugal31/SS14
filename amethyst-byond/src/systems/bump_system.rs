@@ -1,10 +1,9 @@
 use amethyst_core::{
     ecs::{
-        BitSet, Join, Read, ReaderId, System, SystemData, World,
+        BitSet, Join, Read, ReaderId, System, SystemData,
         WriteExpect, WriteStorage,
     },
     shrev::EventChannel,
-    SystemDesc,
 };
 use amethyst_derive::SystemDesc;
 use amethyst_error::{format_err, Error, ResultExt};

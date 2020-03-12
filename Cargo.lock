@@ -3072,6 +3072,7 @@ dependencies = [
  "byond-lua 0.1.0",
  "dmm 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
  "dmm-format 0.1.0 (git+https://github.com/Hugal31/DMM.git)",
+ "float-ord 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "fnv 1.0.6 (registry+https://github.com/rust-lang/crates.io-index)",
  "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "los2d 0.1.0 (git+https://github.com/Hugal31/los2d.git)",

@@ -12,6 +12,7 @@ amethyst-better-logger = { path = "amethyst-better-logger" }
 byond-lua = { path = "byond-lua" }
 dmm = { git = "https://github.com/Hugal31/DMM.git" }
 dmm-format = { git = "https://github.com/Hugal31/DMM.git" }
+float-ord = "0.2"
 fnv = "1"
 log = "0.4"
 los2d = { git = "https://github.com/Hugal31/los2d.git"}

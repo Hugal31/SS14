@@ -16,6 +16,7 @@ use amethyst::{
     },
     utils::application_root_dir,
 };
+use amethyst_imgui::RenderImgui;
 
 use ss14::{
     assets::{self, GameAssetsLoader},
@@ -23,7 +24,6 @@ use ss14::{
     render::RenderLayeredSprites,
     states,
 };
-use amethyst_imgui::RenderImgui;
 
 const DISPLAY_CONFIG_PATH: &str = "display.ron";
 const BINDINGS_CONFIG_PATH: &str = "inputs.ron";
@@ -45,7 +45,10 @@ and set the SS13_SOURCE environment variable to its directory."
 fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Result<()> {
     amethyst_better_logger::start_logger(amethyst_better_logger::LoggerConfig {
         level_filter: amethyst::LogLevelFilter::Debug,
-        other_levels: vec![("amethyst_utils::fps_counter".into(), amethyst::LogLevelFilter::Warn)],
+        other_levels: vec![(
+            "amethyst_utils::fps_counter".into(),
+            amethyst::LogLevelFilter::Warn,
+        )],
         ..Default::default()
     });
 
@@ -73,7 +76,7 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
                 )
                 .with_plugin(RenderLayeredSprites::default())
                 .with_plugin(RenderDebugLines::default())
-		.with_plugin(RenderImgui::<inputs::Input>::default()),
+                .with_plugin(RenderImgui::<inputs::Input>::default()),
         )?;
 
     let initial_state = states::loading::LoadLevelAsset::<states::play::PlayState>::new(level);

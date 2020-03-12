@@ -49,10 +49,18 @@ impl<'a, 'b> SystemBundle<'a, 'b> for GameBundle {
 pub struct DebugGuiBundle;
 
 impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
-    fn build(self, _world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
-	dispatcher.add(amethyst::utils::fps_counter::FpsCounterSystem, "fps_counter", &[]);
-	dispatcher.add(systems::imgui::GlobalDebugGuiSystem::default(), "debug_global_gui", &["fps_counter"]);
+    fn build(self, world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
+        dispatcher.add(
+            amethyst::utils::fps_counter::FpsCounterSystem,
+            "fps_counter",
+            &[],
+        );
+        dispatcher.add(
+            systems::imgui::GlobalDebugGuiSystemDesc.build(world),
+            "debug_global_gui",
+            &["fps_counter"],
+        );
 
-	Ok(())
+        Ok(())
     }
 }

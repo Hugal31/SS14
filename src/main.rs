@@ -43,8 +43,9 @@ and set the SS13_SOURCE environment variable to its directory."
 }
 
 fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Result<()> {
-    amethyst::start_logger(amethyst::LoggerConfig {
+    amethyst_better_logger::start_logger(amethyst_better_logger::LoggerConfig {
         level_filter: amethyst::LogLevelFilter::Debug,
+        other_levels: vec![("amethyst_utils::fps_counter".into(), amethyst::LogLevelFilter::Warn)],
         ..Default::default()
     });
 

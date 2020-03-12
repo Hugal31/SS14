@@ -8,6 +8,7 @@ edition = "2018"
 amethyst = "0.14.0"
 amethyst-imgui = "0.6.1"
 amethyst-byond = { path = "amethyst-byond" }
+amethyst-better-logger = { path = "amethyst-better-logger" }
 byond-lua = { path = "byond-lua" }
 dmm = { git = "https://github.com/Hugal31/DMM.git" }
 dmm-format = { git = "https://github.com/Hugal31/DMM.git" }

@@ -1,0 +1,10 @@
+[package]
+name = "amethyst-better-logger"
+version = "0.1.0"
+authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+fern = { version = "0.5", features = ["colored"] }
+log = { version = "0.4.6", features = ["serde"] }
+serde = { version = "1.0", features = ["derive"] }

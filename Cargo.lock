@@ -91,6 +91,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "amethyst-better-logger"
+version = "0.1.0"
+dependencies = [
+ "fern 0.5.9 (registry+https://github.com/rust-lang/crates.io-index)",
+ "log 0.4.8 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde 1.0.104 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "amethyst-byond"
 version = "0.1.0"
 dependencies = [
@@ -3057,6 +3066,7 @@ name = "ss14"
 version = "0.1.0"
 dependencies = [
  "amethyst 0.14.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "amethyst-better-logger 0.1.0",
  "amethyst-byond 0.1.0",
  "amethyst-imgui 0.6.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "byond-lua 0.1.0",

@@ -50,6 +50,11 @@ pub struct DebugGuiBundle;
 
 impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
     fn build(self, world: &mut World, dispatcher: &mut DispatcherBuilder) -> Result<(), Error> {
+	dispatcher.add(
+            systems::imgui::AssetsDebugGuiSystemDesc.build(world),
+            "debug_asset_gui",
+            &[],
+        );
         dispatcher.add(
             amethyst::utils::fps_counter::FpsCounterSystem,
             "fps_counter",
@@ -58,7 +63,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
         dispatcher.add(
             systems::imgui::GlobalDebugGuiSystemDesc.build(world),
             "debug_global_gui",
-            &["fps_counter"],
+            &["fps_counter", "debug_asset_gui"],
         );
 
         Ok(())

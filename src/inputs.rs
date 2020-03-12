@@ -7,6 +7,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Input {
     Move(Direction),
+    ToggleAssetInfo,
     ToggleDebugInfo,
 }
 

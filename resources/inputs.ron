@@ -5,6 +5,7 @@
         Move(South): [[Key(Down)]],
         Move(East): [[Key(Right)]],
         Move(West): [[Key(Left)]],
+        ToggleAssetInfo: [[Key(F11)]],
         ToggleDebugInfo: [[Key(F12)]],
     },
 )

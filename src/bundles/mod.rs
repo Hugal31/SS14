@@ -54,6 +54,11 @@ impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
             &[],
         );
         dispatcher.add(
+            systems::imgui::InspectorDebugGuiSystemDesc.build(world),
+            "inspector_debug_gui",
+            &["debug_assets_gui"],
+        );
+        dispatcher.add(
             amethyst::utils::fps_counter::FpsCounterSystem,
             "fps_counter",
             &[],
@@ -61,7 +66,7 @@ impl<'a, 'b> SystemBundle<'a, 'b> for DebugGuiBundle {
         dispatcher.add(
             systems::imgui::GlobalDebugGuiSystemDesc.build(world),
             "debug_global_gui",
-            &["fps_counter", "debug_assets_gui"],
+            &["fps_counter", "inspector_debug_gui"],
         );
 
         Ok(())

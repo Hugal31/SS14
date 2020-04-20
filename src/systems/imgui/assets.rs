@@ -17,12 +17,11 @@ use amethyst_imgui::{
     ImguiStatePtr,
 };
 
-use crate::inputs::Input;
 use super::ClosableSystem;
+use crate::inputs::Input;
 
 pub struct AssetsDebugGuiSystem {
     closable_system: ClosableSystem,
-    /// Whether or not the gui is opened.
     texture_bitset: BitSet,
 }
 
@@ -88,7 +87,7 @@ impl AssetsDebugGuiSystem {
                 imgui::TextureId::from(texture.id() as usize),
                 [255.0, 255.0],
             )
-                .build(ui);
+            .build(ui);
         });
     }
 }

@@ -1,17 +1,19 @@
 mod assets;
 mod debug;
+mod inspector;
 
 pub use self::assets::AssetsDebugGuiSystemDesc;
 pub use self::debug::GlobalDebugGuiSystemDesc;
+pub use self::inspector::InspectorDebugGuiSystemDesc;
 
+use crate::inputs::Input;
 use amethyst::{
     ecs::{
-        Read, System,
         shrev::{EventChannel, ReaderId},
+        Read, System,
     },
     input::InputEvent,
 };
-use crate::inputs::Input;
 
 pub struct ClosableSystem {
     input_reader: ReaderId<InputEvent<Input>>,
@@ -29,9 +31,12 @@ impl ClosableSystem {
     }
 
     pub fn run(&mut self, inputs: &<Self as System>::SystemData) {
-        if inputs.read(&mut self.input_reader)
+        if inputs
+            .read(&mut self.input_reader)
             .filter(|e| self.is_toggle_action_down(e))
-            .count() % 2 == 1
+            .count()
+            % 2
+            == 1
         {
             self.opened = !self.opened;
         }
@@ -40,7 +45,7 @@ impl ClosableSystem {
     fn is_toggle_action_down(&self, event: &InputEvent<Input>) -> bool {
         match event {
             InputEvent::ActionPressed(a) if a == &self.toggle_action => true,
-            _ => false
+            _ => false,
         }
     }
 }

@@ -1,7 +1,7 @@
 use std::time::Duration;
 
 use amethyst::{
-    core::{Hidden, Time, SystemDesc},
+    core::{Hidden, SystemDesc, Time},
     ecs::{
         shred::ResourceId,
         shrev::{EventChannel, ReaderId},
@@ -14,8 +14,8 @@ use amethyst::{
 use amethyst_imgui::imgui::{self, im_str};
 use float_ord::FloatOrd;
 
-use crate::inputs::Input;
 use super::ClosableSystem;
+use crate::inputs::Input;
 
 pub struct GlobalDebugGuiSystem {
     closable_system: ClosableSystem,
@@ -88,9 +88,9 @@ impl GlobalDebugGuiSystem {
             &im_str!("FPS: {}", data.fps_counter.sampled_fps()),
             &self.frame_times,
         )
-            .scale_min(fps_min)
-            .scale_max(fps_max)
-            .build();
+        .scale_min(fps_min)
+        .scale_max(fps_max)
+        .build();
     }
 
     fn min_max_fps(&self) -> (f32, f32) {
@@ -118,9 +118,9 @@ impl GlobalDebugGuiSystem {
             ui.bullet_text(&im_str!("Total: {}", stats.total_entities));
             ui.bullet_text(&im_str!("Visible entities: {}", stats.visible_entities));
             ui.bullet_text(&im_str!(
-                            "Visible entities with sprite: {}",
-                            stats.visible_entities_with_sprite
-                        ));
+                "Visible entities with sprite: {}",
+                stats.visible_entities_with_sprite
+            ));
         });
     }
 }

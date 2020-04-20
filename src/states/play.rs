@@ -15,6 +15,7 @@ use dmm::Datum;
 use crate::components::{MoveCooldown, Player};
 use crate::events::SS14StateEvent;
 use crate::prefabs::MapPrefabData;
+use crate::CELL_SIZE_IN_PIXEL;
 
 pub struct PlayState {
     level_entity: Entity,
@@ -73,10 +74,10 @@ fn initialise_camera_with_size(
     world
         .create_entity()
         .with(Camera::from(Projection::orthographic(
-            origin_x - (size_x * 32) as f32 / 2.0,
-            origin_x + (size_x * 32) as f32 / 2.0,
-            origin_y - (size_y * 32) as f32 / 2.0,
-            origin_y + (size_y * 32) as f32 / 2.0,
+            origin_x - (size_x * CELL_SIZE_IN_PIXEL) as f32 / 2.0,
+            origin_x + (size_x * CELL_SIZE_IN_PIXEL) as f32 / 2.0,
+            origin_y - (size_y * CELL_SIZE_IN_PIXEL) as f32 / 2.0,
+            origin_y + (size_y * CELL_SIZE_IN_PIXEL) as f32 / 2.0,
             0.1,
             1.5,
         )))

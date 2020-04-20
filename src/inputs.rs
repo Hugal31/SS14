@@ -8,6 +8,7 @@ use serde::{Deserialize, Serialize};
 pub enum Input {
     Move(Direction),
     ToggleAssetInfo,
+    ToggleInspector,
     ToggleDebugInfo,
 }
 

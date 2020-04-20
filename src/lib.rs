@@ -11,3 +11,5 @@ pub mod render;
 pub mod states;
 
 mod systems;
+
+const CELL_SIZE_IN_PIXEL: u32 = 32;

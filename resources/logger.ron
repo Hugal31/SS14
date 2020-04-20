@@ -1,0 +1,6 @@
+LoggerConfig (
+    level_filter: Debug,
+    module_levels: [
+        ("amethyst_utils::fps_counter", Warn)
+    ]
+)

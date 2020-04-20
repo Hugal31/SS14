@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 use amethyst::{
@@ -27,6 +27,7 @@ use ss14::{
 
 const DISPLAY_CONFIG_PATH: &str = "display.ron";
 const BINDINGS_CONFIG_PATH: &str = "inputs.ron";
+const LOGGER_CONFIG_PATH: &str = "logger.ron";
 
 fn main() -> amethyst::Result<()> {
     let level = std::env::args().nth(1).map(From::from);
@@ -43,20 +44,14 @@ and set the SS13_SOURCE environment variable to its directory."
 }
 
 fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Result<()> {
-    amethyst_better_logger::start_logger(amethyst_better_logger::LoggerConfig {
-        level_filter: amethyst::LogLevelFilter::Debug,
-        other_levels: vec![(
-            "amethyst_utils::fps_counter".into(),
-            amethyst::LogLevelFilter::Warn,
-        )],
-        ..Default::default()
-    });
-
     let app_root = application_root_dir()?;
     let assets_dir = app_root.join("resources");
     let display_config_path = assets_dir.join(DISPLAY_CONFIG_PATH);
     let bindings_config_path = assets_dir.join(BINDINGS_CONFIG_PATH);
+    let logger_config_path = assets_dir.join(LOGGER_CONFIG_PATH);
     let level = level.unwrap_or_else(|| assets_dir.join("levels/test_level.dmm"));
+
+    start_logger(&logger_config_path)?;
 
     let game_data = GameDataBuilder::default()
         .with_bundle(
@@ -96,6 +91,15 @@ fn start_game(level: Option<PathBuf>, ss13_source: impl Source) -> amethyst::Res
 
     game.run();
     Ok(())
+}
+
+fn start_logger(logger_config_path: &Path) -> amethyst::Result<()> {
+    Ok(amethyst::Logger::from_config(
+        amethyst::LoggerConfig::load(&logger_config_path).with_context(|_| {
+            format_err!("Could not open logger config file {:?}", logger_config_path)
+        })?,
+    )
+    .start())
 }
 
 fn get_ss13_source() -> amethyst::Result<impl Source> {

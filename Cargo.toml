@@ -5,10 +5,9 @@ authors = ["Hugo Laloge <hugo.laloge@gmail.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst = "0.14.0"
-amethyst-imgui = "0.6.1"
+amethyst = "0.15.0"
+amethyst-imgui = { git = "https://github.com/Hugal31/amethyst-imgui", branch = "amethyst-v0.15" }
 amethyst-byond = { path = "amethyst-byond" }
-amethyst-better-logger = { path = "amethyst-better-logger" }
 byond-lua = { path = "byond-lua" }
 dmm = { git = "https://github.com/Hugal31/DMM.git" }
 dmm-format = { git = "https://github.com/Hugal31/DMM.git" }
@@ -25,7 +24,6 @@ default = ["no-slow-safety-check", "vulkan"]
 vulkan = ["amethyst/vulkan"]
 no-slow-safety-check = ["amethyst/no-slow-safety-checks"]
 profiler = ["thread_profiler", "thread_profiler/thread_profiler", "amethyst/profiler", "amethyst-byond/profiler"]
-nightly = ["amethyst/nightly"]
 
 [profile.dev]
 opt-level = 2
